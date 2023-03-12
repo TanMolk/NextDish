@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://bj-cynosdbmysql-grp-i3wxjnee.sql.tencentcdb.com:20669/c8019_test?characterEncoding=UTF8
+    username: c8019_test
+    password: ${C8019_BACKEND}
+
+google:
+  cloud:
+    map:
+      key: ${C8019_BACKEND_GOOGLE_MAP_KEY}
