@@ -32,13 +32,10 @@ src
 
 ### Run Backend Server
 
-
-
-
 ## Frontend
 
 ### Technology stack
 
 | Name | Version |
 |------|---------|
-| Vue  | *       |
+| Vue  | 3+      |

@@ -5,14 +5,14 @@
     <div class="img"></div>
     <div class="info">
       <div class="info-text">
-        Title
+        {{ info.name}}
         <br>
         <br>
-        Desc
+        {{ info.types}}
       </div>
     </div>
     <div class="mark">
-      🌟4.2
+      🌟{{ info.rating }}
     </div>
   </div>
 </template>
@@ -20,6 +20,9 @@
 <script>
 export default {
   name: "CuisineListItem",
+  props: {
+    info: Object
+  },
   methods: {
     clickItem() {
       this.$emit("cuisine-item-clicked")
@@ -33,6 +36,7 @@ export default {
   display: grid;
   grid-template-columns: repeat(3, 1fr );
   height: 5em;
+  overflow: hidden;
 }
 
 .img {

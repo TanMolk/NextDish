@@ -17,7 +17,7 @@
           :pane-key="items[0]"
       >
         <div>
-          Time
+          {{ detail?.title }}
           <br>
           <br>
           Distance
@@ -54,6 +54,9 @@
 
 export default {
   name: "CuisineDetail",
+  props: {
+    detail: Object
+  },
   data() {
     return {
       items: ['Location', 'Menu', 'Open Time', 'Reviews'],
