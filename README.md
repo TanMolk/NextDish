@@ -3,6 +3,32 @@
 ---
 ## Abstract
 
+## Code Standard
+```text
+Naming convention
+
+1. All name should try to contain more information
+Bad example: method1, param1
+Good example: getCarWithColor, studentName.
+
+2. File name should be PascalCase
+Bad example: usercontroller.java
+Good example: UserController.java
+
+3. Name of method, variable should be camelCase
+Bad example: Params, ThisisAMeTHod
+Good example for method: queryUserDataWithId
+Good example for variable: studentName, locationOfUser
+Good example for constants variable: USER_API_KEY
+
+4. Try to write much information to describe the author, the purpose, the aim and return of a class, a method or a variable.
+
+Code Quality
+
+1. All function should be tested by unit test (normal case, exception case)
+2. Try to solve problems IntelliJ tells and SonarLint tells (Please install sonarlint plugin firstly, could find in setting -> plugins)
+```
+
 
 ## Backend
 

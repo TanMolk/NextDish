@@ -24,7 +24,7 @@ public class GoogleMapService {
     /**
      * Entrance url for google map api.
      */
-    private static final  String GOOGLE_APT_BASE_PATH = "https://maps.googleapis.com/maps/api";
+    private static final String GOOGLE_APT_BASE_PATH = "https://maps.googleapis.com/maps/api";
 
     /**
      * When do a request to google map api, must attach this value with key.
@@ -41,9 +41,10 @@ public class GoogleMapService {
     private RestTemplate restTemplate;
 
     /**
-     * Get more infomation of a place
+     * Get more information of a place
      *
      * @param placeID The place_id return by google place api, which is the identifier of a place
+     * @author Wei
      */
     public JSONObject exampleHowToUse(String placeID) {
         Map<String, String> params = new HashMap<>();
@@ -59,6 +60,7 @@ public class GoogleMapService {
      * @return @see {@link JSONObject}
      * @throws ExternalAPIParamsException   If required params don't contain in requestParams.
      * @throws ExternalAPIResponseException If response is not normal
+     * @author Wei
      */
     private JSONObject baseRequest(APIPathEnum api, Map<String, String> requestParams) throws ExternalAPIException {
         //check params
@@ -87,6 +89,7 @@ public class GoogleMapService {
     }
 
     /**
+     * @author Wei
      * Enum for possible used api
      * <a href="https://developers.google.com/maps/documentation/places/web-service">API Document</a>
      */
@@ -125,6 +128,7 @@ public class GoogleMapService {
     }
 
     /**
+     * @author Wei
      * Field name of google api request
      */
     private enum RequestFieldEnum {
@@ -149,6 +153,7 @@ public class GoogleMapService {
     }
 
     /**
+     * @author Wei
      * Field name of google api response
      */
     private enum ResponseFieldEnum {
