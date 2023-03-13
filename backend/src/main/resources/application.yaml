@@ -1,11 +1,12 @@
-spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://bj-cynosdbmysql-grp-i3wxjnee.sql.tencentcdb.com:20669/c8019_test?characterEncoding=UTF8
-    username: c8019_test
-    password: ${C8019_BACKEND}
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: ${C8019_BACKEND_DATABASE_URL}
+#    username: ${C8019_BACKEND_DATABASE_USERNAME}
+#    password: ${C8019_BACKEND_DATABASE_PASSWORD}
 
 google:
   cloud:
     map:
-      key: ${C8019_BACKEND_GOOGLE_MAP_KEY}
+      #      1. get from environment 2.default as test
+      key: ${C8019_BACKEND_GOOGLE_MAP_KEY:test}

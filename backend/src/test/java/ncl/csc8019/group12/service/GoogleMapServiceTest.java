@@ -1,6 +1,8 @@
 package ncl.csc8019.group12.service;
 
+import com.alibaba.fastjson.JSONObject;
 import ncl.csc8019.group12.BackendApplication;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +21,11 @@ public class GoogleMapServiceTest {
     private GoogleMapService googleMapService;
 
     @Test
-    public void testFindRestaurantWithLocation() throws Exception {
-        googleMapService.findRestaurantWithLocation(54.974141, -1.618138);
+    public void testExample() {
+        String placeId = "ChIJE-u-MMpwfkgRe5igEnexTN0";
+        JSONObject jsonObject = googleMapService.exampleHowToUse(placeId);
+        Assert.assertNotNull(jsonObject);
+
+        System.out.println(jsonObject);
     }
 }
