@@ -60,17 +60,17 @@ src
 #### With IntelliJ
 
 1. Find the "BackendApplication.java" and Run it. It will show errors. This action aims to get this thing below.
-   <img height="300" width="500" src="/Users/kmmn/IdeaProjects/CSC8019/static/Run-Backend-1.png" />
+   <img height="300" width="500" src="./static/Run-Backend-1.png" />
 
 2. Then set environment variable with following steps
    <br>
-   <img height="300" width="500" src="/Users/kmmn/IdeaProjects/CSC8019/static/Run-Backend-2.png" />
+   <img height="300" width="500" src="./static/Run-Backend-2.png" />
    <br>
-   <img height="300" width="500" src="/Users/kmmn/IdeaProjects/CSC8019/static/Run-Backend-3.png" />
+   <img height="300" width="500" src="./static/Run-Backend-3.png" />
    <br>
-   <img height="300" width="500" src="/Users/kmmn/IdeaProjects/CSC8019/static/Run-Backend-4.png" />
+   <img height="300" width="500" src="./static/Run-Backend-4.png" />
    <br>
-   <img height="300" width="500" src="/Users/kmmn/IdeaProjects/CSC8019/static/Run-Backend-5.png" />
+   <img height="300" width="500" src="./static/Run-Backend-5.png" />
    <br>
 3. Then run this backend application again.
 
