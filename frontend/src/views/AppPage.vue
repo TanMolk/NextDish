@@ -4,17 +4,17 @@
       class="map"
       :map-id="Constants.GOOGLE_MAP_ID"
       :api-key="Constants.GOOGLE_MAP_API_KEY"
-      :center="getLocation()"
+      :center="userLocation"
       :zoom="17"
       :disable-default-ui="true"
   >
     <CustomMarker
-        :options="{ position: getLocation()}"
+        :options="userMarkerOption"
     >
       <img style="opacity: 0.7;width: 2em;height: 2em" src="@/assets/me.png" alt="me"/>
     </CustomMarker>
     <Circle
-        :options="{center: getLocation(), radius: convertMileToMeter(1),strokeColor:'#d7dbdf'}"
+        :options="userCircleOption"
     />
 
     <Marker
@@ -24,7 +24,7 @@
           position: item.geometry.location,
           title: item.rating + '',
         }"
-        @click="marketClick"
+        @click="marketClick(item)"
     />
   </GoogleMap>
   <CuisineTypeSelect
@@ -45,8 +45,8 @@ import {GoogleMap, Marker, CustomMarker, Circle} from 'vue3-google-map'
 import {mileToMeter} from "@/utils/MileUtil";
 import CuisineTypeSelect from "@/components/CuisineTypeSelect.vue";
 import CuisineList from "@/components/CuisineList.vue";
-import {reactive} from "vue";
 import Constants from "@/constants/Constants";
+import GoogleMapPlaceService from "@/service/GoogleMapPlaceService";
 
 export default {
   name: "AppPage",
@@ -59,63 +59,81 @@ export default {
   data() {
     return {
       mapInstance: null,
-      myLocation: {
-        latitude: 55,
-        longitude: -1.6,
+      userLocation: {
+        lat: 55,
+        lng: -1.6,
       },
-      listShowState: true,
-      restaurantData: reactive({
+      restaurantData: {
         items: [],
         detail: null
-      })
+      },
+      userMarkerOption: {
+        position: this.userLocation,
+        visible: this.ifInitialized
+      },
+      userCircleOption: {
+        center: this.userLocation,
+        radius: mileToMeter(1),
+        strokeColor: '#d7dbdf',
+        visible: this.ifInitialized
+      },
+      ifInitialized: false,
+      listShowState: true,
+      showingRestaurantMarker: "",
     }
   },
   methods: {
-    getLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-          this.myLocation.latitude = position.coords.latitude;
-          this.myLocation.longitude = position.coords.longitude;
-        });
-        return {lat: this.myLocation.latitude, lng: this.myLocation.longitude}
+    freshUserMakersOptions() {
+      this.userMarkerOption = {
+        position: this.userLocation,
+        visible: this.ifInitialized
+      }
+
+      this.userCircleOption = {
+        center: this.userLocation,
+        radius: mileToMeter(1),
+        strokeColor: '#d7dbdf',
+        visible: this.ifInitialized
       }
     },
-    convertMileToMeter(miles) {
-      return mileToMeter(miles)
+    freshUserLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          this.userLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          }
+          if (!this.ifInitialized) {
+            this.loadRecentRestaurant("");
+            this.ifInitialized = true;
+            this.mapInstance = this.$refs.mapInstance;
+            this.$loading({
+              fullscreen: true
+            }).close();
+          }
+
+          this.freshUserMakersOptions();
+        });
+      }
+      return {lat: this.userLocation.lat, lng: this.userLocation.lng}
     },
     selectOptionChange(type) {
-      console.log(this.mapInstance)
-      let pyrmont = new this.mapInstance.api.LatLng(this.myLocation.latitude, this.myLocation.longitude);
-
-      let placesService = new this.mapInstance.api.places.PlacesService(this.mapInstance.map);
-
-      let request = {
-        location: pyrmont,
-        radius: this.convertMileToMeter(1),
-        type: ['restaurant'],
-        keyword: type
-      };
-
-      placesService.nearbySearch(request, (resp) => {
-        this.restaurantData.items = reactive([])
-        resp.forEach(d => this.restaurantData.items.push(d))
-        console.log(resp)
-        console.log(this.restaurantData.items)
-      });
-
-      console.log(placesService);
+      this.loadRecentRestaurant(type);
     },
-    loadRecentRestaurant() {
+    async loadRecentRestaurant(type) {
+      let response = await GoogleMapPlaceService.getRestaurantWithKeywordInOneMile(this.userLocation, type);
+      this.restaurantData.items = response.data.results;
     },
-    marketClick() {
-      this.listShowState = true
-    }
+    marketClick(item) {
+      this.listShowState = true;
+      this.mapInstance.map.panTo(item.geometry.location)
+    },
   },
   created() {
-    this.getLocation();
-  },
-  beforeUpdate() {
-    this.mapInstance = this.$refs.mapInstance;
+    this.$loading({
+      fullscreen: true
+    });
+    this.freshUserLocation();
   }
 }
 </script>

@@ -1,3 +1,6 @@
+<!--
+@auth
+-->
 <template>
   <div>
     <nut-tabs
@@ -30,7 +33,6 @@
           :pane-key="items[1]"
       >
         <div>
-          <div style="background-color: #43bbad;width: 140px;height: 140px;margin: 33px"></div>
           <div style="background-color: #43bbad;width: 140px;height: 140px;margin: 33px"></div>
         </div>
       </nut-tab-pane>
