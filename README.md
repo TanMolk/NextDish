@@ -113,7 +113,7 @@ frontend
 
 #### With IntelliJ
 
-1. Make sure you have installed node.js (18.15.0 LTS or more higher)
+1. Make sure you have installed node.js (18.15.0 LTS or more higher) [node.js](https://nodejs.org)
 2. Fill the Google map api key in [.env](./frontend/.env) VITE_GOOGLE_MAP_API_KEY, this map api key should have permission for *
    *Maps JavaScript API**
 3. Run with below shell
