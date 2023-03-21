@@ -22,7 +22,7 @@
       >
         <CuisineListItem
             :info="item"
-            @cuisine-item-clicked="changeInfoWindow"
+            @cuisine-item-clicked="changeInfoWindow('detail')"
         />
       </InfiniteList>
       <CuisineDetail
@@ -55,8 +55,12 @@ export default {
     clickX() {
       this.$emit("click-X")
     },
-    changeInfoWindow() {
-      this.infoShowState = !this.infoShowState;
+    changeInfoWindow(type) {
+      if (type === "detail") {
+        this.infoShowState = false;
+      } else if (type === "list") {
+        this.infoShowState = true;
+      }
     }
   }
 }

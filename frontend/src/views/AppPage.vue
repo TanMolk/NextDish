@@ -32,6 +32,7 @@
       @option-change="selectOptionChange"
   />
   <CuisineList
+      ref="cuisineList"
       v-show="listShowState"
       :items="restaurantData.items"
       :detail="restaurantData.detail"
@@ -133,6 +134,9 @@ export default {
     },
     selectOptionChange(type) {
       this.loadRecentRestaurant(type);
+      this.listShowState = true;
+      this.$refs.cuisineList.changeInfoWindow("list");
+
     },
     async loadRecentRestaurant(type) {
       let response = await GoogleMapPlaceService.getRestaurantWithKeywordInOneMile(this.userLocation, type);
