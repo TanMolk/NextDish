@@ -18,7 +18,7 @@ let http = axios.create({
  * @param location longitude and latitude of center location, like {lat: 55,lng: -1.6}
  * @param keyword keyword of aim restaurants
  */
-async function getRestaurantWithKeywordInOneMile(location, keyword) {
+function getRestaurantWithKeywordInOneMile(location, keyword) {
     return http.get("/place/nearbysearch/json",
         {
             params: {
@@ -28,9 +28,46 @@ async function getRestaurantWithKeywordInOneMile(location, keyword) {
                 radius: mileToMeter(1)
             }
         });
+}
 
+/**
+ * Get more information of this place
+ * @param placeReference place reference id that Google Api return
+ */
+function getPlaceDetail(placeReference) {
+    return http.get("/place/details/json",
+        {
+            params: {
+                place_id: placeReference
+            }
+        });
+}
+
+/**
+ * Get restaurant photo
+ * @param photoInfo google returned photo's information, format like
+ *             {
+ *                 "height": 2268,
+ *                 "photo_reference": "123",
+ *                 "width": 4032
+ *             }
+ *
+ */
+function getPlaceImage(photoInfo) {
+    return http.get("/place/photo",
+        {
+            responseType: "blob",
+            params: {
+                photo_reference: photoInfo.photo_reference,
+                maxheight: photoInfo.height,
+                maxwidth: photoInfo.width
+            }
+        });
 }
 
 export default {
-    getRestaurantWithKeywordInOneMile
+    getRestaurantWithKeywordInOneMile,
+    getPlaceImage,
+    getPlaceDetail,
+
 }

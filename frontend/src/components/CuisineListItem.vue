@@ -1,15 +1,23 @@
+<!--
+ @Name CuisineListItem
+ @Description The list item
+ @author Wei Tan
+ @createDate 2023/03/12
+-->
 <template>
-  <div class="wrapper"
-       @click="clickItem()"
-  >
-    <div class="img"></div>
+  <div class="wrapper">
+    <el-image
+        class="img"
+        v-loading="loading"
+        :src="imageSrc"
+    />
     <div class="info">
-      <div class="info-text">
-        {{ info.name}}
-        <br>
-        <br>
-        {{ info.types}}
-      </div>
+      <span class="info-text">
+        {{ info.name }}
+      </span>
+      <span>
+        {{ info.types[0] }}
+      </span>
     </div>
     <div class="mark">
       🌟{{ info.rating }}
@@ -18,14 +26,38 @@
 </template>
 
 <script>
+import GoogleMapPlaceService from "@/service/GoogleMapPlaceService";
+
 export default {
   name: "CuisineListItem",
   props: {
+    //item data
     info: Object
   },
+  data() {
+    return {
+      //blob url
+      imageSrc: null,
+      //the state of image loading
+      loading: true
+    }
+  },
   methods: {
-    clickItem() {
-      this.$emit("cuisine-item-clicked")
+    async loadImage() {
+      GoogleMapPlaceService.getPlaceImage(this.info.photos[0])
+          .then(resp => {
+            if (resp) {
+              const blob = new window.Blob([resp.data], {type: 'image/jpeg'})
+              this.imageSrc = URL.createObjectURL(blob);
+              this.loading = false;
+            }
+          });
+    }
+  },
+  mounted() {
+    //only without blobSrc, loading image
+    if (!this.imageSrc) {
+      this.loadImage();
     }
   }
 }
@@ -35,16 +67,16 @@ export default {
 .wrapper {
   display: grid;
   grid-template-columns: repeat(3, 1fr );
-  height: 5em;
+  /*height: 5em;*/
   overflow: hidden;
 }
 
 .img {
-  width: 76px;
-  height: 76px;
-
+  width: 80px;
+  height: 80px;
   margin: auto auto;
-  background-color: #bb43bb;
+
+  border-radius: 1em;
 }
 
 .info {
@@ -52,7 +84,15 @@ export default {
 }
 
 .info-text {
-  margin: auto auto;
+  display: block;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  /*20 characters*/
+  width: 20ch;
+
+  padding-bottom: 20px;
 }
 
 .mark {

@@ -1,3 +1,9 @@
+<!--
+ @Name AppPage
+ @Description The app page
+ @author Wei
+ @createDate 2023/03/12
+-->
 <template>
   <div class="welcome-page">
     <div class="title">
@@ -17,10 +23,12 @@ export default {
   name: "WelcomePage",
   methods: {
     jumpToApp() {
+      //change router
       this.$router.push({path: "/app"});
     }
   },
   beforeCreate() {
+    //change background
     document.querySelector("body").setAttribute('style', 'background:#a0aab6')
   }
 }

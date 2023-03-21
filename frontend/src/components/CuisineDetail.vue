@@ -1,5 +1,8 @@
 <!--
-@auth
+ @Name CuisineDetail
+ @Description The detail window for restaurant
+ @author Wei Tan
+ @createDate 2023/03/13
 -->
 <template>
   <div>
@@ -16,17 +19,21 @@
         >{{ item }}
         </div>
       </template>
+
       <nut-tab-pane
           :pane-key="items[0]"
       >
         <div>
-          {{ detail?.title }}
+          {{ detail?.name }}
           <br>
           <br>
           Distance
           <br>
           <br>
-          <button>Start Go</button>
+          <button
+              @click="getDirection"
+          >Start Go
+          </button>
         </div>
       </nut-tab-pane>
       <nut-tab-pane
@@ -39,7 +46,7 @@
       <nut-tab-pane
           :pane-key="items[2]"
       >
-        123
+        {{ placeId }}
       </nut-tab-pane>
       <nut-tab-pane
           :pane-key="items[3]"
@@ -54,17 +61,65 @@
 
 <script>
 
+import GoogleMapPlaceService from "@/service/GoogleMapPlaceService";
+import StorageUtil from "@/utils/StorageUtil";
+
 export default {
   name: "CuisineDetail",
   props: {
-    detail: Object
+    placeId: String,
+    mapInstance: Object,
   },
   data() {
     return {
       items: ['Location', 'Menu', 'Open Time', 'Reviews'],
-      selectedTab: "Location"
+      selectedTab: "Location",
+      detail: null,
+      //service of direction
+      directionService: null,
     }
   },
+  watch: {
+    placeId() {
+      this.getDetail();
+    }
+  },
+  methods: {
+    async getDetail() {
+      if (this.placeId) {
+        let resp = await GoogleMapPlaceService.getPlaceDetail(this.placeId);
+        this.detail = resp.data.result;
+      }
+    },
+    async getDirection() {
+      if (this.placeId) {
+        //if it doesn't exist, initialize
+        if (!this.directionService) {
+          this.directionService = new this.mapInstance.api.DirectionsService();
+        }
+
+        //request direction
+        let directionsService = this.directionService;
+        let request = {
+          origin: {
+            location: {
+              lat: Number(StorageUtil.get("currentPositionLat")),
+              lng: Number(StorageUtil.get("currentPositionLng"))
+            }
+          },
+          destination: {
+            location: this.detail.geometry.location
+          },
+          travelMode: 'WALKING'
+        };
+        directionsService.route(request, (result, status) => {
+          if (status === 'OK') {
+            this.$emit("direction-request", result);
+          }
+        });
+      }
+    }
+  }
 }
 </script>
 <style scoped>

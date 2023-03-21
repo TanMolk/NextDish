@@ -1,3 +1,9 @@
+<!--
+ @Name CuisineList
+ @Description The list/detail window
+ @author Wei Tan
+ @createDate 2023/03/12
+-->
 <template>
   <div
       class="li-wrapper"
@@ -22,13 +28,15 @@
       >
         <CuisineListItem
             :info="item"
-            @cuisine-item-clicked="changeInfoWindow('detail')"
+            @click="changeInfoWindow('detail',item)"
         />
       </InfiniteList>
       <CuisineDetail
-          :detail="detail"
+          :map-instance="mapInstance"
+          :place-id="placeIdForDetail"
           class="cuisine-detail"
           v-show="!infoShowState"
+          @direction-request="this.$emit('direction-request',$event);"
       />
     </div>
   </div>
@@ -43,21 +51,47 @@ export default {
   name: "CuisineList",
   components: {CuisineDetail, CuisineListItem, InfiniteList},
   props: {
+    //all data of list
     items: Array,
-    detail: Object
+    //data of detail
+    placeId: String,
+    mapInstance: Object,
+  },
+  watch: {
+    //if prop placeId change, update to placeIdForDetail
+    placeId(newVar) {
+      this.placeIdForDetail = newVar;
+    },
+    placeIdForDetail(newVar) {
+      //send update event to outside
+      this.$emit("place-id-change", newVar)
+    }
   },
   data() {
     return {
+      //true: show list, false: show detail
       infoShowState: true,
+      //store placeId for change
+      placeIdForDetail: null
     }
   },
   methods: {
+    /**
+     * Event when the X button get clicked
+     */
     clickX() {
+      //send event to outside
       this.$emit("click-X")
     },
-    changeInfoWindow(type) {
+    /**
+     * Change showing window
+     * @param type detail or list
+     * @param item data of showing detail
+     */
+    changeInfoWindow(type, item) {
       if (type === "detail") {
         this.infoShowState = false;
+        this.placeIdForDetail = item.place_id;
       } else if (type === "list") {
         this.infoShowState = true;
       }
