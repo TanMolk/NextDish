@@ -47,6 +47,7 @@ import CuisineTypeSelect from "@/components/CuisineTypeSelect.vue";
 import CuisineList from "@/components/CuisineList.vue";
 import Constants from "@/constants/Constants";
 import GoogleMapPlaceService from "@/service/GoogleMapPlaceService";
+import {ElMessageBox} from 'element-plus';
 
 export default {
   name: "AppPage",
@@ -111,8 +112,21 @@ export default {
               fullscreen: true
             }).close();
           }
-
           this.freshUserMakersOptions();
+        }, (error) => {
+          let errorMessage = '';
+          switch (error.code){
+            case error.PERMISSION_DENIED:
+              errorMessage = "Please allow location service in site setting"
+              break;
+            case error.POSITION_UNAVAILABLE:
+              errorMessage = "Location information is unavailable"
+              break;
+            case error.TIMEOUT:
+              errorMessage = "The request to get location timed out"
+              break;
+          }
+          ElMessageBox.alert(errorMessage,'Error');
         });
       }
       return {lat: this.userLocation.lat, lng: this.userLocation.lng}
