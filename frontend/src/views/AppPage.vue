@@ -101,7 +101,7 @@ export default {
       //flag of the page initialized state
       ifInitialized: false,
       //the flag of showing the list/detail window
-      listShowState: true,
+      listShowState: false,
     }
   },
   methods: {
@@ -154,8 +154,8 @@ export default {
           this.freshUserMarkerOptions();
 
           //store location for further usage
-          StorageUtil.set("currentPositionLat", this.userLocation.lat)
-          StorageUtil.set("currentPositionLng", this.userLocation.lng)
+          StorageUtil.set(Constants.STORAGE_USER_LOCATION_LATITUDE, this.userLocation.lat)
+          StorageUtil.set(Constants.STORAGE_USER_LOCATION_LONGITUDE, this.userLocation.lng)
 
           //If error
         }, (error) => {
@@ -231,6 +231,11 @@ export default {
     });
     //If it gets location successfully, the loading will disappear.
     this.freshUserLocation();
+
+    //set first entrance flag,if it doesn't exist
+    if (!StorageUtil.get(Constants.STORAGE_IS_USER_FIRST_USER_STAT)) {
+      StorageUtil.set(Constants.STORAGE_IS_USER_FIRST_USER_STAT, "false");
+    }
   }
 }
 </script>

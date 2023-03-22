@@ -19,6 +19,9 @@
 </template>
 
 <script>
+import StorageUtil from "@/utils/StorageUtil";
+import Constants from "@/constants/Constants";
+
 export default {
   name: "WelcomePage",
   methods: {
@@ -28,6 +31,12 @@ export default {
     }
   },
   beforeCreate() {
+    //check if the first time
+    if (StorageUtil.get(Constants.STORAGE_IS_USER_FIRST_USER_STAT)) {
+      this.$router.push({path: "/app"});
+      return;
+    }
+
     //change background
     document.querySelector("body").setAttribute('style', 'background:#a0aab6')
   }

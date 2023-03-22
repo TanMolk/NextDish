@@ -63,6 +63,7 @@
 
 import GoogleMapPlaceService from "@/service/GoogleMapPlaceService";
 import StorageUtil from "@/utils/StorageUtil";
+import Constants from "@/constants/Constants";
 
 export default {
   name: "CuisineDetail",
@@ -103,8 +104,8 @@ export default {
         let request = {
           origin: {
             location: {
-              lat: Number(StorageUtil.get("currentPositionLat")),
-              lng: Number(StorageUtil.get("currentPositionLng"))
+              lat: Number(StorageUtil.get(Constants.STORAGE_USER_LOCATION_LATITUDE,)),
+              lng: Number(StorageUtil.get(Constants.STORAGE_USER_LOCATION_LONGITUDE,))
             }
           },
           destination: {
