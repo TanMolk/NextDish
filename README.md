@@ -59,7 +59,9 @@ src
 
 #### With IntelliJ
 
-1. Find the "BackendApplication.java" and Run it. It will show errors. This action aims to get this thing below.
+1. First delete ":test" of Key in application.yami located in resources folder,
+   then find the "BackendApplication.java" and press run button next to main method 
+   and run it. It will show errors. This action aims to get this thing below.
    <img height="300" width="500" src="./static/Run-Backend-1.png" />
 
 2. Then set environment variable with following steps
