@@ -44,14 +44,16 @@ export default {
   },
   methods: {
     async loadImage() {
-      GoogleMapPlaceService.getPlaceImage(this.info.photos[0])
-          .then(resp => {
-            if (resp) {
-              const blob = new window.Blob([resp.data], {type: 'image/jpeg'})
-              this.imageSrc = URL.createObjectURL(blob);
-              this.loading = false;
-            }
-          });
+      if (this.info.photos) {
+        GoogleMapPlaceService.getPlaceImage(this.info.photos[0])
+            .then(resp => {
+              if (resp) {
+                const blob = new window.Blob([resp.data], {type: 'image/jpeg'})
+                this.imageSrc = URL.createObjectURL(blob);
+                this.loading = false;
+              }
+            });
+      }
     }
   },
   mounted() {

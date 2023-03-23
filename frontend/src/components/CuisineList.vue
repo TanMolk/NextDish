@@ -18,6 +18,7 @@
     </div>
 
     <div class="list-wrapper">
+      <!--      todo fix scroll bug-->
       <InfiniteList
           v-show="infoShowState"
           :width="'100%'"
@@ -65,7 +66,7 @@ export default {
     placeIdForDetail(newVar) {
       //send update event to outside
       this.$emit("place-id-change", newVar)
-    }
+    },
   },
   data() {
     return {
@@ -102,7 +103,7 @@ export default {
 
 <style scoped>
 .cuisine-detail {
-  max-width: 100%;
+  width: var(--restaurants-list-detail-window-width);
 }
 
 .li-wrapper {
@@ -111,9 +112,9 @@ export default {
 
 
   position: absolute;
-  width: 100vw;
-  height: 50vh;
-  left: calc(50% - 50vw);
+  height: var(--restaurants-list-detail-window-height);
+  width: var(--restaurants-list-detail-window-width);
+  left: var(--restaurants-list-detail-window-left);
   bottom: 0;
 
   background-color: #9faab8;
@@ -124,7 +125,6 @@ export default {
 
 .header {
   grid-row: 1;
-
   line-height: 5vh;
 }
 
@@ -147,13 +147,5 @@ export default {
   border: none;
 
   background-color: transparent;
-}
-
-@media screen and (min-width: 480px) {
-  .li-wrapper {
-    width: 480px;
-
-    left: calc(50% - 240px);
-  }
 }
 </style>

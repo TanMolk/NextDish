@@ -1,0 +1,13 @@
+:root {
+    --restaurants-list-detail-window-width: 100vw;
+    --restaurants-list-detail-window-height: 50vh;
+    --restaurants-list-detail-window-left: calc(50% - 50vw);
+
+}
+
+@media screen and (min-width: 480px) {
+    :root {
+        --restaurants-list-detail-window-width: 480px;
+        --restaurants-list-detail-window-left: calc(50% - 240px);
+    }
+}

@@ -23,37 +23,53 @@
       <nut-tab-pane
           :pane-key="items[0]"
       >
-        <div>
-          {{ detail?.name }}
-          <br>
-          <br>
-          Distance
-          <br>
-          <br>
-          <button
-              @click="getDirection"
-          >Start Go
-          </button>
-        </div>
+        <template v-slot>
+          <div class="detail-pane">
+            {{ detail?.name }}
+            <br>
+            <br>
+            Distance: {{ directionDetail?.routes[0].legs[0].distance.value }}m
+            <br>
+            <br>
+            <button
+                @click="directionButtonClick"
+            >Start Go
+            </button>
+          </div>
+        </template>
       </nut-tab-pane>
       <nut-tab-pane
           :pane-key="items[1]"
       >
-        <div>
-          <div style="background-color: #43bbad;width: 140px;height: 140px;margin: 33px"></div>
-        </div>
+        <template v-slot>
+          <div class="detail-pane">
+            <!--            <div style="background-color: #43bbad;width: 140px;height: 140px;margin: 33px"></div>-->
+          </div>
+        </template>
       </nut-tab-pane>
       <nut-tab-pane
           :pane-key="items[2]"
       >
-        {{ placeId }}
+        <template v-slot>
+          <div v-show="detail" class="detail-pane">
+            <p v-for="item in detail?.opening_hours.weekday_text">
+              {{ item }}
+            </p>
+          </div>
+        </template>
       </nut-tab-pane>
       <nut-tab-pane
           :pane-key="items[3]"
       >
-        <div>
-          123
-        </div>
+        <template v-slot>
+          <div v-show="detail" class="detail-pane">
+            <div v-for="review in detail?.reviews">
+              <p>{{ review.author_name }}</p>
+              <p>{{ review.rating }}</p>
+              <p>{{ review.text }}</p>
+            </div>
+          </div>
+        </template>
       </nut-tab-pane>
     </nut-tabs>
   </div>
@@ -76,6 +92,7 @@ export default {
       items: ['Location', 'Menu', 'Open Time', 'Reviews'],
       selectedTab: "Location",
       detail: null,
+      directionDetail: null,
       //service of direction
       directionService: null,
     }
@@ -90,8 +107,13 @@ export default {
       if (this.placeId) {
         let resp = await GoogleMapPlaceService.getPlaceDetail(this.placeId);
         this.detail = resp.data.result;
+        await this.getDirection();
       }
     },
+    /**
+     * Get information for direction, best used in the getDetail
+     * @returns {Promise<void>}
+     */
     async getDirection() {
       if (this.placeId) {
         //if it doesn't exist, initialize
@@ -115,19 +137,27 @@ export default {
         };
         directionsService.route(request, (result, status) => {
           if (status === 'OK') {
-            this.$emit("direction-request", result);
+            this.directionDetail = result;
           }
         });
       }
+    },
+    directionButtonClick() {
+      this.$emit("direction-request", this.directionDetail);
     }
   }
 }
 </script>
 <style scoped>
+
 .tab-class {
   background-color: white;
   border-radius: 1em;
 
   margin: 5px 5px;
+}
+
+.detail-pane {
+  height: 31vh;
 }
 </style>

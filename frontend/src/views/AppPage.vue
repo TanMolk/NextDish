@@ -10,8 +10,7 @@
       class="map"
       :map-id="Constants.GOOGLE_MAP_ID"
       :api-key="Constants.GOOGLE_MAP_API_KEY"
-      :center="userLocation"
-      :zoom="15"
+      :zoom="14"
       :disable-default-ui="true"
   >
     <CustomMarker
@@ -29,6 +28,7 @@
           label: item.name,
           position: item.geometry.location,
           title: item.rating + '',
+          visible: item.place_id === this.restaurantData.detailPlaceId || !this.directionModel
         }"
         @click="markerClick(item)"
     />
@@ -38,6 +38,8 @@
       @option-change="selectOptionChange"
   />
   <CuisineList
+      :key="listDetailKey"
+      v-loading="loadingState.listDetailWindow"
       ref="cuisineList"
       v-show="listShowState"
       :map-instance="mapInstance"
@@ -65,6 +67,14 @@ export default {
   computed: {
     Constants() {
       return Constants
+    }
+  },
+  watch: {
+    directionModel(newVar) {
+      if (!newVar) {
+        //remove direction
+        this.directionRender.setDirections({routes: []});
+      }
     }
   },
   components: {CuisineList, CuisineTypeSelect, GoogleMap, Marker, CustomMarker, Circle},
@@ -102,9 +112,20 @@ export default {
       ifInitialized: false,
       //the flag of showing the list/detail window
       listShowState: false,
+      //if user use direction
+      directionModel: false,
+      //loadingState
+      loadingState: {
+        listDetailWindow: false,
+      },
+      //to force this component update by changing key
+      listDetailKey: 0,
     }
   },
   methods: {
+    setMapCenter(location) {
+      this.mapInstance.map.setCenter(location);
+    },
     /**
      * IF UPDATE USER POSITION, MUST USE THIS METHOD!
      * IF CHANGE THE ATTRIBUTE DIRECTLY, NO CHANGE WILL HAPPEN.
@@ -133,32 +154,41 @@ export default {
     freshUserLocation() {
       //Check if support this feature
       if (navigator.geolocation) {
-        //Set the callback function
-        navigator.geolocation.getCurrentPosition((position) => {
-          //If success
+        //success callback function
+        const successCallback = (position) => {
           //update user location
           this.userLocation = {
             lat: position.coords.latitude,
             lng: position.coords.longitude
           }
+
           //If it doesn't initialize, firstly request restaurant data and set refer for mapInstance
           if (!this.ifInitialized) {
             this.loadRecentRestaurant("");
             this.ifInitialized = true;
             this.mapInstance = this.$refs.mapInstance;
+            this.setMapCenter(this.userLocation);
+
+            //register location watcher
+            navigator.geolocation.watchPosition(successCallback, errorCallback);
+
             //close loading page
             this.$loading({
               fullscreen: true
             }).close();
           }
           this.freshUserMarkerOptions();
+          //if it is in direction model
+          if (this.directionModel) {
+            this.setMapCenter(this.userLocation)
+          }
 
           //store location for further usage
           StorageUtil.set(Constants.STORAGE_USER_LOCATION_LATITUDE, this.userLocation.lat)
           StorageUtil.set(Constants.STORAGE_USER_LOCATION_LONGITUDE, this.userLocation.lng)
-
           //If error
-        }, (error) => {
+        }
+        const errorCallback = (error) => {
           let errorMessage = '';
           switch (error.code) {
             case error.PERMISSION_DENIED:
@@ -172,7 +202,10 @@ export default {
               break;
           }
           ElMessageBox.alert(errorMessage, 'Error');
-        });
+        }
+
+        //Set the callback function
+        navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
       }
     },
     /**
@@ -182,6 +215,10 @@ export default {
     selectOptionChange(type) {
       this.loadRecentRestaurant(type);
       this.listShowState = true;
+      //quit direction model
+      this.directionModel = false;
+      this.setMapCenter(this.userLocation);
+
       //call sub component method
       this.$refs.cuisineList.changeInfoWindow("list");
     },
@@ -190,8 +227,13 @@ export default {
      * @param type Type of restaurant, like America, British
      */
     async loadRecentRestaurant(type) {
+      this.loadingState.listDetailWindow = true;
       let response = await GoogleMapPlaceService.getRestaurantWithKeywordInOneMile(this.userLocation, type);
       this.restaurantData.items = response.data.results;
+      this.loadingState.listDetailWindow = false;
+
+      //force update
+      this.listDetailKey++
     },
     /**
      * What happens, if one restaurant marker get clicked
@@ -199,9 +241,11 @@ export default {
      */
     markerClick(item) {
       this.listShowState = true;
-      this.mapInstance.map.panTo(item.geometry.location);
+      this.setMapCenter(item.geometry.location);
       this.restaurantData.detailPlaceId = item.place_id;
       this.$refs.cuisineList.changeInfoWindow("detail", item);
+      //quit direction model
+      this.directionModel = false;
     },
     /**
      * when place-id-change event happens, the script runs.
@@ -209,6 +253,8 @@ export default {
      */
     onCuisineListChangePlaceId(data) {
       this.restaurantData.detailPlaceId = data;
+      //quit direction model
+      this.directionModel = false;
     },
     /**
      * when direction-request event happens, the script runs.
@@ -219,6 +265,8 @@ export default {
         this.directionRender.setMap(this.mapInstance.map)
       }
       this.directionRender.setDirections(direction);
+      this.listShowState = false;
+      this.directionModel = true;
     }
   },
   /**
@@ -252,9 +300,5 @@ export default {
   position: absolute;
   top: 5%;
   right: 5%;
-}
-
-.app-cuisine-list {
-  /*max-height: 50%;*/
 }
 </style>
