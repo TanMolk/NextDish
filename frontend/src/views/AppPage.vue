@@ -37,7 +37,7 @@
       class="cuisine-select-wrapper"
       @option-change="selectOptionChange"
   />
-  <CuisineList
+  <CuisineWindow
       :key="listDetailKey"
       v-loading="loadingState.listDetailWindow"
       ref="cuisineList"
@@ -56,7 +56,7 @@
 import {GoogleMap, Marker, CustomMarker, Circle} from 'vue3-google-map'
 import {mileToMeter} from "@/utils/MileUtil";
 import CuisineTypeSelect from "@/components/CuisineTypeSelect.vue";
-import CuisineList from "@/components/CuisineList.vue";
+import CuisineWindow from "@/components/CuisineWindow.vue";
 import Constants from "@/constants/Constants";
 import GoogleMapPlaceService from "@/service/GoogleMapPlaceService";
 import {ElMessageBox} from 'element-plus';
@@ -77,7 +77,7 @@ export default {
       }
     }
   },
-  components: {CuisineList, CuisineTypeSelect, GoogleMap, Marker, CustomMarker, Circle},
+  components: {CuisineWindow, CuisineTypeSelect, GoogleMap, Marker, CustomMarker, Circle},
   data() {
     return {
       // To store the Google map instance
@@ -124,7 +124,7 @@ export default {
   },
   methods: {
     setMapCenter(location) {
-      this.mapInstance.map.setCenter(location);
+      this.mapInstance.map.panTo(location);
     },
     /**
      * IF UPDATE USER POSITION, MUST USE THIS METHOD!

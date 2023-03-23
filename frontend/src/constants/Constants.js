@@ -8,12 +8,17 @@ let GOOGLE_MAP_API_KEY;
 
 if (MODE === "production") {
     //production environment
+    GOOGLE_MAP_ID = "1232131";
+    GOOGLE_MAP_API_KEY = "1321321312312";
 
 } else {
     //not production
     GOOGLE_MAP_ID = import.meta.env.VITE_GOOGLE_MAP_ID;
     GOOGLE_MAP_API_KEY = import.meta.env.VITE_GOOGLE_MAP_API_KEY;
 }
+
+console.log(GOOGLE_MAP_ID)
+console.log(GOOGLE_MAP_API_KEY)
 
 
 //local storage constants

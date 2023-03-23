@@ -1,5 +1,5 @@
 <!--
- @Name CuisineList
+ @Name CuisineWindow
  @Description The list/detail window
  @author Wei Tan
  @createDate 2023/03/12
@@ -49,7 +49,7 @@ import CuisineListItem from "@/components/CuisineListItem.vue";
 import CuisineDetail from "@/components/CuisineDetail.vue";
 
 export default {
-  name: "CuisineList",
+  name: "CuisineWindow",
   components: {CuisineDetail, CuisineListItem, InfiniteList},
   props: {
     //all data of list
