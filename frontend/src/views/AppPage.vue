@@ -123,8 +123,18 @@ export default {
     }
   },
   methods: {
+    /**
+     * set the center of Map to user location
+     * set condition to make sure mapInstance is not null
+     * set time out to avoid calling this method before mapInstance is properly installed
+     * @param location user location
+     */
     setMapCenter(location) {
-      this.mapInstance.map.panTo(location);
+      setTimeout(() => {
+        if (this.mapInstance && this.mapInstance.map) {
+          this.mapInstance.map.panTo(location);
+        }
+      }, 50);
     },
     /**
      * IF UPDATE USER POSITION, MUST USE THIS METHOD!
