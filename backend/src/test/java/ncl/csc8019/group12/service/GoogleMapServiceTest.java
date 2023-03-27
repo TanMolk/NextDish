@@ -1,7 +1,8 @@
 package ncl.csc8019.group12.service;
 
-import com.alibaba.fastjson.JSONObject;
+
 import ncl.csc8019.group12.BackendApplication;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.annotation.Resource;
 
 /**
- * @author wei tan
+ * @author Pulei, Rachel & Wei
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = BackendApplication.class)

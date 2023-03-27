@@ -1,9 +1,10 @@
 package ncl.csc8019.group12.service;
 
-import com.alibaba.fastjson.JSONObject;
+
 import ncl.csc8019.group12.exception.ExternalAPIException;
 import ncl.csc8019.group12.exception.ExternalAPIParamsException;
 import ncl.csc8019.group12.exception.ExternalAPIResponseException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -16,7 +17,7 @@ import java.util.Map;
 /**
  * Functions of Google map provides
  *
- * @author wei tan
+ * @author Pulei, Rachel & Wei
  */
 @Service
 public class GoogleMapService {
@@ -77,11 +78,10 @@ public class GoogleMapService {
         requestParams.forEach(urlBuilder::queryParam);
 
         String json = restTemplate.getForObject(urlBuilder.build().encode().toString(), String.class);
-        JSONObject jsonObject = JSONObject.parseObject(json);
+        JSONObject jsonObject = new JSONObject(json);
 
         //if response is empty or status of response is not "ok", throw exception
-        if (jsonObject == null
-                || !"OK".equalsIgnoreCase(jsonObject.getString(ResponseFieldEnum.STATUS.name))) {
+        if (!"OK".equalsIgnoreCase(jsonObject.getString(ResponseFieldEnum.STATUS.name))) {
             throw new ExternalAPIResponseException(json);
         }
 

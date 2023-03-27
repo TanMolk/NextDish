@@ -15,8 +15,9 @@ repositories {
 dependencies {
     //spring
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    //fastjson
-    implementation 'com.alibaba:fastjson:2.0.23'
+    //json
+    implementation 'org.json:json:20230227'
+
 
     //test
     testImplementation 'junit:junit:4.13.1'
