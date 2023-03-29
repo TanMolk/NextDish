@@ -54,13 +54,12 @@
 </template>
 
 <script>
-import InfiniteList from 'vue3-infinite-list';
 import CuisineListItem from "@/components/CuisineListItem.vue";
 import CuisineDetail from "@/components/CuisineDetail.vue";
 
 export default {
   name: "CuisineWindow",
-  components: {CuisineDetail, CuisineListItem, InfiniteList},
+  components: {CuisineDetail, CuisineListItem},
   props: {
     //list loading state
     listLoadingState: Boolean,
