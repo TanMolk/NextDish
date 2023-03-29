@@ -13,6 +13,26 @@
       :zoom="14"
       :disable-default-ui="true"
   >
+    <!----------------------Control-------------------->
+    <CustomControl
+        position="TOP_CENTER"
+    >
+      <ElButton
+          v-show="directionModel"
+          @click="
+          directionModel = false;
+          setMapCenter(userLocation);
+          mapInstance.map.setZoom(14);
+          "
+          style="margin-top: 2em">
+        Exit Direction
+      </ElButton>
+    </CustomControl>
+    <!----------------------Control End---------------->
+
+
+    <!----------------------Markers-------------------->
+
     <CustomMarker
         :options="userMarkerOption"
     >
@@ -21,9 +41,8 @@
     <Circle
         :options="userCircleOption"
     />
-
     <Marker
-        v-for="item in restaurantData.items"
+        v-for="item in restaurantData.showingItems"
         :options="{
           label: item.name,
           position: item.geometry.location,
@@ -32,6 +51,7 @@
         }"
         @click="markerClick(item)"
     />
+    <!------------------Markers End-------------------->
   </GoogleMap>
   <CuisineTypeSelect
       class="cuisine-select-wrapper"
@@ -39,21 +59,23 @@
   />
   <CuisineWindow
       :key="listDetailKey"
-      v-loading="loadingState.listDetailWindow"
       ref="cuisineList"
       v-show="listShowState"
       :map-instance="mapInstance"
-      :items="restaurantData.items"
+      :items="restaurantData.showingItems"
       :place-id="restaurantData.detailPlaceId"
+      :list-loading-state="listDetailWindowStates.windowShow"
+      :list-no-more-state="listDetailWindowStates.noMoreData"
       class="app-cuisine-list"
       @click-X="this.listShowState = false"
       @place-id-change="onCuisineListChangePlaceId($event)"
       @direction-request="onDirectionRequest($event)"
+      @load-more-data="showMoreRestaurants"
   />
 </template>
 
 <script>
-import {GoogleMap, Marker, CustomMarker, Circle} from 'vue3-google-map'
+import {GoogleMap, Marker, Circle, CustomMarker, CustomControl} from 'vue3-google-map'
 import {mileToMeter} from "@/utils/MileUtil";
 import CuisineTypeSelect from "@/components/CuisineTypeSelect.vue";
 import CuisineWindow from "@/components/CuisineWindow.vue";
@@ -64,6 +86,7 @@ import StorageUtil from "@/utils/StorageUtil";
 
 export default {
   name: "AppPage",
+  components: {CuisineWindow, CuisineTypeSelect, GoogleMap, Marker, CustomMarker, Circle, CustomControl},
   computed: {
     Constants() {
       return Constants
@@ -71,13 +94,15 @@ export default {
   },
   watch: {
     directionModel(newVar) {
-      if (!newVar) {
+      //if in direction model
+      if (newVar) {
+
+      } else {
         //remove direction
         this.directionRender.setDirections({routes: []});
       }
     }
   },
-  components: {CuisineWindow, CuisineTypeSelect, GoogleMap, Marker, CustomMarker, Circle},
   data() {
     return {
       // To store the Google map instance
@@ -91,10 +116,15 @@ export default {
       },
       // restaurant data set
       restaurantData: {
+        //items of showing restaurants
+        showingItems: [],
         //items of all restaurants
-        items: [],
+        allItems: [],
         //data of the detail windows
         detailPlaceId: null
+      },
+      mapOption: {
+        zoom: 14,
       },
       //user marker option
       userMarkerOption: {
@@ -115,8 +145,9 @@ export default {
       //if user use direction
       directionModel: false,
       //loadingState
-      loadingState: {
-        listDetailWindow: false,
+      listDetailWindowStates: {
+        windowShow: false,
+        noMoreData: false
       },
       //to force this component update by changing key
       listDetailKey: 0,
@@ -237,10 +268,15 @@ export default {
      * @param type Type of restaurant, like America, British
      */
     async loadRecentRestaurant(type) {
-      this.loadingState.listDetailWindow = true;
+      this.listDetailWindowStates.windowShow = true;
       let response = await GoogleMapPlaceService.getRestaurantWithKeywordInOneMile(this.userLocation, type);
-      this.restaurantData.items = response.data.results;
-      this.loadingState.listDetailWindow = false;
+
+      //get all restaurants
+      this.restaurantData.allItems = response.data.results;
+      //render the first 10 restaurants
+      this.restaurantData.showingItems = this.restaurantData.allItems.slice(0, 10);
+
+      this.listDetailWindowStates.windowShow = false;
 
       //force update
       this.listDetailKey++
@@ -277,6 +313,16 @@ export default {
       this.directionRender.setDirections(direction);
       this.listShowState = false;
       this.directionModel = true;
+    },
+    showMoreRestaurants() {
+      let allItems = this.restaurantData.allItems;
+      let showingItems = this.restaurantData.showingItems;
+
+      this.restaurantData.showingItems = allItems.slice(0, showingItems.length + 10);
+
+      if (allItems.length === this.restaurantData.showingItems.length) {
+        this.listDetailWindowStates.noMoreData = true;
+      }
     }
   },
   /**

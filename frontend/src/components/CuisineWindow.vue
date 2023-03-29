@@ -18,20 +18,30 @@
     </div>
 
     <div class="list-wrapper">
-      <!--      todo fix scroll bug-->
-      <InfiniteList
-          v-show="infoShowState"
-          :width="'100%'"
-          :height="'100%'"
-          :data="items"
-          :itemSize="100"
-          v-slot="{item,index}"
+      <ul
+          style="padding: 0;"
+          v-loading="listLoadingState"
+          v-infinite-scroll="loadMoreData"
+          :infinite-scroll-disabled="listNoMoreState"
       >
-        <CuisineListItem
-            :info="item"
-            @click="changeInfoWindow('detail',item)"
-        />
-      </InfiniteList>
+        <li
+            style="list-style: none;"
+            v-for="item in items"
+            v-show="infoShowState"
+        >
+          <CuisineListItem
+              style="margin-top: 10px"
+              :info="item"
+              @click="changeInfoWindow('detail',item)"
+          />
+        </li>
+        <li
+            style="margin-top: 10px"
+            v-show="listNoMoreState"
+        >
+          <span style="font-weight: bolder;">No more</span>
+        </li>
+      </ul>
       <CuisineDetail
           :map-instance="mapInstance"
           :place-id="placeIdForDetail"
@@ -52,6 +62,9 @@ export default {
   name: "CuisineWindow",
   components: {CuisineDetail, CuisineListItem, InfiniteList},
   props: {
+    //list loading state
+    listLoadingState: Boolean,
+    listNoMoreState: Boolean,
     //all data of list
     items: Array,
     //data of detail
@@ -96,6 +109,9 @@ export default {
       } else if (type === "list") {
         this.infoShowState = true;
       }
+    },
+    loadMoreData() {
+      this.$emit("load-more-data");
     }
   }
 }
@@ -107,9 +123,7 @@ export default {
 }
 
 .li-wrapper {
-  display: grid;
-  grid-template-rows: 10% 90%;
-
+  overflow: auto;
 
   position: absolute;
   height: var(--restaurants-list-detail-window-height);
@@ -124,12 +138,7 @@ export default {
 }
 
 .header {
-  grid-row: 1;
   line-height: 5vh;
-}
-
-.list-wrapper {
-  grid-row: 2;
 }
 
 .title {
