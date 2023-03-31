@@ -15,6 +15,13 @@
             class="button">
       Start exploring
     </button>
+<!--    <video-->
+<!--        autoplay-->
+<!--        loop-->
+<!--        class="background-video"-->
+<!--    >-->
+<!--      <source src="@/assets/video/portal-video.mp4" type="video/mp4"/>-->
+<!--    </video>-->
   </div>
 </template>
 
@@ -86,5 +93,12 @@ export default {
 
 .button:focus {
   background-color: #b7abab;
+}
+
+.background-video {
+  width: 100%;
+  height: 100%;
+
+  z-index: -999;
 }
 </style>

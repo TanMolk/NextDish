@@ -34,6 +34,7 @@
     <!----------------------Markers-------------------->
 
     <CustomMarker
+        user-guidance-step="2"
         :options="userMarkerOption"
     >
       <img style="opacity: 0.7;width: 2em;height: 2em" src="@/assets/me.png" alt="me"/>
@@ -54,6 +55,7 @@
     <!------------------Markers End-------------------->
   </GoogleMap>
   <CuisineTypeSelect
+      user-guidance-step="1"
       class="cuisine-select-wrapper"
       @option-change="selectOptionChange"
   />
@@ -72,6 +74,7 @@
       @direction-request="onDirectionRequest($event)"
       @load-more-data="showMoreRestaurants"
   />
+  <v-tour name="userGuidance" :steps="steps"></v-tour>
 </template>
 
 <script>
@@ -151,6 +154,24 @@ export default {
       },
       //to force this component update by changing key
       listDetailKey: 0,
+
+      //user guidance steps
+      steps: [
+        {
+          target: '[user-guidance-step="1"]',
+          params: {
+            highlight: true
+          },
+          content: 'Step 1'
+        },
+        {
+          target: '[user-guidance-step="2"]',
+          params: {
+            highlight: true
+          },
+          content: 'Step 2'
+        }
+      ]
     }
   },
   methods: {
@@ -328,16 +349,23 @@ export default {
   /**
    * Event when all dom nodes get created
    */
-  created() {
+  beforeMount() {
     //show loading
     this.$loading({
       fullscreen: true
     });
     //If it gets location successfully, the loading will disappear.
     this.freshUserLocation();
-
-    //set first entrance flag,if it doesn't exist
+  },
+  mounted() {
+    //Set first entrance flag ,if it doesn't exist
+    console.log(!StorageUtil.get(Constants.STORAGE_IS_USER_FIRST_USER_STAT))
     if (!StorageUtil.get(Constants.STORAGE_IS_USER_FIRST_USER_STAT)) {
+
+      //start tour
+      // this.$tours['userGuidance'].start()
+
+      //if it is the first time, show the user guidance
       StorageUtil.set(Constants.STORAGE_IS_USER_FIRST_USER_STAT, "false");
     }
   }
