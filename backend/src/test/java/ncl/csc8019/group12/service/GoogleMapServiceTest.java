@@ -2,6 +2,7 @@ package ncl.csc8019.group12.service;
 
 
 import ncl.csc8019.group12.BackendApplication;
+import ncl.csc8019.group12.pojo.Location;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
@@ -22,11 +23,22 @@ public class GoogleMapServiceTest {
     private GoogleMapService googleMapService;
 
     @Test
-    public void testExample() {
+    public void testGetPlaceDetail() {
         String placeId = "ChIJE-u-MMpwfkgRe5igEnexTN0";
-        JSONObject jsonObject = googleMapService.exampleHowToUse(placeId);
+        JSONObject jsonObject = googleMapService.getPlaceDetail(placeId);
         Assert.assertNotNull(jsonObject);
 
         System.out.println(jsonObject);
+    }
+
+    @Test
+    public void testGetNearByPlaceWithLocation() {
+        Location currentLocation = new Location(54.9733004, -1.6218502);
+
+        JSONObject places = googleMapService.getNearByPlaceWithLocation(currentLocation, 1600, "");
+        Assert.assertNotNull(places);
+
+        System.out.println(places);
+        System.out.println(places.length());
     }
 }
