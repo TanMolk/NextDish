@@ -344,6 +344,12 @@ export default {
 }
 </script>
 
+<style>
+.el-message-box {
+  box-sizing: border-box;
+}
+</style>
+
 <style scoped>
 .map {
   width: 100vw;
@@ -351,7 +357,6 @@ export default {
   color: #d7dbdf;
 
 }
-
 .cuisine-select-wrapper {
   position: absolute;
   top: 5%;

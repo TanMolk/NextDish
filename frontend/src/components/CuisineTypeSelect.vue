@@ -30,7 +30,7 @@ export default {
 <style scoped>
 .cuisine-select-wrapper {
   height: 3em;
-  width: 5em;
+  width: 6em;
   border-radius: 1em;
 }
 
