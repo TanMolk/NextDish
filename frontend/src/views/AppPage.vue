@@ -387,7 +387,7 @@ export default {
 }
 .cuisine-select-wrapper {
   position: absolute;
-  top: 5%;
-  right: 5%;
+  top: 44%;
+  left: 5%;
 }
 </style>
