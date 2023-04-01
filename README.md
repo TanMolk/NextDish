@@ -1,132 +1,88 @@
 # CSC8019 Group Coursework
 
 ---
+
 ## Abstract
 
-## Code Standard
-```text
-Naming convention
+It is aim to store code source for the whole project. This project's architecture is **Anteroposterior end separation**.
 
-1. All name should try to contain more information
-Bad example: method1, param1
-Good example: getCarWithColor, studentName.
+## Technology stacks
 
-2. File name should be PascalCase
-Bad example: usercontroller.java
-Good example: UserController.java
-
-3. Name of method, variable should be camelCase
-Bad example: Params, ThisisAMeTHod
-Good example for method: queryUserDataWithId
-Good example for variable: studentName, locationOfUser
-Good example for constants variable: USER_API_KEY
-
-4. Try to write much information to describe the author, the purpose, the aim and return of a class, a method or a variable.
-
-Code Quality
-
-1. All function should be tested by unit test (normal case, exception case)
-2. Try to solve problems IntelliJ tells and SonarLint tells (Please install sonarlint plugin firstly, could find in setting -> plugins)
-```
-
-
-## Backend
-
-### Technology stack
+- **Backend**
 
 | Name       | Version |
 |------------|---------|
 | Springboot | 2.7.9   |
 
-### Structure
-
-```text
-src
-|____test
-| |____java
-| | |____ncl.csc8019.group12
-|____main
-| |____resources
-| | |____application.yaml
-| |____java
-| | |____ncl.csc8019.group12
-| | | | | |____controller
-| | | | | |____service
-| | | | | |____BackendApplication.java
-```
-
-### Run Backend Server
-
-#### With IntelliJ
-
-1. First delete ":test" of Key in application.yami located in resources folder,
-   then find the "BackendApplication.java" and press run button next to main method 
-   and run it. It will show errors. This action aims to get this thing below.
-   <img height="300" width="500" src="./static/Run-Backend-1.png" />
-
-2. Then set environment variable with following steps
-   <br>
-   <img height="300" width="500" src="./static/Run-Backend-2.png" />
-   <br>
-   <img height="300" width="500" src="./static/Run-Backend-3.png" />
-   <br>
-   <img height="300" width="500" src="./static/Run-Backend-4.png" />
-   <br>
-   <img height="300" width="500" src="./static/Run-Backend-5.png" />
-   <br>
-3. Then run this backend application again.
-
-** The Google Map API key should have **Places API and Directions API** permissions.
-** If run unit test, you should follow this steps for these configurations again.
-
-## Frontend
-
-### Technology stack
+- **Frontend**
 
 | Name | Version |
 |------|---------|
 | Vue  | 3.2.47  |
 
-### Structure
+## File Structure
+
+- **Backend**
+
+```text
+src
+|____test (store unit test)
+|____main (store main code)
+| |____resources
+| | |____application.yaml (environment configuration file)
+| |____java (main java code)
+| | |____ncl.csc8019.group12 (all code in this package)
+| | | | | |____BackendApplication.java (backend entrance)
+```
+
+- **Frontend**
 
 ```text
 frontend
-|____index.html
-|____vite.config.js
+|____index.html (frontend entrance)
+|____vite.config.js (vite configuration)
 |____public
-| |____favicon.ico
-|____package-lock.json
-|____package.json
-|____.env
-|____src
-| |____main.js
-| |____App.vue
-| |____assets
-| |____constants
-| |____components
-| |____service
-| |____utils
-| |____views
-| |____router
-| | |____index.js
+| |____favicon.ico (web page icon)
+|____package.json (dependency config)
+|____.env (environment configuration)
+|____src (all source code of frontend)
 ```
 
-### Run Frontend Server
+## Code Standard
 
-#### With IntelliJ
+### Naming convention
 
-1. Make sure you have installed node.js (18.15.0 LTS or more higher) [node.js](https://nodejs.org)
-2. Fill the Google map api key in [.env](./frontend/.env) VITE_GOOGLE_MAP_API_KEY, this map api key should have permission for *
-   *Maps JavaScript API**
-3. Run with below shell
+1. All name should try to contain more information
+   Bad example: method1, param1
+   Good example: getCarWithColor, studentName.
 
-```shell
-# Get into frontend dictory
-cd frontend
+2. File name should be PascalCase
+   Bad example: usercontroller.java
+   Good example: UserController.java
 
-# Install dependency
-npm install
+3. Name of method, variable should be camelCase
+   Bad example: Params, ThisisAMeTHod
+   Good example for method: queryUserDataWithId
+   Good example for variable: studentName, locationOfUser
+   Good example for constants variable: USER_API_KEY
 
-# Run frontend
-npm run dev
-```
+4. Try to write much information to describe the author, the purpose, the aim and return of a class, a method or a
+   variable.
+
+### Code Quality
+
+1. All function should be tested by unit test (normal case, exception case)
+2. Try to solve problems IntelliJ tells and SonarLint tells (Please install sonarlint plugin firstly, could find in
+   setting -> plugins)
+
+### Others:
+
+1. Api should follow restful style. [Restful](https://www.redhat.com/en/topics/api/what-is-a-rest-api)
+
+## Run server
+
+You should start backend server firstly and then start frontend
+
+[Run Backend](./docs/Start_Backend.md)
+
+[Run Frontend](./docs/Start_Frontend.md)

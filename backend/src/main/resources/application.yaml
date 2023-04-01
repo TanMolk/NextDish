@@ -1,12 +1,4 @@
-#spring:
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: ${C8019_BACKEND_DATABASE_URL}
-#    username: ${C8019_BACKEND_DATABASE_USERNAME}
-#    password: ${C8019_BACKEND_DATABASE_PASSWORD}
-
 google:
   cloud:
     map:
-      #      1. get from environment 2.default as test
-      key: ${C8019_BACKEND_GOOGLE_MAP_KEY:test}
+      key: FILL_WITH_YOU_API_KEY_OF_GOOGLE_MAP
