@@ -34,7 +34,7 @@ public class PlaceController {
      * If the priority of params is nextPageToken > location and keyword.
      * If the hash calculated by all request params is contained in cache, will return the cached response.
      *
-     * @param location      location format is like
+     * @param location      location format is like 11.1111,-12,123
      * @param keyword       keyword of nearby places
      * @param nextPageToken the nextPageToken returned
      * @return Places data
@@ -43,8 +43,9 @@ public class PlaceController {
     public String nearByPlaces(@RequestParam(required = false) String location,
                                @RequestParam(required = false) String keyword,
                                @RequestParam(required = false) String nextPageToken) {
+        //avoid the same request
         if (nextPageToken != null) {
-            String cache = cacheService.getCachedResponse(keyword);
+            String cache = cacheService.getCachedResponse(nextPageToken);
             //get data from cache
             if (cache != null) {
                 return cache;
