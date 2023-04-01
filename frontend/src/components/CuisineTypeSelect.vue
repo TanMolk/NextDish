@@ -4,6 +4,7 @@
       v-model="selectedOptionValue"
       @change="optionChange()"
   >
+    <option disabled value="">Filter by</option>
     <option v-for="type in types">
       {{ type }}
     </option>
@@ -16,7 +17,7 @@ export default {
   data() {
     return {
       types: ["All", "American", "British", "Chinese", "Indian", "Italian", "Thai"],
-      selectedOptionValue: "All"
+      selectedOptionValue: ''
     }
   },
   methods: {
@@ -28,10 +29,14 @@ export default {
 </script>
 
 <style scoped>
-.cuisine-select-wrapper {
+select {
   height: 3em;
   width: 6em;
   border-radius: 1em;
+  text-align-last: center;
+  font-size: 1em;
+  background: coral;
+  color: white;
 }
 
 @media screen and (min-width: 480px) {
