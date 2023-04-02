@@ -55,6 +55,7 @@
     <!------------------Markers End-------------------->
   </GoogleMap>
   <CuisineTypeSelect
+      v-show="listShowState"
       user-guidance-step="1"
       class="cuisine-select-wrapper"
       @option-change="selectOptionChange"
@@ -144,7 +145,7 @@ export default {
       //flag of the page initialized state
       ifInitialized: false,
       //the flag of showing the list/detail window
-      listShowState: false,
+      listShowState: true,
       //if user use direction
       directionModel: false,
       //loadingState
@@ -387,7 +388,17 @@ export default {
 }
 .cuisine-select-wrapper {
   position: absolute;
-  top: 44%;
-  left: 5%;
+  top: 5%;
+  right: 5%;
 }
+
+@media screen and (max-width: 480px) {
+  .cuisine-select-wrapper {
+    position: absolute;
+    top: 42.5%;
+    left: 5%;
+    width: 50%;
+  }
+}
+
 </style>
