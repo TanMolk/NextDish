@@ -30,17 +30,16 @@ export default {
 
 <style scoped>
 select, select option{
-  height: 3em;
+  height: 2.5em;
   width: 6em;
   border-radius: 3em;
   border-width: 0;
-  text-align: center;
-  font-size: 1em;
-  background: coral;
+  background: #F38B0C;
   color: white;
-  font-family: sans-serif;
-  font-weight: bold;
-  outline: none;
+  text-align: center;
+  font-size: 1.2em;
+  font-family: Inter;
+  font-weight: 400;
 }
 
 @media screen and (min-width: 480px) {
@@ -48,7 +47,7 @@ select, select option{
     width: 15%;
   }
   select:hover{
-    background: #e17350;
+    background: #d76f0c;
   }
 }
 

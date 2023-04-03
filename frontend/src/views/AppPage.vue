@@ -87,6 +87,7 @@ import Constants from "@/constants/Constants";
 import GoogleMapPlaceService from "@/service/GoogleMapPlaceService";
 import {ElMessageBox} from 'element-plus';
 import StorageUtil from "@/utils/StorageUtil";
+import {h} from 'vue';
 
 export default {
   name: "AppPage",
@@ -255,7 +256,7 @@ export default {
           let errorMessage = '';
           switch (error.code) {
             case error.PERMISSION_DENIED:
-              errorMessage = "Please allow location service in site setting"
+              errorMessage = "This app cannot accessed without enabling location tracking"
               break;
             case error.POSITION_UNAVAILABLE:
               errorMessage = "Location information is unavailable"
@@ -264,7 +265,27 @@ export default {
               errorMessage = "The request to get location timed out"
               break;
           }
-          ElMessageBox.alert(errorMessage, 'Error');
+          ElMessageBox({
+            title:'',
+            message: h('p',{style: 'color: white'},[
+                h('span', {style: 'font-family: inter'},[
+                    h('span',{style: 'font-weight: 400'},[
+                        h('span', {style: 'font-size: 1.5em'},errorMessage)
+                    ])
+                ])
+            ]),
+            customClass:'locationServiceAlert',
+            confirmButtonClass:'confirmButton',
+            showClose:false,
+            center:true,
+            buttonSize:"large",
+            closeOnClickModal:false,
+            showConfirmButton:true,
+            autofocus:false,
+          })
+              //Rerun freshUserLocation after user tap confirm button
+              //without fresh the page after allow geolocation in browser
+              .then(() => {this.freshUserLocation()})
         }
 
         //Set the callback function
@@ -374,9 +395,24 @@ export default {
 </script>
 
 <style>
-.el-message-box {
+.el-message-box{
   box-sizing: border-box;
+  background: #034BFC;
+  border-width: 0;
+  text-align-last: center;
 }
+
+.confirmButton{
+  background: #F38B0C;
+  outline:none;
+  font-weight: bold;
+  border-width: 0;
+}
+
+.confirmButton:hover{
+  background: #d76f0c;
+}
+
 </style>
 
 <style scoped>
@@ -391,7 +427,6 @@ export default {
   top: 5%;
   right: 5%;
 }
-
 @media screen and (max-width: 480px) {
   .cuisine-select-wrapper {
     position: absolute;
@@ -400,5 +435,4 @@ export default {
     width: 50%;
   }
 }
-
 </style>
