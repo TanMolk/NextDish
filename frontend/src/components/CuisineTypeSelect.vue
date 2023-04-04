@@ -5,7 +5,9 @@
       @change="optionChange()"
   >
     <option value="" disabled selected hidden>Filter by</option>
-    <option v-for="type in types">
+    <option
+        class="cuisine-select-option"
+        v-for="type in types">
       {{ type }}
     </option>
   </select>
@@ -29,29 +31,46 @@ export default {
 </script>
 
 <style scoped>
-select, select option{
-  height: 2.5em;
-  width: 6em;
-  border-radius: 3em;
+select{
+  height: 45px;
+  width: 180px;
+  border-radius: 5px;
   border-width: 0;
-  background: #F38B0C;
+  background: #0050F8;
   color: white;
   text-align: center;
   font-size: 1.2em;
-  font-family: Inter;
+  font-family: sans-serif;
   font-weight: 400;
+  -webkit-appearance: none;
 }
+
+select option{
+  background: #0050F8;
+  text-align: center;
+  border-radius: 1em;
+}
+
+select:focus{
+  outline: none;
+}
+
 
 @media screen and (min-width: 480px) {
   .cuisine-select-wrapper {
     width: 15%;
   }
-  select:hover{
-    background: #d76f0c;
+  select:focus{
+    background: #A4B0BE 70%;
   }
 }
 
 @media screen and (max-width: 480px) {
-
+  .cuisine-select-wrapper{
+    text-align: center;
+  }
+  .cuisine-select-option{
+    text-align: center;
+  }
 }
 </style>

@@ -403,14 +403,14 @@ export default {
 }
 
 .confirmButton{
-  background: #F38B0C;
+  background: #A4B0BE 70%;
   outline:none;
   font-weight: bold;
   border-width: 0;
 }
 
 .confirmButton:hover{
-  background: #d76f0c;
+  background: #A4B0BE 50%;
 }
 
 </style>
@@ -426,13 +426,5 @@ export default {
   position: absolute;
   top: 5%;
   right: 5%;
-}
-@media screen and (max-width: 480px) {
-  .cuisine-select-wrapper {
-    position: absolute;
-    top: 42.5%;
-    left: 5%;
-    width: 50%;
-  }
 }
 </style>
