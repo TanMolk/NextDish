@@ -47,26 +47,10 @@ export default defineConfig({
             output: {
                 manualChunks(id) {
                     if (id.includes('node_modules')) {
-                        const arr = id.toString().split('node_modules/')[1].split('/')
-                        switch (arr[0]) {
-                            case 'vue':
-                            case '@nutui/nutui':
-                            case 'element-plus':
-                            case 'vue3-google-map':
-                            case 'vue3-infinite-list':
-                                return '_' + arr[0]
-                            default :
-                                return '__vendor'
-                        }
+                        return id.toString().split('node_modules/')[1].split('/')[0].toString();
                     }
-                },
-                chunkFileNames: 'static/chunk/[name]-[hash].js',
-                entryFileNames: 'static/main/[name]-[hash].js',
-                assetFileNames: 'static/[ext]/[name]-[hash].[ext]'
-            },
-            brotliSize: false,
-            target: 'esnext',
-            minify: 'esbuild'
+                }
+            }
         }
     }
 });
