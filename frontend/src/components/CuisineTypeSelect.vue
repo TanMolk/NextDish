@@ -7,6 +7,9 @@
 <template>
   <select
       class="cuisine-select-wrapper"
+      :class="{'focused':isFocused}"
+      @mousedown="onMouseDown"
+      @blur="onBlur"
       v-model="selectedOptionValue"
       @change="optionChange()"
   >
@@ -25,19 +28,29 @@ export default {
   data() {
     return {
       types: ["All", "American", "British", "Chinese", "Indian", "Italian", "Thai"],
-      selectedOptionValue: ''
+      selectedOptionValue: '',
+      isFocused: false,
     }
   },
   methods: {
+    onMouseDown(){
+      this.isFocused = true;
+    },
+    onBlur(event){
+      if(!event.relatedTarget || !event.relatedTarget.classList.contains('custom-option')){
+      this.isFocused = false
+      }
+    },
     optionChange() {
       this.$emit("option-change", this.selectedOptionValue);
+      this.isFocused = false;
     }
   }
 }
 </script>
 
 <style scoped>
-select{
+.cuisine-select-wrapper{
   height: 45px;
   width: 180px;
   border-radius: 5px;
@@ -51,13 +64,13 @@ select{
   -webkit-appearance: none;
 }
 
-select option{
+.cuisine-select-wrapper option{
   background: #0050F8;
   text-align: center;
   border-radius: 1em;
 }
 
-select:focus{
+.cuisine-select-wrapper:focus{
   outline: none;
 }
 
@@ -66,7 +79,7 @@ select:focus{
   .cuisine-select-wrapper {
     width: 15%;
   }
-  select:focus{
+  .cuisine-select-wrapper.focused{
     background: #A4B0BE 70%;
   }
 }
