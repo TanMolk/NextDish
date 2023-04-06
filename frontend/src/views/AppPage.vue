@@ -55,7 +55,6 @@
     <!------------------Markers End-------------------->
   </GoogleMap>
   <CuisineTypeSelect
-      v-show="listShowState"
       user-guidance-step="1"
       class="cuisine-select-wrapper"
       @option-change="selectOptionChange($event)"
