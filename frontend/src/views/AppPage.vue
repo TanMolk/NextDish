@@ -212,7 +212,7 @@ export default {
         if (this.mapInstance && this.mapInstance.map) {
           this.mapInstance.map.panTo(location);
         }
-      }, 50);
+      }, 100);
     },
     /**
      * IF UPDATE USER POSITION, MUST USE THIS METHOD!
