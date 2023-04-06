@@ -1,3 +1,9 @@
+<!--
+ @Name CuisineTypeSelect
+ @Description Filter of cuisine
+ @author Ashton & Wei
+ @createDate 2023/03/12
+-->
 <template>
   <select
       class="cuisine-select-wrapper"
