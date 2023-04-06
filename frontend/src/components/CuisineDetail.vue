@@ -131,7 +131,7 @@
 
 <script>
 
-import GoogleMapPlaceService from "@/service/GoogleMapPlaceService";
+import PlaceService from "@/service/PlaceService";
 import StorageUtil from "@/utils/StorageUtil";
 import Constants from "@/constants/Constants";
 
@@ -161,12 +161,12 @@ export default {
   methods: {
     async getDetail() {
       if (this.placeId) {
-        let resp = await GoogleMapPlaceService.getPlaceDetail(this.placeId);
+        let resp = await PlaceService.getPlaceDetail(this.placeId);
         this.detail = resp.data.result;
         console.log(this.detail)
 
         for (const photo of this.detail.photos) {
-          GoogleMapPlaceService.getPlaceImage(photo)
+          PlaceService.getPlaceImage(photo)
               .then(resp => {
                 if (resp) {
                   const blob = new window.Blob([resp.data], {type: 'image/jpeg'})

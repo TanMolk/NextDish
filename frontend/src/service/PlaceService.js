@@ -7,10 +7,7 @@ import Constants from "@/constants/Constants";
 import {mileToMeter} from "@/utils/MileUtil";
 
 let http = axios.create({
-    baseURL: "/map-api",
-    params: {
-        key: Constants.GOOGLE_MAP_API_KEY
-    }
+    baseURL: Constants.API_GATEWAY
 });
 
 /**
@@ -19,7 +16,7 @@ let http = axios.create({
  * @param keyword keyword of aim restaurants
  */
 function getRestaurantWithKeywordInOneMile(location, keyword) {
-    return http.get("/place/nearbysearch/json",
+    return http.get("/place/nearby",
         {
             params: {
                 location: location.lat + "," + location.lng,
@@ -35,7 +32,7 @@ function getRestaurantWithKeywordInOneMile(location, keyword) {
  * @param placeReference place reference id that Google Api return
  */
 function getPlaceDetail(placeReference) {
-    return http.get("/place/details/json",
+    return http.get("/place/detail",
         {
             params: {
                 place_id: placeReference

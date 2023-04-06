@@ -41,4 +41,10 @@ public class GoogleMapServiceTest {
         System.out.println(places);
         System.out.println(places.length());
     }
+
+    @Test
+    public void testGetPhoto() {
+        String ref = "change_to_your_photo_reference";
+        Assert.assertNotNull(googleMapService.getPhoto(ref, 1600, 1600));
+    }
 }

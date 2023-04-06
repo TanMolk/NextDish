@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import GoogleMapPlaceService from "@/service/GoogleMapPlaceService";
+import PlaceService from "@/service/PlaceService";
 
 export default {
   name: "CuisineListItem",
@@ -45,7 +45,7 @@ export default {
   methods: {
     async loadImage() {
       if (this.info.photos) {
-        GoogleMapPlaceService.getPlaceImage(this.info.photos[0])
+        PlaceService.getPlaceImage(this.info.photos[0])
             .then(resp => {
               if (resp) {
                 const blob = new window.Blob([resp.data], {type: 'image/jpeg'})

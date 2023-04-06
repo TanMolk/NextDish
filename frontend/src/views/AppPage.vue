@@ -85,7 +85,7 @@ import {mileToMeter} from "@/utils/MileUtil";
 import CuisineTypeSelect from "@/components/CuisineTypeSelect.vue";
 import CuisineWindow from "@/components/CuisineWindow.vue";
 import Constants from "@/constants/Constants";
-import GoogleMapPlaceService from "@/service/GoogleMapPlaceService";
+import PlaceService from "@/service/PlaceService";
 import {ElLoading, ElMessageBox} from 'element-plus';
 import StorageUtil from "@/utils/StorageUtil";
 import {h} from 'vue';
@@ -339,7 +339,7 @@ export default {
      */
     async loadRecentRestaurant(type) {
       this.listDetailWindowStates.windowShow = true;
-      let response = await GoogleMapPlaceService.getRestaurantWithKeywordInOneMile(this.userLocation, type);
+      let response = await PlaceService.getRestaurantWithKeywordInOneMile(this.userLocation, type);
 
       //get all restaurants
       this.restaurantData.allItems = response.data.results;
