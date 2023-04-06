@@ -4,6 +4,7 @@ import ncl.csc8019.group12.pojo.Location;
 import ncl.csc8019.group12.service.CacheService;
 import ncl.csc8019.group12.service.GoogleMapService;
 import ncl.csc8019.group12.utils.DistanceUtil;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -88,5 +89,19 @@ public class PlaceController {
             cacheService.cacheResponse(response, placeId);
             return response;
         }
+    }
+
+    @GetMapping(
+            value = "/photo",
+            produces = MediaType.IMAGE_JPEG_VALUE)
+    public byte[] photo(@RequestParam String photoReference,
+                        @RequestParam int width,
+                        @RequestParam int height) {
+        byte[] photoBytes = cacheService.getPhotoCache(photoReference);
+        if (photoBytes == null) {
+            photoBytes = googleMapService.getPhoto(photoReference, width, height);
+            cacheService.cachePhoto(photoReference, photoBytes);
+        }
+        return photoBytes;
     }
 }

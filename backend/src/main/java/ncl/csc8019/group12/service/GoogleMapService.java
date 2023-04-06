@@ -20,6 +20,7 @@ import java.util.Map;
  *
  * @author Pulei, Rachel & Wei
  */
+
 @Service
 public class GoogleMapService {
 
@@ -61,8 +62,8 @@ public class GoogleMapService {
      * @return nearby places' brief information, max 60 places
      */
     public JSONObject getNearByPlaceWithLocation(Location location,
-                                                int radius,
-                                                String keyword) {
+                                                 int radius,
+                                                 String keyword) {
         String locationStr = location.getLatitude() + "," + location.getLongitude();
 
         Map<String, String> params = new HashMap<>();
@@ -87,6 +88,25 @@ public class GoogleMapService {
         Map<String, String> params = new HashMap<>();
         params.put(RequestFieldEnum.PAGE_TOKEN.name, nextPageToken);
         return baseRequest(APIPathEnum.NEARBY, params);
+    }
+
+    /**
+     * Get photo with photo reference
+     *
+     * @param photoReference photo reference, google api provided
+     * @param maxheight      max height the picture is, just for request photo from Google platform
+     * @param maxwidth       max with the picture is, just for request photo from Google platform
+     * @return photo bytes
+     */
+    public byte[] getPhoto(String photoReference, int maxheight, int maxwidth) {
+        Map<String, String> params = new HashMap<>();
+        params.put("photo_reference", photoReference);
+        params.put("maxheight", String.valueOf(maxheight));
+        params.put("maxwidth", String.valueOf(maxwidth));
+
+        String url = buildRequestUrl(APIPathEnum.PHOTO.path, params);
+
+        return restTemplate.getForObject(url, byte[].class);
     }
 
     /**
@@ -116,11 +136,9 @@ public class GoogleMapService {
         }
 
         //Build the request
-        requestParams.put(RequestFieldEnum.KEY.name, MAP_API_KEY);
-        UriComponentsBuilder urlBuilder = UriComponentsBuilder.fromHttpUrl(GOOGLE_APT_BASE_PATH + api.path);
-        requestParams.forEach(urlBuilder::queryParam);
+        String url = buildRequestUrl(api.path, requestParams);
 
-        String json = restTemplate.getForObject(urlBuilder.build().encode().toString(), String.class);
+        String json = restTemplate.getForObject(url, String.class);
         JSONObject jsonObject = new JSONObject(json);
 
         //if response is empty or status of response is not "ok", throw exception
@@ -129,6 +147,18 @@ public class GoogleMapService {
         }
 
         return jsonObject;
+    }
+
+    /**
+     * @param path          the uri
+     * @param requestParams get query parameters
+     * @return the request url
+     */
+    private String buildRequestUrl(String path, Map<String, String> requestParams) {
+        requestParams.put(RequestFieldEnum.KEY.name, MAP_API_KEY);
+        UriComponentsBuilder urlBuilder = UriComponentsBuilder.fromHttpUrl(GOOGLE_APT_BASE_PATH + path);
+        requestParams.forEach(urlBuilder::queryParam);
+        return urlBuilder.build().encode().toString();
     }
 
     /**
@@ -157,7 +187,14 @@ public class GoogleMapService {
                 new RequestFieldEnum[][]{
                         new RequestFieldEnum[]{
                                 RequestFieldEnum.PLACE_ID,
-                        }});
+                        }}),
+
+        /**
+         * <a href="https://developers.google.com/maps/documentation/places/web-service/photos">Photo</a>
+         */
+        PHOTO("/place/photo", null),
+
+        ;
 
         /**
          * Path for this api

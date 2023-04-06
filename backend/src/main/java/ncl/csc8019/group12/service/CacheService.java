@@ -2,6 +2,10 @@ package ncl.csc8019.group12.service;
 
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,8 +21,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class CacheService {
 
-    //Key: request params
-    //Value: the response
+    /**
+     * Key: request params
+     * Value: the response
+     */
     private final static Map<Integer, String> RESPONSE_CACHE_STORAGE = new ConcurrentHashMap<>();
 
     /**
@@ -39,5 +45,34 @@ public class CacheService {
      */
     public String getCachedResponse(Object... args) {
         return RESPONSE_CACHE_STORAGE.get(Objects.hash(args));
+    }
+
+    public void cachePhoto(String photoReference, byte[] data) {
+        File file = new File(photoReference + ".jpeg");
+        if (!file.exists()) {
+            try (
+                    FileOutputStream fos = new FileOutputStream(file);
+            ) {
+                fos.write(data, 0, data.length);
+                fos.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public byte[] getPhotoCache(String photoReference) {
+        File file = new File(photoReference + ".jpeg");
+        if (file.exists()) {
+            try (FileInputStream in = new FileInputStream(file)) {
+                byte[] data = new byte[in.available()];
+                in.read(data);
+                return data;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        return null;
     }
 }
