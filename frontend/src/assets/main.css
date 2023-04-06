@@ -14,3 +14,12 @@ body {
 .v-tour__target--highlighted {
     box-shadow: 0 0 0 99999px rgba(0, 0, 0, 0.87);
 }
+
+.custom-message-box {
+    /*Custom class for external component*/
+    --el-messagebox-title-color: #FFFFFF;
+    --el-messagebox-content-color: #FFFFFF;
+    --el-messagebox-font-size: 1.2em;
+
+    background-color: var(--application-normal-background-color);
+}

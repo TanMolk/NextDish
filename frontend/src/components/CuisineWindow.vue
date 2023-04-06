@@ -9,7 +9,7 @@
       class="li-wrapper"
   >
     <div class="header">
-      <span class="title">more details</span>
+      <span class="title">{{ title }}</span>
       <button
           class="exit"
           @click="clickX()"
@@ -19,25 +19,24 @@
 
     <div class="list-wrapper">
       <ul
-          style="padding: 0;"
+          style="padding: 0;margin-top: 0;"
           v-loading="listLoadingState"
           v-infinite-scroll="loadMoreData"
           :infinite-scroll-disabled="listNoMoreState"
       >
         <li
-            style="list-style: none;"
+            style="list-style: none;margin-top: 1px;"
             v-for="item in items"
-            v-show="infoShowState"
+            v-show="listShowState"
         >
           <CuisineListItem
-              style="margin-top: 10px"
               :info="item"
               @click="changeInfoWindow('detail',item)"
           />
         </li>
         <li
             style="margin-top: 10px"
-            v-show="listNoMoreState"
+            v-show="listShowState && listNoMoreState"
         >
           <span style="font-weight: bolder;">No more</span>
         </li>
@@ -46,7 +45,7 @@
           :map-instance="mapInstance"
           :place-id="placeIdForDetail"
           class="cuisine-detail"
-          v-show="!infoShowState"
+          v-show="!listShowState"
           @direction-request="this.$emit('direction-request',$event);"
       />
     </div>
@@ -61,6 +60,8 @@ export default {
   name: "CuisineWindow",
   components: {CuisineDetail, CuisineListItem},
   props: {
+    //title of the window
+    title: String,
     //list loading state
     listLoadingState: Boolean,
     listNoMoreState: Boolean,
@@ -79,13 +80,20 @@ export default {
       //send update event to outside
       this.$emit("place-id-change", newVar)
     },
+    title(newVar){
+      this.windowTitle = newVar;
+    }
   },
   data() {
     return {
-      //true: show list, false: show detail
-      infoShowState: true,
-      //store placeId for change
-      placeIdForDetail: null
+      /**
+       * true: show list, false: show detail
+       */
+      listShowState: true,
+      /**
+       * store placeId for change
+       */
+      placeIdForDetail: null,
     }
   },
   methods: {
@@ -93,8 +101,12 @@ export default {
      * Event when the X button get clicked
      */
     clickX() {
-      //send event to outside
-      this.$emit("click-X")
+      //if it is showing detail, change to show list
+      this.$emit("click-X",this.listShowState)
+
+      if (!this.listShowState) {
+        this.listShowState = true;
+      }
     },
     /**
      * Change showing window
@@ -103,10 +115,11 @@ export default {
      */
     changeInfoWindow(type, item) {
       if (type === "detail") {
-        this.infoShowState = false;
+        this.listShowState = false;
         this.placeIdForDetail = item.place_id;
+        this.$emit("detail-change",item.name);
       } else if (type === "list") {
-        this.infoShowState = true;
+        this.listShowState = true;
       }
     },
     loadMoreData() {
@@ -141,10 +154,11 @@ export default {
 }
 
 .title {
-  margin: 20px auto;
-
+  display: inline-block;
+  max-width: 20ch;
+  margin: 5px 0 0 0;
   font-size: 1.5em;
-  font-weight: bolder;
+  font-weight: 600;
 }
 
 .exit {
@@ -155,5 +169,8 @@ export default {
   border: none;
 
   background-color: transparent;
+
+  color: #FFFFFF;
+  font-size: 1.1em;
 }
 </style>

@@ -69,8 +69,10 @@ export default {
 .wrapper {
   display: grid;
   grid-template-columns: repeat(3, 1fr );
-  /*height: 5em;*/
   overflow: hidden;
+
+  padding: 10px;
+  border: 1px solid white;
 }
 
 .img {
@@ -82,7 +84,7 @@ export default {
 }
 
 .info {
-  margin: auto auto;
+  margin: auto auto auto 1em;
 }
 
 .info-text {

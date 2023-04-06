@@ -1,4 +1,8 @@
 :root {
+    /*Color*/
+    --application-normal-background-color: #0050F8;
+
+    /*Application variables*/
     --restaurants-list-detail-window-width: 100vw;
     --restaurants-list-detail-window-height: 50vh;
     --restaurants-list-detail-window-left: calc(50% - 50vw);

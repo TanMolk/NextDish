@@ -58,22 +58,24 @@
       v-show="listShowState"
       user-guidance-step="1"
       class="cuisine-select-wrapper"
-      @option-change="selectOptionChange"
+      @option-change="selectOptionChange($event)"
   />
   <CuisineWindow
       :key="listDetailKey"
       ref="cuisineList"
       v-show="listShowState"
+      :title="restaurantData.title"
       :map-instance="mapInstance"
       :items="restaurantData.showingItems"
       :place-id="restaurantData.detailPlaceId"
       :list-loading-state="listDetailWindowStates.windowShow"
       :list-no-more-state="listDetailWindowStates.noMoreData"
       class="app-cuisine-list"
-      @click-X="this.listShowState = false"
+      @click-X="onClickX($event)"
       @place-id-change="onCuisineListChangePlaceId($event)"
       @direction-request="onDirectionRequest($event)"
       @load-more-data="showMoreRestaurants"
+      @detail-change="this.restaurantData.title = $event"
   />
   <v-tour name="userGuidance" :steps="steps"></v-tour>
 </template>
@@ -85,7 +87,7 @@ import CuisineTypeSelect from "@/components/CuisineTypeSelect.vue";
 import CuisineWindow from "@/components/CuisineWindow.vue";
 import Constants from "@/constants/Constants";
 import GoogleMapPlaceService from "@/service/GoogleMapPlaceService";
-import {ElMessageBox} from 'element-plus';
+import {ElLoading, ElMessageBox} from 'element-plus';
 import StorageUtil from "@/utils/StorageUtil";
 import {h} from 'vue';
 
@@ -106,58 +108,81 @@ export default {
         //remove direction
         this.directionRender.setDirections({routes: []});
       }
-    }
+    },
+    /**
+     * watch if mapInstance has finished initialized.
+     */
+    mapInstance(newVar) {
+      const option = {
+        fullscreen: true
+      }
+
+      if (newVar) {
+        //close loading page, wait 1s for making sure map get initialized
+        //why not this.$loading, because in setTimeout this doesn't point vue instance
+        setTimeout(() => {
+          ElLoading.service(option).close();
+        }, 1000)
+      } else {
+        //loading page
+        ElLoading.service(option);
+      }
+    },
   },
   data() {
     return {
-      // To store the Google map instance
+      /**  To store the Google map instance*/
       mapInstance: null,
-      //render of direction
+      /** render of direction*/
       directionRender: null,
-      // user current location
+      /**  user current location*/
       userLocation: {
         lat: 55,
         lng: -1.6,
       },
-      // restaurant data set
+      /**  restaurant data set*/
       restaurantData: {
-        //items of showing restaurants
+        /** items of showing restaurants*/
         showingItems: [],
-        //items of all restaurants
+        /** items of all restaurants*/
         allItems: [],
-        //data of the detail windows
-        detailPlaceId: null
+        /** data of the detail windows*/
+        detailPlaceId: null,
+        /** title of cuisine window*/
+        title: "All",
+        /** current selection of cuisine type select*/
+        currentSelection: "All",
       },
       mapOption: {
         zoom: 14,
       },
-      //user marker option
+      /** user marker option*/
       userMarkerOption: {
         position: this.userLocation,
         visible: this.ifInitialized
       },
-      //1-mile circle option
+      /** 1-mile circle option*/
       userCircleOption: {
         center: this.userLocation,
         radius: mileToMeter(1),
         strokeColor: '#d7dbdf',
         visible: this.ifInitialized
       },
-      //flag of the page initialized state
+      /** flag of the page initialized state*/
       ifInitialized: false,
-      //the flag of showing the list/detail window
+      /** the flag of showing the list/detail window*/
       listShowState: true,
-      //if user use direction
+      /** if user use direction*/
       directionModel: false,
-      //loadingState
+      /** loadingState*/
       listDetailWindowStates: {
         windowShow: false,
         noMoreData: false
       },
-      //to force this component update by changing key
+      /** to force this component update by changing key*/
       listDetailKey: 0,
 
-      //user guidance steps
+      /** user guidance steps*/
       steps: [
         {
           target: '[user-guidance-step="1"]',
@@ -235,14 +260,12 @@ export default {
 
             //register location watcher
             navigator.geolocation.watchPosition(successCallback, errorCallback);
-
-            //close loading page
-            this.$loading({
-              fullscreen: true
-            }).close();
           }
+
+          //fresh user location
           this.freshUserMarkerOptions();
-          //if it is in direction model
+
+          //if it is in direction model, set map center to user current location when location updated
           if (this.directionModel) {
             this.setMapCenter(this.userLocation)
           }
@@ -250,8 +273,10 @@ export default {
           //store location for further usage
           StorageUtil.set(Constants.STORAGE_USER_LOCATION_LATITUDE, this.userLocation.lat)
           StorageUtil.set(Constants.STORAGE_USER_LOCATION_LONGITUDE, this.userLocation.lng)
-          //If error
+
         }
+
+        //If error
         const errorCallback = (error) => {
           let errorMessage = '';
           switch (error.code) {
@@ -297,6 +322,9 @@ export default {
      * @param type restaurant type
      */
     selectOptionChange(type) {
+      this.restaurantData.currentSelection = type;
+      this.restaurantData.title = type;
+
       this.loadRecentRestaurant(type);
       this.listShowState = true;
       //quit direction model
@@ -366,6 +394,14 @@ export default {
       if (allItems.length === this.restaurantData.showingItems.length) {
         this.listDetailWindowStates.noMoreData = true;
       }
+    },
+    onClickX(value){
+      //if it is showing list, close cuisine window;else change title to current selection
+      if (value){
+        this.listShowState = false
+      }else {
+        this.restaurantData.title = this.restaurantData.currentSelection;
+      }
     }
   },
   /**
@@ -380,16 +416,6 @@ export default {
     this.freshUserLocation();
   },
   mounted() {
-    //Set first entrance flag ,if it doesn't exist
-    console.log(!StorageUtil.get(Constants.STORAGE_IS_USER_FIRST_USER_STAT))
-    if (!StorageUtil.get(Constants.STORAGE_IS_USER_FIRST_USER_STAT)) {
-
-      //start tour
-      // this.$tours['userGuidance'].start()
-
-      //if it is the first time, show the user guidance
-      StorageUtil.set(Constants.STORAGE_IS_USER_FIRST_USER_STAT, "false");
-    }
   }
 }
 </script>

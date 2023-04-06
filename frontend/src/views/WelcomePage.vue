@@ -11,30 +11,66 @@
       Newcastle Feed your stomach
       </span>
     </div>
-    <button @click="jumpToApp()"
-            class="button">
+    <button
+        @click="jumpToApp()"
+        class="button"
+    >
       Start exploring
     </button>
-<!--    <video-->
-<!--        autoplay-->
-<!--        loop-->
-<!--        class="background-video"-->
-<!--    >-->
-<!--      <source src="@/assets/video/portal-video.mp4" type="video/mp4"/>-->
-<!--    </video>-->
+    <p
+        @click="jumpToApp(true)"
+        class="never-show"
+    >
+      never show</p>
+
+    <!--    <video-->
+    <!--        autoplay-->
+    <!--        loop-->
+    <!--        muted-->
+    <!--        class="background-video"-->
+    <!--    >-->
+    <!--      <source src="@/assets/video/video.mp4" type="video/mp4"/>-->
+    <!--    </video>-->
   </div>
 </template>
 
 <script>
 import StorageUtil from "@/utils/StorageUtil";
 import Constants from "@/constants/Constants";
+import MsgBoxUtil from "@/utils/MsgBoxUtil";
+
 
 export default {
   name: "WelcomePage",
   methods: {
-    jumpToApp() {
-      //change router
-      this.$router.push({path: "/app"});
+    jumpToApp(neverShow) {
+      //show loading
+      this.$loading({
+        fullscreen: true
+      });
+
+      let successCallback = (pos) => {
+        //if success, jump to app
+        if (neverShow) {
+          StorageUtil.set(Constants.STORAGE_IS_USER_FIRST_USER_STAT, "false");
+        }
+
+        this.$router.push({path: "/app"});
+      };
+
+      let errorCallback = () => {
+        MsgBoxUtil.alert(
+            "Sorry",
+            "If you don’t give this permission, we cannot provide all function for you.",
+            "Refresh",
+            () => {
+              navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+            }
+        )
+      };
+
+      //ger location permission
+      navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
     }
   },
   beforeCreate() {
@@ -58,33 +94,33 @@ export default {
 .title {
 
   position: absolute;
-  top: 30%;
+  top: 15%;
   left: calc(50% - 10em);
 
-  line-height: 3em;
   height: 3em;
   width: 20em;
-  background-color: #d7dbdf;
-  border-radius: 2em;
   text-align: center;
 
-  font-weight: bolder;
+  color: #ffffff;
+  font-size: 1.6em;
 }
 
 .button {;
-  width: 10em;
+  width: 9em;
   height: 2em;
 
-  position: absolute;
-  bottom: 20%;
-  left: calc(50% - 5em);
-
   display: block;
+  position: absolute;
+  bottom: 15%;
+  left: calc(50% - 4.5em);
+  background-color: var(--application-normal-background-color);
+
 
   border: 0.1em black;
-  border-radius: 1em;
+  border-radius: 2em;
 
-  font-weight: bolder;
+  font-size: 20px;
+  color: #FFFFFF;
 }
 
 .button:hover {
@@ -95,10 +131,14 @@ export default {
   background-color: #b7abab;
 }
 
-.background-video {
-  width: 100%;
-  height: 100%;
+.never-show {
+  color: #FFFFFF;
 
-  z-index: -999;
+  position: absolute;
+  bottom: 3%;
+  right: 3%;
+}
+
+.background-video {
 }
 </style>
