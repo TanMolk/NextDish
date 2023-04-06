@@ -6,6 +6,7 @@
 -->
 <template>
   <div>
+    <!--      Pane Tabs    -->
     <nut-tabs
         v-model="selectedTab"
         :background="'#9faab8'"
@@ -16,19 +17,21 @@
             v-for="item in items"
             :key="item"
             @click="selectedTab = item"
-        >{{ item }}
+        >
+          {{ item }}
         </div>
       </template>
 
+      <!--      Panes    -->
       <nut-tab-pane
           :pane-key="items[0]"
       >
         <template v-slot>
           <div class="detail-pane">
-            {{ detail?.name }}
-            <br>
-            <br>
             Distance: {{ directionDetail?.routes[0].legs[0].distance.value }}m
+            <br>
+            <br>
+            Time: {{ directionDetail?.routes[0].legs[0].duration.text }}
             <br>
             <br>
             <button
@@ -38,34 +41,85 @@
           </div>
         </template>
       </nut-tab-pane>
+
       <nut-tab-pane
           :pane-key="items[1]"
       >
         <template v-slot>
-          <div class="detail-pane">
-            <!--            <div style="background-color: #43bbad;width: 140px;height: 140px;margin: 33px"></div>-->
+          <p
+              class="info-title"
+              style="margin-bottom: 1em;"
+          >Menu and environment </p>
+          <div
+              v-if="detail"
+              class="detail-pane highlight-container"
+          >
+            <el-image
+                v-for="(image,index) in images"
+                class="highlight-image"
+                :src="image"
+                :loading="'lazy'"
+                :initial-index="index"
+                :preview-src-list="images"
+                :preview-teleported="true"
+            />
           </div>
         </template>
       </nut-tab-pane>
+
       <nut-tab-pane
           :pane-key="items[2]"
       >
         <template v-slot>
-          <div v-show="detail" class="detail-pane">
-            <p v-for="item in detail?.opening_hours.weekday_text">
-              {{ item }}
-            </p>
+          <div
+              v-if="detail"
+              class="detail-pane"
+          >
+            <div>
+              <p class="info-title">Open Time</p>
+              <table
+                  class="info-table"
+                  v-if="detail.opening_hours"
+              >
+                <tr
+                    v-for="item in detail.opening_hours.weekday_text"
+                >
+                  <td class="title-column">{{ item.split(": ")[0] }}</td>
+                  <td>{{ item.split(": ")[1] }}</td>
+                </tr>
+              </table>
+              <p v-else>No information</p>
+            </div>
+            <div style="text-align: left;">
+                  <span
+                      class="info-title title-column"
+                  >Average Cost:</span>
+              <span>{{
+                  detail.price_level
+                      ? "£" + (Number(detail.price_level) * 10) + "~" + (Number(detail.price_level) * 10 + 10)
+                      : "No information"
+                }}
+                  </span>
+            </div>
           </div>
         </template>
       </nut-tab-pane>
+
       <nut-tab-pane
           :pane-key="items[3]"
       >
         <template v-slot>
-          <div v-show="detail" class="detail-pane">
-            <div v-for="review in detail?.reviews">
+          <div
+              style="text-align: left;"
+              v-if="detail"
+              class="detail-pane"
+          >
+            <p class="info-title">Reviews</p>
+            <div
+                style="border-bottom: 1px solid;"
+                v-for="review in detail.reviews"
+            >
               <p>{{ review.author_name }}</p>
-              <p>{{ review.rating }}</p>
               <p>{{ review.text }}</p>
             </div>
           </div>
@@ -89,12 +143,14 @@ export default {
   },
   data() {
     return {
-      items: ['Location', 'Menu', 'Open Time', 'Reviews'],
+      items: ['Location', 'Highlight', 'Details', 'Reviews'],
       selectedTab: "Location",
       detail: null,
       directionDetail: null,
-      //service of direction
+      /** service of direction */
       directionService: null,
+      images: [],
+      imageViewShowState: false
     }
   },
   watch: {
@@ -107,6 +163,21 @@ export default {
       if (this.placeId) {
         let resp = await GoogleMapPlaceService.getPlaceDetail(this.placeId);
         this.detail = resp.data.result;
+        console.log(this.detail)
+
+        for (const photo of this.detail.photos) {
+          GoogleMapPlaceService.getPlaceImage(photo)
+              .then(resp => {
+                if (resp) {
+                  const blob = new window.Blob([resp.data], {type: 'image/jpeg'})
+                  this.images.push(URL.createObjectURL(blob));
+                }
+              })
+              .catch(err => {
+                console.log(err)
+              });
+        }
+
         await this.getDirection();
       }
     },
@@ -160,4 +231,33 @@ export default {
 .detail-pane {
   height: 31vh;
 }
+
+.info-title {
+  text-align: left;
+  margin: 0;
+  font-weight: 700;
+}
+
+.info-table {
+  margin: 10px auto;
+  padding: 0;
+}
+
+.title-column {
+  padding-right: 5em;
+}
+
+.highlight-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.highlight-image {
+  width: 10em;
+  height: 10em;
+  margin-bottom: 1.5em;
+}
+
 </style>

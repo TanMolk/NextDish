@@ -52,6 +52,10 @@ export default {
                 this.imageSrc = URL.createObjectURL(blob);
                 this.loading = false;
               }
+            })
+            .catch(err => {
+              console.log(err)
+              this.loading = false;
             });
       }
     }
