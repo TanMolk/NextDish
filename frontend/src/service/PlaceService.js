@@ -14,15 +14,19 @@ let http = axios.create({
  * Get restaurants in one mile with location and type
  * @param location longitude and latitude of center location, like {lat: 55,lng: -1.6}
  * @param keyword keyword of aim restaurants
+ * @param nextPageToken the nextPageToken, for page turning
  */
-function getRestaurantWithKeywordInOneMile(location, keyword) {
+function getRestaurantWithKeywordInOneMile(location, keyword, nextPageToken) {
+    //use round to keep 3 decimal to make request, although it will cause location issue. But the error range it is within 100m.
+    let lat = location.lat.toFixed(3);
+    let lng = location.lng.toFixed(3);
+
     return http.get("/place/nearby",
         {
             params: {
-                location: location.lat + "," + location.lng,
+                location: lat + "," + lng,
                 keyword,
-                type: "restaurant",
-                radius: mileToMeter(1)
+                nextPageToken
             }
         });
 }
@@ -35,7 +39,7 @@ function getPlaceDetail(placeReference) {
     return http.get("/place/detail",
         {
             params: {
-                place_id: placeReference
+                placeId: placeReference
             }
         });
 }
@@ -55,9 +59,9 @@ function getPlaceImage(photoInfo) {
         {
             responseType: "blob",
             params: {
-                photo_reference: photoInfo.photo_reference,
-                maxheight: photoInfo.height,
-                maxwidth: photoInfo.width
+                photoReference: photoInfo.photo_reference,
+                height: photoInfo.height,
+                width: photoInfo.width
             }
         });
 }

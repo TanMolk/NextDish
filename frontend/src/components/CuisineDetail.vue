@@ -161,9 +161,9 @@ export default {
   methods: {
     async getDetail() {
       if (this.placeId) {
+        this.images = [];
         let resp = await PlaceService.getPlaceDetail(this.placeId);
-        this.detail = resp.data.result;
-        console.log(this.detail)
+        this.detail = resp.data;
 
         for (const photo of this.detail.photos) {
           PlaceService.getPlaceImage(photo)

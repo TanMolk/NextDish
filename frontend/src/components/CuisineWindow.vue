@@ -21,6 +21,7 @@
       <ul
           style="padding: 0;margin-top: 0;"
           v-loading="listLoadingState"
+          :infinite-scroll-immediate="false"
           v-infinite-scroll="loadMoreData"
           :infinite-scroll-disabled="listNoMoreState"
       >

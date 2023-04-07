@@ -55,6 +55,7 @@
     <!------------------Markers End-------------------->
   </GoogleMap>
   <CuisineTypeSelect
+      v-show="!directionModel"
       user-guidance-step="1"
       class="cuisine-select-wrapper"
       @option-change="selectOptionChange($event)"
@@ -143,14 +144,14 @@ export default {
       restaurantData: {
         /** items of showing restaurants*/
         showingItems: [],
-        /** items of all restaurants*/
-        allItems: [],
         /** data of the detail windows*/
         detailPlaceId: null,
         /** title of cuisine window*/
         title: "All",
         /** current selection of cuisine type select*/
         currentSelection: "All",
+        /**set next page token for scrolling*/
+        nextPageToken: undefined,
       },
       mapOption: {
         zoom: 14,
@@ -323,6 +324,8 @@ export default {
     selectOptionChange(type) {
       this.restaurantData.currentSelection = type;
       this.restaurantData.title = type;
+      this.restaurantData.nextPageToken = undefined;
+      this.listDetailWindowStates.noMoreData = false;
 
       this.loadRecentRestaurant(type);
       this.listShowState = true;
@@ -342,12 +345,12 @@ export default {
       let response = await PlaceService.getRestaurantWithKeywordInOneMile(this.userLocation, type);
 
       //get all restaurants
-      this.restaurantData.allItems = response.data.results;
-      //render the first 10 restaurants
-      this.restaurantData.showingItems = this.restaurantData.allItems.slice(0, 10);
+      this.restaurantData.showingItems = response.data.results;
+
+      //set next page token for scrolling
+      this.restaurantData.nextPageToken = response.data.next_page_token;
 
       this.listDetailWindowStates.windowShow = false;
-
       //force update
       this.listDetailKey++
     },
@@ -384,21 +387,21 @@ export default {
       this.listShowState = false;
       this.directionModel = true;
     },
-    showMoreRestaurants() {
-      let allItems = this.restaurantData.allItems;
-      let showingItems = this.restaurantData.showingItems;
-
-      this.restaurantData.showingItems = allItems.slice(0, showingItems.length + 10);
-
-      if (allItems.length === this.restaurantData.showingItems.length) {
+    async showMoreRestaurants() {
+      let nextPageToken = this.restaurantData.nextPageToken;
+      if (nextPageToken) {
+        let resp = await PlaceService.getRestaurantWithKeywordInOneMile(this.userLocation, null, nextPageToken);
+        this.restaurantData.showingItems = [...this.restaurantData.showingItems, ...resp.data.results]
+        this.restaurantData.nextPageToken = resp.data.next_page_token;
+      } else {
         this.listDetailWindowStates.noMoreData = true;
       }
     },
-    onClickX(value){
+    onClickX(value) {
       //if it is showing list, close cuisine window;else change title to current selection
-      if (value){
+      if (value) {
         this.listShowState = false
-      }else {
+      } else {
         this.restaurantData.title = this.restaurantData.currentSelection;
       }
     }

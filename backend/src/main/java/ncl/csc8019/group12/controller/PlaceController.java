@@ -4,14 +4,15 @@ import ncl.csc8019.group12.pojo.Location;
 import ncl.csc8019.group12.service.CacheService;
 import ncl.csc8019.group12.service.GoogleMapService;
 import ncl.csc8019.group12.utils.DistanceUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.security.InvalidParameterException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Place Apis
@@ -19,9 +20,15 @@ import java.security.InvalidParameterException;
  * @author Pulei & Rachel & Wei
  */
 
+@CrossOrigin
 @RestController
 @RequestMapping("/place")
 public class PlaceController {
+
+    private static final Logger log = LoggerFactory.getLogger(PlaceController.class);
+
+    private static final AtomicInteger API_CALL_TOTAL_AMOUNT = new AtomicInteger();
+    private static final AtomicInteger GOOGLE_API_REQUEST_AMOUNT = new AtomicInteger();
 
     @Resource
     private CacheService cacheService;
@@ -41,54 +48,90 @@ public class PlaceController {
      * @return Places data
      */
     @GetMapping("/nearby")
-    public String nearByPlaces(@RequestParam(required = false) String location,
+    public String nearByPlaces(@RequestParam String location,
                                @RequestParam(required = false) String keyword,
                                @RequestParam(required = false) String nextPageToken) {
-        //avoid the same request
+        //log and count request
+        log.info("[Nearby-{}] location:{}, keyword:{}, nextPageToken:{}",
+                API_CALL_TOTAL_AMOUNT.addAndGet(1),
+                location, keyword, nextPageToken);
+
+        //produce response
+        boolean fromCache = false;
+        JSONObject responseObject;
+        String[] locations = location.split(",");
+        Location currentLocation = new Location(Double.parseDouble(locations[0]), Double.parseDouble(locations[1]));
+        int radius = DistanceUtil.convertMilesToMetersApproximately(1);
+
+        //get data
         if (nextPageToken != null) {
-            String cache = cacheService.getCachedResponse(nextPageToken);
-            //get data from cache
-            if (cache != null) {
-                return cache;
+            responseObject = cacheService.getCachedResponse(nextPageToken);
+            if (responseObject == null) {
+                responseObject = googleMapService.getNearByPlaceWithNextPageToken(nextPageToken);
             } else {
-                // get data from Google map api
-                String response = googleMapService.getNearByPlaceWithNextPageToken(nextPageToken).toString();
-                //cache response
-                cacheService.cacheResponse(response, nextPageToken);
-                return response;
+                fromCache = true;
+            }
+        } else {
+            responseObject = cacheService.getCachedResponse(location, keyword);
+            if (responseObject == null) {
+                responseObject = googleMapService.getNearByPlaceWithLocation(
+                        currentLocation,
+                        radius,
+                        keyword);
+            } else {
+                fromCache = true;
             }
         }
 
-        if (location != null) {
-            String cache = cacheService.getCachedResponse(location, keyword);
-            if (cache != null) {
-                return cache;
-            } else {
-                String[] locations = location.split(",");
-                Location currentLocation = new Location(Double.parseDouble(locations[0]), Double.parseDouble(locations[1]));
-                int radius = DistanceUtil.convertMilesToMetersApproximately(1);
-                String response = googleMapService.getNearByPlaceWithLocation(currentLocation, radius, keyword).toString();
-                cacheService.cacheResponse(response, location, keyword);
-                return response;
-            }
+        //if it gets cache, return.
+        if (fromCache) {
+            return responseObject.toString();
         }
 
-        throw new InvalidParameterException("");
+        //filter places within 1 mile
+        JSONArray places = responseObject.getJSONArray("results");
+        JSONArray filteredPlaces = new JSONArray();
+
+        for (int i = 0; i < places.length(); i++) {
+            JSONObject place = places.getJSONObject(i);
+            JSONObject placeLocationObj = place.getJSONObject("geometry").getJSONObject("location");
+
+            Location placeLocation = new Location(
+                    placeLocationObj.getDouble("lat"),
+                    placeLocationObj.getDouble("lng"));
+
+            if (DistanceUtil.calculateApproximateDistanceOfTwoLocation(currentLocation, placeLocation) <= radius) {
+                filteredPlaces.put(place);
+            }
+        }
+        responseObject.put("results", filteredPlaces);
+
+        //cache
+        if (nextPageToken != null) {
+            cacheService.cacheResponse(responseObject, nextPageToken);
+        } else {
+            cacheService.cacheResponse(responseObject, location, keyword);
+        }
+
+        GOOGLE_API_REQUEST_AMOUNT.addAndGet(1);
+        return responseObject.toString();
     }
 
     @GetMapping("/detail")
     public String detail(@RequestParam String placeId) {
+        log.info("[Detail-{}] placeId:{}", API_CALL_TOTAL_AMOUNT.addAndGet(1), placeId);
 
+        JSONObject response;
         //get from cache
-        String cache = cacheService.getCachedResponse(placeId);
+        response = cacheService.getCachedResponse(placeId);
 
-        if (cache != null) {
-            return cache;
-        } else {
-            String response = googleMapService.getPlaceDetail(placeId).toString();
+        if (response == null) {
+            response = googleMapService.getPlaceDetail(placeId);
+            GOOGLE_API_REQUEST_AMOUNT.addAndGet(1);
             cacheService.cacheResponse(response, placeId);
-            return response;
         }
+
+        return response.toString();
     }
 
     @GetMapping(
@@ -97,9 +140,11 @@ public class PlaceController {
     public byte[] photo(@RequestParam String photoReference,
                         @RequestParam int width,
                         @RequestParam int height) {
+        log.info("[Photo-{}] photoReference:{}", API_CALL_TOTAL_AMOUNT.addAndGet(1), photoReference);
         byte[] photoBytes = cacheService.getPhotoCache(photoReference);
         if (photoBytes == null) {
             photoBytes = googleMapService.getPhoto(photoReference, width, height);
+            GOOGLE_API_REQUEST_AMOUNT.addAndGet(1);
             cacheService.cachePhoto(photoReference, photoBytes);
         }
         return photoBytes;

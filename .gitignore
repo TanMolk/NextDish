@@ -80,3 +80,6 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+
+#resource
+/cache_image/

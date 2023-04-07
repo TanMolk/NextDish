@@ -1,5 +1,6 @@
 package ncl.csc8019.group12.service;
 
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -20,21 +21,28 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class CacheService {
+    {
+        File file = new File("./cache_image");
+
+        if (!file.exists()){
+            file.mkdir();
+        }
+    }
 
     /**
      * Key: request params
      * Value: the response
      */
-    private final static Map<Integer, String> RESPONSE_CACHE_STORAGE = new ConcurrentHashMap<>();
+    private final static Map<Integer, JSONObject> RESPONSE_CACHE_STORAGE = new ConcurrentHashMap<>();
 
     /**
      * Store response json string to memory
      *
-     * @param responseJsonString response json string
+     * @param response response json object
      * @param args               request params
      */
-    public void cacheResponse(String responseJsonString, Object... args) {
-        RESPONSE_CACHE_STORAGE.put(Objects.hash(args), responseJsonString);
+    public void cacheResponse(JSONObject response, Object... args) {
+        RESPONSE_CACHE_STORAGE.put(Objects.hash(args), response);
     }
 
     /**
@@ -43,12 +51,12 @@ public class CacheService {
      * @param args request params
      * @return null-if it doesn't have cache; else return response json with the same input last returned
      */
-    public String getCachedResponse(Object... args) {
+    public JSONObject getCachedResponse(Object... args) {
         return RESPONSE_CACHE_STORAGE.get(Objects.hash(args));
     }
 
     public void cachePhoto(String photoReference, byte[] data) {
-        File file = new File(photoReference + ".jpeg");
+        File file = new File("./cache_image/" + photoReference + ".jpeg");
         if (!file.exists()) {
             try (
                     FileOutputStream fos = new FileOutputStream(file);
@@ -62,7 +70,7 @@ public class CacheService {
     }
 
     public byte[] getPhotoCache(String photoReference) {
-        File file = new File(photoReference + ".jpeg");
+        File file = new File("./cache_image/" + photoReference + ".jpeg");
         if (file.exists()) {
             try (FileInputStream in = new FileInputStream(file)) {
                 byte[] data = new byte[in.available()];
