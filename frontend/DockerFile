@@ -1,5 +1,5 @@
 FROM nginx:stable-alpine
-LABEL MAINTAINER="c8019-group12"
+MAINTAINER c8019-group12
 
 ENV PORT 8080
 
