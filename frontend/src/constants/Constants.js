@@ -1,6 +1,8 @@
-//application constans
+//application constants
+import StorageUtil from "@/utils/StorageUtil";
+
 const MODE = import.meta.env.MODE;
-const API_GATEWAY = import.meta.env.VITE_API_GATEWAY;
+let API_GATEWAY = import.meta.env.VITE_API_GATEWAY;
 
 //google map constants
 let GOOGLE_MAP_ID;
@@ -8,8 +10,10 @@ let GOOGLE_MAP_API_KEY;
 
 if (MODE === "production") {
     //production environment
-    GOOGLE_MAP_ID = "1232131";
-    GOOGLE_MAP_API_KEY = "1321321312312";
+    API_GATEWAY = "";
+    GOOGLE_MAP_ID = ""
+    GOOGLE_MAP_API_KEY = "";
+
 
 } else {
     //not production
@@ -17,15 +21,25 @@ if (MODE === "production") {
     GOOGLE_MAP_API_KEY = import.meta.env.VITE_GOOGLE_MAP_API_KEY;
 }
 
-console.log(GOOGLE_MAP_ID)
-console.log(GOOGLE_MAP_API_KEY)
-
 
 //local storage constants
 const STORAGE_USER_LOCATION_LATITUDE = "currentPositionLat"
 const STORAGE_USER_LOCATION_LONGITUDE = "currentPositionLng"
 //exist means is not the first time, don't exist means it is the first time
 const STORAGE_IS_USER_FIRST_USER_STAT = "userFirstUseState"
+
+//client uuid
+const STORAGE_CLIENT_UUID = "clientId"
+let CLIENT_ID = StorageUtil.get(STORAGE_CLIENT_UUID);
+
+//set client id
+if (!CLIENT_ID) {
+    CLIENT_ID = crypto.randomUUID();
+    StorageUtil.set(STORAGE_CLIENT_UUID, CLIENT_ID);
+}
+
+console.log(CLIENT_ID);
+
 
 export default {
     MODE,
@@ -35,4 +49,5 @@ export default {
     STORAGE_USER_LOCATION_LATITUDE,
     STORAGE_USER_LOCATION_LONGITUDE,
     STORAGE_IS_USER_FIRST_USER_STAT,
+    CLIENT_ID
 }
