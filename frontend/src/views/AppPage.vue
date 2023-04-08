@@ -12,6 +12,9 @@
       :map-id="Constants.GOOGLE_MAP_ID"
       :api-key="Constants.GOOGLE_MAP_API_KEY"
       :zoom="14"
+      :min-zoom="14"
+      :restriction="restriction"
+      :gesture-handling="'greedy'"
       :disable-default-ui="true"
   >
     <!----------------------Control-------------------->
@@ -99,6 +102,16 @@ export default {
   computed: {
     Constants() {
       return Constants
+    },
+    restriction(){
+      return {
+        latLngBounds:{
+          north: this.userLocation.lat + 0.025,
+          south: this.userLocation.lat - 0.025,
+          east: this.userLocation.lng + 0.05,
+          west: this.userLocation.lng - 0.05,
+        }
+      }
     }
   },
   watch: {
@@ -451,7 +464,7 @@ export default {
 <style scoped>
 .map {
   width: 100vw;
-  height: 100vh;
+  height: var(--doc-height);
   color: #d7dbdf;
 
 }

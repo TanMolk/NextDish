@@ -150,7 +150,7 @@ export default {
 }
 
 .header {
-  line-height: 5vh;
+  line-height: calc(var(--doc-height) * 0.05);
 }
 
 .title {

@@ -76,6 +76,17 @@
           <div
               v-if="detail"
           >
+            <div style="text-align: left;margin-bottom: 1em;">
+                  <span
+                      class="info-title title-column"
+                  >Average Cost:</span>
+              <span>{{
+                  detail.price_level
+                      ? "£" + (Number(detail.price_level) * 10) + "~" + (Number(detail.price_level) * 10 + 10)
+                      : "No information"
+                }}
+                  </span>
+            </div>
             <div>
               <p class="info-title">Open Time</p>
               <table
@@ -90,17 +101,6 @@
                 </tr>
               </table>
               <p v-else>No information</p>
-            </div>
-            <div style="text-align: left;">
-                  <span
-                      class="info-title title-column"
-                  >Average Cost:</span>
-              <span>{{
-                  detail.price_level
-                      ? "£" + (Number(detail.price_level) * 10) + "~" + (Number(detail.price_level) * 10 + 10)
-                      : "No information"
-                }}
-                  </span>
             </div>
           </div>
         </template>
@@ -231,7 +231,7 @@ export default {
 
 .detail-pane {
   overflow: auto;
-  height: 40vh;
+  height: calc(var(--doc-height) * 0.5);
 }
 
 .info-title {

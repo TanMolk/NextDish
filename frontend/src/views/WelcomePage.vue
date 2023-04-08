@@ -8,7 +8,7 @@
   <div class="welcome-page">
     <video-background
         src="./video/video.mp4"
-        style="height: 100vh;"
+        style="height: var(--doc-height);;"
     >
       <div class="title">
       <span>

@@ -1,6 +1,7 @@
 @import "base.css";
 
 body {
+    height: var(--doc-height);
     margin: 0;
     font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
     Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
@@ -8,6 +9,7 @@ body {
 
 #app {
     margin: 0 auto;
+    height: var(--doc-height);
 }
 
 /*Set user guidance mask style*/

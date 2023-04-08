@@ -9,5 +9,21 @@
 <body>
 <div id="app"></div>
 <script type="module" src="/src/main.js"></script>
+<script>
+    //adjust page height
+    const documentHeight = () => {
+        const doc = document.documentElement
+        doc.style.setProperty('--doc-height', `${window.innerHeight}px`)
+    }
+    window.addEventListener('resize', documentHeight);
+    documentHeight()
+
+    //forbidden pull down to refresh page
+    document.addEventListener('touchmove', event => {
+        event.preventDefault()
+    }, { passive: false })
+
+
+</script>
 </body>
 </html>
