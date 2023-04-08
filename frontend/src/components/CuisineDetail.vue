@@ -24,10 +24,11 @@
 
       <!--      Panes    -->
       <nut-tab-pane
+          class="detail-pane"
           :pane-key="items[0]"
       >
         <template v-slot>
-          <div class="detail-pane">
+          <div>
             Distance: {{ directionDetail?.routes[0].legs[0].distance.value }}m
             <br>
             <br>
@@ -43,6 +44,7 @@
       </nut-tab-pane>
 
       <nut-tab-pane
+          class="detail-pane"
           :pane-key="items[1]"
       >
         <template v-slot>
@@ -51,7 +53,7 @@
           >Menu and environment</p>
           <div
               v-if="detail"
-              class="detail-pane highlight-container"
+              class="highlight-container"
           >
             <el-image
                 v-for="(image,index) in images"
@@ -67,12 +69,12 @@
       </nut-tab-pane>
 
       <nut-tab-pane
+          class="detail-pane"
           :pane-key="items[2]"
       >
         <template v-slot>
           <div
               v-if="detail"
-              class="detail-pane"
           >
             <div>
               <p class="info-title">Open Time</p>
@@ -105,6 +107,7 @@
       </nut-tab-pane>
 
       <nut-tab-pane
+          class="detail-pane"
           :pane-key="items[3]"
       >
         <template v-slot>
@@ -112,7 +115,6 @@
           <div
               style="text-align: left;"
               v-if="detail"
-              class="detail-pane"
           >
             <div
                 style="border-bottom: 1px solid;margin-bottom: 1.5em"
@@ -229,7 +231,7 @@ export default {
 
 .detail-pane {
   overflow: auto;
-  height: 31vh;
+  height: 33vh;
 }
 
 .info-title {
@@ -255,8 +257,8 @@ export default {
 }
 
 .highlight-image {
-  width: 8em;
-  height: 8em;
+  width: 10em;
+  height: 10em;
   margin-bottom: 1.5em;
 }
 

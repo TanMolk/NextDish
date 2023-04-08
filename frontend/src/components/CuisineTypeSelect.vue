@@ -6,6 +6,7 @@
 -->
 <template>
   <el-select
+      popper-class="custom-select-option"
       placeholder="Filter by"
       v-model="selectedOptionValue"
       @change="optionChange"
@@ -42,12 +43,6 @@ export default {
       this.$emit("option-change", this.selectedOptionValue);
       // this.isFocused = false;
     }
-  },
-  created() {
-    //change style
-    document.body.style.setProperty('--el-bg-color-overlay', 'var(--application-normal-background-color)');
-    document.body.style.setProperty('--el-text-color-regular', '#FFFFFF');
-    document.body.style.setProperty('--el-fill-color-light', '#3c5b9d');
   }
 }
 </script>
@@ -59,5 +54,15 @@ export default {
   height: 2.5em;
   --el-input-bg-color: var(--application-normal-background-color);
   --el-input-placeholder-color: #FFFFFF;
+}
+
+.el-select .el-input.is-focus .el-input__wrapper {
+  --el-input-bg-color: #A4B0BEB2;
+}
+
+.custom-select-option {
+  --el-bg-color-overlay: var(--application-normal-background-color);
+  --el-text-color-regular: #FFFFFF;
+  --el-fill-color-light: #3c5b9d;
 }
 </style>
