@@ -121,7 +121,7 @@
                 v-for="review in detail.reviews"
             >
               <p>{{ review.author_name }}</p>
-              <p>{{ review.text }}</p>
+              <p style="word-break: break-word;">{{ review.text }}</p>
             </div>
           </div>
         </template>
@@ -231,7 +231,7 @@ export default {
 
 .detail-pane {
   overflow: auto;
-  height: 33vh;
+  height: 40vh;
 }
 
 .info-title {

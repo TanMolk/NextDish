@@ -54,6 +54,7 @@ export default {
   height: 2.5em;
   --el-input-bg-color: var(--application-normal-background-color);
   --el-input-placeholder-color: #FFFFFF;
+  --el-input-text-color: #FFFFFF;
 }
 
 .el-select .el-input.is-focus .el-input__wrapper {
