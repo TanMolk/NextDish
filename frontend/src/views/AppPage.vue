@@ -6,6 +6,7 @@
 -->
 <template>
   <GoogleMap
+      @click="OnMapClick"
       ref="mapInstance"
       class="map"
       :map-id="Constants.GOOGLE_MAP_ID"
@@ -23,8 +24,9 @@
           directionModel = false;
           setMapCenter(userLocation);
           mapInstance.map.setZoom(14);
+          this.listShowState = true;
           "
-          style="margin-top: 2em">
+          style="margin-top: 2em;font-weight: bolder;color: black">
         Exit Direction
       </ElButton>
     </CustomControl>
@@ -40,6 +42,7 @@
       <img style="opacity: 0.7;width: 2em;height: 2em" src="@/assets/me.png" alt="me"/>
     </CustomMarker>
     <Circle
+        @click="OnMapClick"
         :options="userCircleOption"
     />
     <Marker
@@ -70,7 +73,6 @@
       :place-id="restaurantData.detailPlaceId"
       :list-loading-state="listDetailWindowStates.windowShow"
       :list-no-more-state="listDetailWindowStates.noMoreData"
-      class="app-cuisine-list"
       @click-X="onClickX($event)"
       @place-id-change="onCuisineListChangePlaceId($event)"
       @direction-request="onDirectionRequest($event)"
@@ -213,7 +215,7 @@ export default {
         if (this.mapInstance && this.mapInstance.map) {
           this.mapInstance.map.panTo(location);
         }
-      }, 100);
+      }, 300);
     },
     /**
      * IF UPDATE USER POSITION, MUST USE THIS METHOD!
@@ -404,6 +406,9 @@ export default {
       } else {
         this.restaurantData.title = this.restaurantData.currentSelection;
       }
+    },
+    OnMapClick(){
+      this.listShowState = !this.listShowState
     }
   },
   /**

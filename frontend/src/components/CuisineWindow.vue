@@ -7,6 +7,7 @@
 <template>
   <div
       class="li-wrapper"
+      :style="{overflow: listShowState?'auto':'hidden'}"
   >
     <div class="header">
       <span class="title">{{ title }}</span>
@@ -16,14 +17,14 @@
       >X
       </button>
     </div>
-
-    <div class="list-wrapper">
+    <div>
       <ul
           style="padding: 0;margin-top: 0;"
           v-loading="listLoadingState"
           :infinite-scroll-immediate="false"
+          :infinite-scroll-delay="1000"
           v-infinite-scroll="loadMoreData"
-          :infinite-scroll-disabled="listNoMoreState"
+          :infinite-scroll-disabled="listNoMoreState && listShowState"
       >
         <li
             style="list-style: none;margin-top: 1px;"
@@ -81,7 +82,7 @@ export default {
       //send update event to outside
       this.$emit("place-id-change", newVar)
     },
-    title(newVar){
+    title(newVar) {
       this.windowTitle = newVar;
     }
   },
@@ -103,7 +104,7 @@ export default {
      */
     clickX() {
       //if it is showing detail, change to show list
-      this.$emit("click-X",this.listShowState)
+      this.$emit("click-X", this.listShowState)
 
       if (!this.listShowState) {
         this.listShowState = true;
@@ -118,7 +119,7 @@ export default {
       if (type === "detail") {
         this.listShowState = false;
         this.placeIdForDetail = item.place_id;
-        this.$emit("detail-change",item.name);
+        this.$emit("detail-change", item.name);
       } else if (type === "list") {
         this.listShowState = true;
       }
@@ -136,8 +137,6 @@ export default {
 }
 
 .li-wrapper {
-  overflow: auto;
-
   position: absolute;
   height: var(--restaurants-list-detail-window-height);
   width: var(--restaurants-list-detail-window-width);

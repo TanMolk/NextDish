@@ -28,6 +28,7 @@ public class PlaceController {
     private static final Logger log = LoggerFactory.getLogger(PlaceController.class);
 
     private static final AtomicInteger API_CALL_TOTAL_AMOUNT = new AtomicInteger();
+    private static final AtomicInteger CACHE_HIT_AMOUNT = new AtomicInteger();
     private static final AtomicInteger GOOGLE_API_REQUEST_AMOUNT = new AtomicInteger();
 
     @Resource
@@ -48,14 +49,10 @@ public class PlaceController {
      * @return Places data
      */
     @GetMapping("/nearby")
-    public String nearByPlaces(@RequestParam String location,
+    public String nearByPlaces(@RequestHeader("c8019-client-id") String clientId,
+                               @RequestParam String location,
                                @RequestParam(required = false) String keyword,
                                @RequestParam(required = false) String nextPageToken) {
-        //log and count request
-        log.info("[Nearby-{}] location:{}, keyword:{}, nextPageToken:{}",
-                API_CALL_TOTAL_AMOUNT.addAndGet(1),
-                location, keyword, nextPageToken);
-
         //produce response
         boolean fromCache = false;
         JSONObject responseObject;
@@ -83,8 +80,17 @@ public class PlaceController {
             }
         }
 
+        //log and count request
+        log.info("[{}-Nearby] cache:{}; location:{}, keyword:{}, nextPageToken:{}; clientId:{}",
+                API_CALL_TOTAL_AMOUNT.addAndGet(1),
+                fromCache,
+                location, keyword, nextPageToken,
+                clientId
+        );
+
         //if it gets cache, return.
         if (fromCache) {
+            CACHE_HIT_AMOUNT.addAndGet(1);
             return responseObject.toString();
         }
 
@@ -118,35 +124,56 @@ public class PlaceController {
     }
 
     @GetMapping("/detail")
-    public String detail(@RequestParam String placeId) {
-        log.info("[Detail-{}] placeId:{}", API_CALL_TOTAL_AMOUNT.addAndGet(1), placeId);
+    public String detail(@RequestHeader("c8019-client-id") String clientId,
+                         @RequestParam String placeId) {
 
         JSONObject response;
         //get from cache
         response = cacheService.getCachedResponse(placeId);
 
-        if (response == null) {
-            response = googleMapService.getPlaceDetail(placeId);
-            GOOGLE_API_REQUEST_AMOUNT.addAndGet(1);
-            cacheService.cacheResponse(response, placeId);
+        log.info("[{}-Detail] cache:{}; placeId:{}; clientId:{}",
+                API_CALL_TOTAL_AMOUNT.addAndGet(1),
+                response != null,
+                placeId,
+                clientId
+        );
+
+        if (response != null) {
+            CACHE_HIT_AMOUNT.addAndGet(1);
+            return response.toString();
         }
 
+        response = googleMapService.getPlaceDetail(placeId);
+        GOOGLE_API_REQUEST_AMOUNT.addAndGet(1);
+        cacheService.cacheResponse(response, placeId);
         return response.toString();
     }
 
     @GetMapping(
             value = "/photo",
             produces = MediaType.IMAGE_JPEG_VALUE)
-    public byte[] photo(@RequestParam String photoReference,
+    public byte[] photo(@RequestHeader("c8019-client-id") String clientId,
+                        @RequestParam String photoReference,
                         @RequestParam int width,
                         @RequestParam int height) {
-        log.info("[Photo-{}] photoReference:{}", API_CALL_TOTAL_AMOUNT.addAndGet(1), photoReference);
         byte[] photoBytes = cacheService.getPhotoCache(photoReference);
-        if (photoBytes == null) {
-            photoBytes = googleMapService.getPhoto(photoReference, width, height);
-            GOOGLE_API_REQUEST_AMOUNT.addAndGet(1);
-            cacheService.cachePhoto(photoReference, photoBytes);
+
+        log.info("[{}-Photo] cache:{}; photoReference:{}; clientId:{}",
+                API_CALL_TOTAL_AMOUNT.addAndGet(1),
+                photoBytes != null,
+                photoReference,
+                clientId
+        );
+
+
+        if (photoBytes != null) {
+            CACHE_HIT_AMOUNT.addAndGet(1);
+            return photoBytes;
         }
+
+        photoBytes = googleMapService.getPhoto(photoReference, width, height);
+        GOOGLE_API_REQUEST_AMOUNT.addAndGet(1);
+        cacheService.cachePhoto(photoReference, photoBytes);
         return photoBytes;
     }
 }

@@ -7,7 +7,10 @@ import Constants from "@/constants/Constants";
 import {mileToMeter} from "@/utils/MileUtil";
 
 let http = axios.create({
-    baseURL: Constants.API_GATEWAY
+    baseURL: Constants.API_GATEWAY,
+    headers: {
+        "c8019-client-id": Constants.CLIENT_ID
+    }
 });
 
 /**

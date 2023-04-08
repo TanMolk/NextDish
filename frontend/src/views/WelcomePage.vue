@@ -6,31 +6,27 @@
 -->
 <template>
   <div class="welcome-page">
-    <div class="title">
+    <video-background
+        src="./video/video.mp4"
+        style="height: 100vh;"
+    >
+      <div class="title">
       <span>
       Newcastle Feed your stomach
       </span>
-    </div>
-    <button
-        @click="jumpToApp()"
-        class="button"
-    >
-      Start exploring
-    </button>
-    <p
-        @click="jumpToApp(true)"
-        class="never-show"
-    >
-      never show</p>
-
-    <!--    <video-->
-    <!--        autoplay-->
-    <!--        loop-->
-    <!--        muted-->
-    <!--        class="background-video"-->
-    <!--    >-->
-    <!--      <source src="@/assets/video/video.mp4" type="video/mp4"/>-->
-    <!--    </video>-->
+      </div>
+      <button
+          @click="jumpToApp()"
+          class="button"
+      >
+        Start exploring
+      </button>
+      <p
+          @click="jumpToApp(true)"
+          class="never-show"
+      >
+        never show</p>
+    </video-background>
   </div>
 </template>
 
@@ -137,8 +133,5 @@ export default {
   position: absolute;
   bottom: 3%;
   right: 3%;
-}
-
-.background-video {
 }
 </style>

@@ -1,25 +1,22 @@
 <!--
  @Name CuisineTypeSelect
  @Description Filter of cuisine
- @author Ashton & Wei
+ @author Ashton
  @createDate 2023/03/12
 -->
 <template>
-  <select
-      class="cuisine-select-wrapper"
-      :class="{'focused':isFocused}"
-      @mousedown="onMouseDown"
-      @blur="onBlur"
+  <el-select
+      placeholder="Filter by"
       v-model="selectedOptionValue"
-      @change="optionChange()"
+      @change="optionChange"
   >
-    <option value="" disabled selected hidden>Filter by</option>
-    <option
-        class="cuisine-select-option"
-        v-for="type in types">
-      {{ type }}
-    </option>
-  </select>
+    <el-option
+        v-for="type in types"
+        :key="type"
+        :label="type"
+        :value="type"
+    />
+  </el-select>
 </template>
 
 <script>
@@ -43,53 +40,24 @@ export default {
     },
     optionChange() {
       this.$emit("option-change", this.selectedOptionValue);
-      this.isFocused = false;
+      // this.isFocused = false;
     }
+  },
+  created() {
+    //change style
+    document.body.style.setProperty('--el-bg-color-overlay', 'var(--application-normal-background-color)');
+    document.body.style.setProperty('--el-text-color-regular', '#FFFFFF');
+    document.body.style.setProperty('--el-fill-color-light', '#3c5b9d');
   }
 }
 </script>
 
-<style scoped>
-.cuisine-select-wrapper{
-  height: 45px;
-  width: 180px;
-  border-radius: 5px;
-  border-width: 0;
-  background: #0050F8;
-  color: white;
-  text-align: center;
-  font-size: 1.2em;
-  font-family: sans-serif;
-  font-weight: 400;
-  -webkit-appearance: none;
-}
-
-.cuisine-select-wrapper option{
-  background: #0050F8;
-  text-align: center;
-  border-radius: 1em;
-}
-
-.cuisine-select-wrapper:focus{
-  outline: none;
-}
-
-
-@media screen and (min-width: 480px) {
-  .cuisine-select-wrapper {
-    width: 15%;
-  }
-  .cuisine-select-wrapper.focused{
-    background: #A4B0BE 70%;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .cuisine-select-wrapper{
-    text-align: center;
-  }
-  .cuisine-select-option{
-    text-align: center;
-  }
+<style>
+/*Change default select style*/
+.el-input__wrapper {
+  width: 9em;
+  height: 2.5em;
+  --el-input-bg-color: var(--application-normal-background-color);
+  --el-input-placeholder-color: #FFFFFF;
 }
 </style>

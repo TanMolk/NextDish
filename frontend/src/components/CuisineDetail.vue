@@ -48,8 +48,7 @@
         <template v-slot>
           <p
               class="info-title"
-              style="margin-bottom: 1em;"
-          >Menu and environment </p>
+          >Menu and environment</p>
           <div
               v-if="detail"
               class="detail-pane highlight-container"
@@ -109,14 +108,14 @@
           :pane-key="items[3]"
       >
         <template v-slot>
+          <p class="info-title">Reviews</p>
           <div
               style="text-align: left;"
               v-if="detail"
               class="detail-pane"
           >
-            <p class="info-title">Reviews</p>
             <div
-                style="border-bottom: 1px solid;"
+                style="border-bottom: 1px solid;margin-bottom: 1.5em"
                 v-for="review in detail.reviews"
             >
               <p>{{ review.author_name }}</p>
@@ -229,12 +228,13 @@ export default {
 }
 
 .detail-pane {
+  overflow: auto;
   height: 31vh;
 }
 
 .info-title {
   text-align: left;
-  margin: 0;
+  margin: 0 0 1em 0;
   font-weight: 700;
 }
 
@@ -255,8 +255,8 @@ export default {
 }
 
 .highlight-image {
-  width: 10em;
-  height: 10em;
+  width: 8em;
+  height: 8em;
   margin-bottom: 1.5em;
 }
 
