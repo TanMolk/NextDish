@@ -28,7 +28,7 @@
           :pane-key="items[0]"
       >
         <template v-slot>
-          <div>
+          <div style="margin-top: 30%">
             Distance: {{ directionDetail?.routes[0].legs[0].distance.value }}m
             <br>
             <br>
@@ -231,7 +231,7 @@ export default {
 
 .detail-pane {
   overflow: auto;
-  height: calc(var(--doc-height) * 0.5);
+  height: calc(var(--doc-height) * 0.59);
 }
 
 .info-title {

@@ -17,13 +17,6 @@
     }
     window.addEventListener('resize', documentHeight);
     documentHeight()
-
-    //forbidden pull down to refresh page
-    document.addEventListener('touchmove', event => {
-        event.preventDefault()
-    }, { passive: false })
-
-
 </script>
 </body>
 </html>
