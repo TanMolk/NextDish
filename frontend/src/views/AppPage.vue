@@ -65,6 +65,7 @@
       user-guidance-step="1"
       class="cuisine-select-wrapper"
       @option-change="selectOptionChange($event)"
+      @click="listShowState=true"
   />
   <CuisineWindow
       :key="listDetailKey"
