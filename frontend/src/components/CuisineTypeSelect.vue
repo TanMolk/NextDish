@@ -6,6 +6,7 @@
 -->
 <template>
   <el-select
+      ref="elSelect"
       popper-class="custom-select-option"
       placeholder="Filter by"
       v-model="selectedOptionValue"
@@ -32,17 +33,11 @@ export default {
     }
   },
   methods: {
-    onMouseDown(){
-      this.isFocused = true;
-    },
-    onBlur(event){
-      if(!event.relatedTarget || !event.relatedTarget.classList.contains('custom-option')){
-      this.isFocused = false
-      }
-    },
     optionChange() {
       this.$emit("option-change", this.selectedOptionValue);
-      // this.isFocused = false;
+    },
+    makeSelectBlur(){
+      this.$refs.elSelect.blur();
     }
   }
 }

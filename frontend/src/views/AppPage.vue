@@ -61,6 +61,7 @@
     <!------------------Markers End-------------------->
   </GoogleMap>
   <CuisineTypeSelect
+      ref="cuisineTypeFilter"
       v-show="!directionModel"
       user-guidance-step="1"
       class="cuisine-select-wrapper"
@@ -375,6 +376,10 @@ export default {
      * @param item Data of the marker
      */
     markerClick(item) {
+      //select blur
+      this.$refs.cuisineTypeFilter.makeSelectBlur();
+
+      //set market invoke detail flag
       StorageUtil.set(Constants.STORAGE_IF_DETAIL_SHOW_BY_CLICK_MARKER,"true")
       this.listShowState = true;
       this.setMapCenter(item.geometry.location);
@@ -429,6 +434,7 @@ export default {
       }
     },
     OnMapClick(){
+      this.$refs.cuisineTypeFilter.makeSelectBlur();
       this.listShowState = false;
     }
   },
