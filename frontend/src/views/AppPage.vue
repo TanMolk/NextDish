@@ -65,7 +65,7 @@
       user-guidance-step="1"
       class="cuisine-select-wrapper"
       @option-change="selectOptionChange($event)"
-      @click="listShowState=true"
+      @option-click="this.listShowState=true"
   />
   <CuisineWindow
       :key="listDetailKey"
@@ -187,7 +187,7 @@ export default {
       /** flag of the page initialized state*/
       ifInitialized: false,
       /** the flag of showing the list/detail window*/
-      listShowState: true,
+      listShowState: false,
       /** if user use direction*/
       directionModel: false,
       /** loadingState*/

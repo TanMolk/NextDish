@@ -8,7 +8,7 @@
   <div class="welcome-page">
     <video-background
         src="./video/video.mp4"
-        style="height: var(--doc-height);;"
+        style="height: var(--doc-height);"
     >
       <div class="title">
       <span>
@@ -60,20 +60,37 @@ export default {
             "If you don’t give this permission, we cannot provide all function for you.",
             "Refresh",
             () => {
-              navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+
+              let newHref = location.href
+
+              if (!this.$route.query['permission']) {
+                newHref += "?" + "permission=true"
+              }
+
+              if (neverShow) {
+                if (!this.$route.query['neverShow']) {
+                  newHref += "&neverShow=true"
+                }
+              }
+
+              location.href = newHref;
             }
         )
       };
 
-      //ger location permission
+      //get location permission
       navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
     }
   },
-  beforeCreate() {
+  beforeMount() {
     //check if the first time
     if (StorageUtil.get(Constants.STORAGE_IS_USER_FIRST_USER_STAT)) {
       this.$router.push({path: "/app"});
       return;
+    }
+
+    if (this.$route.query['permission']) {
+      this.jumpToApp(this.$route.query['neverShow']);
     }
 
     //change background

@@ -44,8 +44,10 @@ export default {
   },
   methods: {
     async loadImage() {
-      if (this.info.photos) {
-        PlaceService.getPlaceImage(this.info.photos[0])
+
+      let photos = this.info.photos;
+      if (photos) {
+        PlaceService.getPlaceImage(photos[0])
             .then(resp => {
               if (resp) {
                 const blob = new window.Blob([resp.data], {type: 'image/jpeg'})
@@ -57,6 +59,9 @@ export default {
               console.log(err)
               this.loading = false;
             });
+      } else {
+        this.imageSrc = "/image-alt.png";
+        this.loading = false;
       }
     }
   },

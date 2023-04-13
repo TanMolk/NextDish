@@ -13,6 +13,10 @@
     >
       <template v-slot:titles>
         <div
+            :style="{
+              backgroundColor:selectedTab === item ? 'rgba(55,66,250,0.2)' : '',
+              color: selectedTab=== item ? '#3742FA' : ''
+            }"
             class="nut-tabs__titles-item tab-class"
             v-for="item in items"
             :key="item"
@@ -52,7 +56,7 @@
               class="info-title"
           >Menu and environment</p>
           <div
-              v-if="detail"
+              v-if="detail?.photos"
               class="highlight-container"
           >
             <el-image
@@ -65,6 +69,7 @@
                 :preview-teleported="true"
             />
           </div>
+          <p v-else>No information</p>
         </template>
       </nut-tab-pane>
 
@@ -166,17 +171,20 @@ export default {
         let resp = await PlaceService.getPlaceDetail(this.placeId);
         this.detail = resp.data;
 
-        for (const photo of this.detail.photos) {
-          PlaceService.getPlaceImage(photo)
-              .then(resp => {
-                if (resp) {
-                  const blob = new window.Blob([resp.data], {type: 'image/jpeg'})
-                  this.images.push(URL.createObjectURL(blob));
-                }
-              })
-              .catch(err => {
-                console.log(err)
-              });
+        let photos = this.detail.photos;
+        if (photos) {
+          for (const photo of photos) {
+            PlaceService.getPlaceImage(photo)
+                .then(resp => {
+                  if (resp) {
+                    const blob = new window.Blob([resp.data], {type: 'image/jpeg'})
+                    this.images.push(URL.createObjectURL(blob));
+                  }
+                })
+                .catch(err => {
+                  console.log(err)
+                });
+          }
         }
 
         await this.getDirection();
