@@ -23,10 +23,12 @@ if (MODE === "production") {
 
 
 //local storage constants
-const STORAGE_USER_LOCATION_LATITUDE = "currentPositionLat"
-const STORAGE_USER_LOCATION_LONGITUDE = "currentPositionLng"
+const STORAGE_USER_LOCATION_LATITUDE = "currentPositionLat";
+const STORAGE_USER_LOCATION_LONGITUDE = "currentPositionLng";
 //exist means is not the first time, don't exist means it is the first time
-const STORAGE_IS_USER_FIRST_USER_STAT = "userFirstUseState"
+const STORAGE_IS_USER_FIRST_USER_STAT = "userFirstUseState";
+//if detail is from marker clicking
+const STORAGE_IF_DETAIL_SHOW_BY_CLICK_MARKER = "detailShowByClickMarker";
 
 //client uuid
 const STORAGE_CLIENT_UUID = "clientId"
@@ -49,5 +51,6 @@ export default {
     STORAGE_USER_LOCATION_LATITUDE,
     STORAGE_USER_LOCATION_LONGITUDE,
     STORAGE_IS_USER_FIRST_USER_STAT,
+    STORAGE_IF_DETAIL_SHOW_BY_CLICK_MARKER,
     CLIENT_ID
 }

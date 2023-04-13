@@ -65,7 +65,7 @@
       user-guidance-step="1"
       class="cuisine-select-wrapper"
       @option-change="selectOptionChange($event)"
-      @option-click="this.listShowState=true"
+      @option-click="this.listShowState=true;this.$refs.cuisineList.changeInfoWindow('list');"
   />
   <CuisineWindow
       :key="listDetailKey"
@@ -375,6 +375,7 @@ export default {
      * @param item Data of the marker
      */
     markerClick(item) {
+      StorageUtil.set(Constants.STORAGE_IF_DETAIL_SHOW_BY_CLICK_MARKER,"true")
       this.listShowState = true;
       this.setMapCenter(item.geometry.location);
       this.restaurantData.detailPlaceId = item.place_id;
@@ -420,9 +421,15 @@ export default {
       } else {
         this.restaurantData.title = this.restaurantData.currentSelection;
       }
+
+      //if detail window is invoked by markers clicking, close all table, then remove that flag
+      if (StorageUtil.get(Constants.STORAGE_IF_DETAIL_SHOW_BY_CLICK_MARKER)){
+        this.listShowState = false;
+        StorageUtil.remove(Constants.STORAGE_IF_DETAIL_SHOW_BY_CLICK_MARKER);
+      }
     },
     OnMapClick(){
-      this.listShowState = !this.listShowState
+      this.listShowState = false;
     }
   },
   /**
