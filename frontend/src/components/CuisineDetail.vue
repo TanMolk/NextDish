@@ -161,6 +161,7 @@ export default {
   },
   watch: {
     placeId() {
+      this.selectedTab = this.items[0];
       this.getDetail();
     }
   },
