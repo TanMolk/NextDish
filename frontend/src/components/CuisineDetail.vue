@@ -39,11 +39,11 @@
             Time: {{ directionDetail?.routes[0].legs[0].duration.text }}
             <br>
             <br>
-            <button
-                style="font-size: 16px;height: 2em;width: 6em;"
+            <el-button
+                style="border: 1px grey solid"
                 @click="directionButtonClick"
             >Start Go
-            </button>
+            </el-button>
           </div>
         </template>
       </nut-tab-pane>
@@ -69,6 +69,10 @@
                 :preview-src-list="images"
                 :preview-teleported="true"
             />
+            <div
+                class="highlight-image"
+              v-if="images.length % 2 === 1"
+            ></div>
           </div>
           <p v-else>No information</p>
         </template>
