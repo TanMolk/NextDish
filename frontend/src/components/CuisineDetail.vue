@@ -32,7 +32,7 @@
           :pane-key="items[0]"
       >
         <template v-slot>
-          <div style="margin-top: 30%">
+          <div style="text-align: left;font-size: 20px;">
             Distance: {{ directionDetail?.routes[0].legs[0].distance.value }}m
             <br>
             <br>
@@ -40,6 +40,7 @@
             <br>
             <br>
             <button
+                style="font-size: 16px;height: 2em;width: 6em;"
                 @click="directionButtonClick"
             >Start Go
             </button>
@@ -233,14 +234,14 @@ export default {
 
 .tab-class {
   background-color: white;
-  border-radius: 1em;
+  border-radius: 0.5em;
 
   margin: 5px 5px;
 }
 
 .detail-pane {
   overflow: auto;
-  height: calc(var(--doc-height) * 0.59);
+  height: calc(var(--doc-height) * 0.55);
 }
 
 .info-title {
@@ -255,7 +256,7 @@ export default {
 }
 
 .title-column {
-  padding-right: 5em;
+  padding-right: 16px;
 }
 
 .highlight-container {
@@ -269,6 +270,8 @@ export default {
   width: 10em;
   height: 10em;
   margin-bottom: 1.5em;
+
+  border-radius: 0.5em;
 }
 
 </style>

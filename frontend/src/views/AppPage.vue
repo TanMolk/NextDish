@@ -11,8 +11,8 @@
       class="map"
       :map-id="Constants.GOOGLE_MAP_ID"
       :api-key="Constants.GOOGLE_MAP_API_KEY"
-      :zoom="14"
-      :min-zoom="14"
+      :zoom="13"
+      :min-zoom="13"
       :restriction="restriction"
       :gesture-handling="'greedy'"
       :disable-default-ui="true"
@@ -51,7 +51,8 @@
     <Marker
         v-for="item in restaurantData.showingItems"
         :options="{
-          label: item.name,
+          icon: {url:'/marker.png',scaledSize: {width:20,height:27}},
+          label: item.name.length > 10 ? item.name.substring(0,10) + '...' : item.name,
           position: item.geometry.location,
           title: item.rating + '',
           visible: item.place_id === this.restaurantData.detailPlaceId || !this.directionModel
@@ -66,7 +67,7 @@
       user-guidance-step="1"
       class="cuisine-select-wrapper"
       @option-change="selectOptionChange($event)"
-      @option-click="this.listShowState=true;this.$refs.cuisineList.changeInfoWindow('list');"
+      @option-click="selectOptionChange($event)"
   />
   <CuisineWindow
       :key="listDetailKey"
@@ -81,8 +82,8 @@
       @click-X="onClickX($event)"
       @place-id-change="onCuisineListChangePlaceId($event)"
       @direction-request="onDirectionRequest($event)"
-      @load-more-data="showMoreRestaurants"
-      @detail-change="this.restaurantData.title = $event"
+      @load-more-data="loadRecentRestaurant(restaurantData.currentSelection)"
+      @detail-change="this.restaurantData.title = $event.name;setMapCenter($event.geometry.location)"
   />
   <v-tour name="userGuidance" :steps="steps"></v-tour>
 </template>
@@ -138,6 +139,7 @@ export default {
         //close loading page, wait 1s for making sure map get initialized
         //why not this.$loading, because in setTimeout this doesn't point vue instance
         setTimeout(() => {
+          window.$mapInstance = this.mapInstance;
           ElLoading.service(option).close();
         }, 1000)
       } else {
@@ -168,7 +170,7 @@ export default {
         /** current selection of cuisine type select*/
         currentSelection: "All",
         /**set next page token for scrolling*/
-        nextPageToken: undefined,
+        nextPageToken: null,
       },
       mapOption: {
         zoom: 14,
@@ -219,6 +221,8 @@ export default {
     }
   },
   methods: {
+    ttttt(e){
+      console.log(e)},
     /**
      * set the center of Map to user location
      * set condition to make sure mapInstance is not null
@@ -270,7 +274,7 @@ export default {
 
           //If it doesn't initialize, firstly request restaurant data and set refer for mapInstance
           if (!this.ifInitialized) {
-            this.loadRecentRestaurant("");
+            this.loadRecentRestaurant(this.restaurantData.currentSelection);
             this.ifInitialized = true;
             this.mapInstance = this.$refs.mapInstance;
             this.setMapCenter(this.userLocation);
@@ -339,19 +343,23 @@ export default {
      * @param type restaurant type
      */
     selectOptionChange(type) {
-      this.restaurantData.currentSelection = type;
       this.restaurantData.title = type;
-      this.restaurantData.nextPageToken = undefined;
+      this.restaurantData.nextPageToken = null;
       this.listDetailWindowStates.noMoreData = false;
 
-      this.loadRecentRestaurant(type);
+      if (this.restaurantData.currentSelection !== type){
+        this.loadRecentRestaurant(type);
+        this.$refs.cuisineList.changeInfoWindow("list", true);
+      } else {
+        this.$refs.cuisineList.changeInfoWindow("list");
+      }
+
       this.listShowState = true;
       //quit direction model
       this.directionModel = false;
       this.setMapCenter(this.userLocation);
 
       //call sub component method
-      this.$refs.cuisineList.changeInfoWindow("list");
     },
     /**
      * Refresh nearby restaurant data set.
@@ -359,17 +367,37 @@ export default {
      */
     async loadRecentRestaurant(type) {
       this.listDetailWindowStates.windowShow = true;
-      let response = await PlaceService.getRestaurantWithKeywordInOneMile(this.userLocation, type);
 
-      //get all restaurants
-      this.restaurantData.showingItems = response.data.results;
+      let response
+      //if not initialize or type change
+      if (
+          this.restaurantData.currentSelection !== type
+          || !this.ifInitialized) {
+        response = await PlaceService.getRestaurantWithKeywordInOneMile(this.userLocation, type);
+        this.restaurantData.showingItems = response.data.results;
+
+        //only loaded data, change current type.
+        this.restaurantData.currentSelection = type;
+
+        //force update
+        this.listDetailKey++
+      } else {
+        response = await PlaceService.getRestaurantWithKeywordInOneMile(
+            this.userLocation,
+            null,
+            this.restaurantData.nextPageToken);
+        this.restaurantData.showingItems = [...this.restaurantData.showingItems, ...response.data.results]
+      }
 
       //set next page token for scrolling
-      this.restaurantData.nextPageToken = response.data.next_page_token;
+      let nextPageToken = response.data.next_page_token;
+      if (nextPageToken) {
+        this.restaurantData.nextPageToken = nextPageToken;
+      } else {
+        this.listDetailWindowStates.noMoreData = true;
+      }
 
       this.listDetailWindowStates.windowShow = false;
-      //force update
-      this.listDetailKey++
     },
     /**
      * What happens, if one restaurant marker get clicked
@@ -409,18 +437,10 @@ export default {
       this.listShowState = false;
       this.directionModel = true;
     },
-    async showMoreRestaurants() {
-      let nextPageToken = this.restaurantData.nextPageToken;
-      if (nextPageToken) {
-        let resp = await PlaceService.getRestaurantWithKeywordInOneMile(this.userLocation, null, nextPageToken);
-        this.restaurantData.showingItems = [...this.restaurantData.showingItems, ...resp.data.results]
-        this.restaurantData.nextPageToken = resp.data.next_page_token;
-      } else {
-        this.listDetailWindowStates.noMoreData = true;
-      }
-    },
     onClickX(value) {
-      //if it is showing list, close cuisine window;else change title to current selection
+
+      //if it is showing list, close cuisine window
+      //else change title to current selection
       if (value) {
         this.listShowState = false
       } else {
@@ -448,8 +468,6 @@ export default {
     });
     //If it gets location successfully, the loading will disappear.
     this.freshUserLocation();
-  },
-  mounted() {
   }
 }
 </script>

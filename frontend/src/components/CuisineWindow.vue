@@ -6,11 +6,17 @@
 -->
 <template>
   <div
+      ref="windowWrapper"
       class="li-wrapper"
       :style="{overflow: listShowState?'auto':'hidden'}"
   >
-    <div class="header">
-      <span class="title">{{ title }}</span>
+    <div
+        :style="{marginTop:listShowState ? '' : '2em'}"
+        class="header"
+    >
+      <span
+          :style="{fontSize: listShowState ? '2em' : '1.5em'}"
+          class="title">{{ title }}</span>
       <button
           class="exit"
           @click="clickX()"
@@ -82,9 +88,6 @@ export default {
       //send update event to outside
       this.$emit("place-id-change", newVar)
     },
-    title(newVar) {
-      this.windowTitle = newVar;
-    }
   },
   data() {
     return {
@@ -96,6 +99,10 @@ export default {
        * store placeId for change
        */
       placeIdForDetail: null,
+      /**
+       * the position of scrollbar
+       */
+      scrollTop: null,
     }
   },
   methods: {
@@ -108,6 +115,11 @@ export default {
 
       if (!this.listShowState) {
         this.listShowState = true;
+
+        //set to original position
+        this.$nextTick(() => {
+          this.$refs.windowWrapper.scrollTop = this.scrollTop;
+        })
       }
     },
     /**
@@ -116,12 +128,25 @@ export default {
      * @param item data of showing detail
      */
     changeInfoWindow(type, item) {
+      //record scrollbar position
+      this.scrollTop = this.$refs.windowWrapper.scrollTop;
+
       if (type === "detail") {
-        this.listShowState = false;
-        this.placeIdForDetail = item.place_id;
-        this.$emit("detail-change", item.name);
+        this.$nextTick(() => {
+          this.$refs.windowWrapper.scrollTop = 0;
+          this.listShowState = false;
+          this.placeIdForDetail = item.place_id;
+          this.$emit("detail-change", item);
+        })
       } else if (type === "list") {
         this.listShowState = true;
+
+        //set to original position
+        if (item) {
+          this.$nextTick(() => {
+            this.$refs.windowWrapper.scrollTop = this.scrollTop;
+          })
+        }
       }
     },
     loadMoreData() {
@@ -157,7 +182,6 @@ export default {
   display: inline-block;
   max-width: 20ch;
   margin: 5px 0 0 0;
-  font-size: 1.5em;
   font-weight: 600;
 }
 

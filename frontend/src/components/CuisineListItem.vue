@@ -76,24 +76,31 @@ export default {
 
 <style scoped>
 .wrapper {
+  height: 70px;
+
   display: grid;
   grid-template-columns: repeat(3, 1fr );
   overflow: hidden;
 
-  padding: 10px;
-  border: 1px solid white;
+  padding: 0;
+
+  border-width: 0 1px 1px 1px;
+  border-color: black;
+  border-style: solid;
 }
 
 .img {
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   margin: auto auto;
 
-  border-radius: 1em;
+  border-radius: 0.5em;
 }
 
 .info {
   margin: auto auto auto 1em;
+
+  text-align: left;
 }
 
 .info-text {
@@ -105,7 +112,7 @@ export default {
   /*20 characters*/
   width: 20ch;
 
-  padding-bottom: 20px;
+  padding-bottom: 5px;
 }
 
 .mark {

@@ -17,7 +17,7 @@
         :key="type"
         :label="type"
         :value="type"
-        @click="this.$emit('option-click')"
+        @click="type === selectedOptionValue ? this.$emit('option-click', type) : ''"
     />
   </el-select>
 </template>
