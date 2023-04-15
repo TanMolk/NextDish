@@ -461,7 +461,7 @@ export default {
     onDetailChange(e){
       let name = e.name;
       if (name.length > 47){
-        name = name.substring(0,47) + "...";
+        name = name.substring(0,46) + "...";
       }
       this.restaurantData.title = name;
       this.setMapCenter(e.geometry.location)

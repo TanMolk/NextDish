@@ -249,7 +249,7 @@ export default {
 
 .detail-pane {
   overflow: auto;
-  height: calc(var(--doc-height) * 0.55);
+  height: calc(var(--doc-height) * 0.6);
 }
 
 .info-title {

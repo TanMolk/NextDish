@@ -11,11 +11,14 @@
       :style="{overflow: listShowState?'auto':'hidden'}"
   >
     <div
-        :style="{marginTop:listShowState ? '' : '2em'}"
+        :style="{marginTop:listShowState ? '' : '1em'}"
         class="header"
     >
       <span
-          :style="{fontSize: listShowState ? '2em' : '1.5em'}"
+          :style="{
+                    fontSize: listShowState ? '2em' : '1.5em',
+                    margin: listShowState ? '20px 0': '-10px 0 0 0',
+          }"
           class="title">{{ title }}</span>
       <button
           class="exit"
@@ -184,8 +187,7 @@ export default {
 
 .title {
   display: inline-block;
-  max-width: 20ch;
-  margin: 5px 0 0 0;
+  max-width: 18ch;
   font-weight: 600;
 }
 
