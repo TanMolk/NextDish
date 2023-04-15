@@ -20,7 +20,11 @@
       <button
           class="exit"
           @click="clickX()"
-      >X
+      >
+        <el-image
+            style="width: 16px;height: 16px;"
+            src="/x.png"
+        />
       </button>
     </div>
     <div>

@@ -83,7 +83,7 @@
       @place-id-change="onCuisineListChangePlaceId($event)"
       @direction-request="onDirectionRequest($event)"
       @load-more-data="loadRecentRestaurant(restaurantData.currentSelection)"
-      @detail-change="this.restaurantData.title = $event.name;setMapCenter($event.geometry.location)"
+      @detail-change="onDetailChange($event)"
   />
   <v-tour name="userGuidance" :steps="steps"></v-tour>
 </template>
@@ -184,6 +184,7 @@ export default {
       userCircleOption: {
         center: this.userLocation,
         radius: mileToMeter(1),
+        strokeWeight: 0.5,
         strokeColor: '#d7dbdf',
         visible: this.ifInitialized
       },
@@ -456,6 +457,14 @@ export default {
     OnMapClick(){
       this.$refs.cuisineTypeFilter.makeSelectBlur();
       this.listShowState = false;
+    },
+    onDetailChange(e){
+      let name = e.name;
+      if (name.length > 47){
+        name = name.substring(0,47) + "...";
+      }
+      this.restaurantData.title = name;
+      this.setMapCenter(e.geometry.location)
     }
   },
   /**

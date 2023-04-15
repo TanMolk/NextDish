@@ -10,6 +10,7 @@
     <nut-tabs
         v-model="selectedTab"
         :background="'#9faab8'"
+        style="margin-top: -12px"
     >
       <template v-slot:titles>
         <div
@@ -40,7 +41,7 @@
             <br>
             <br>
             <el-button
-                style="border: 1px grey solid"
+                style="border: 1px grey solid;color: black"
                 @click="directionButtonClick"
             >Start Go
             </el-button>
@@ -127,12 +128,15 @@
               v-if="detail"
           >
             <div
-                style="border-bottom: 1px solid;margin-bottom: 1.5em"
-                v-for="review in detail.reviews"
+                v-if="detail.reviews"
+                v-for="(review, index) in detail.reviews"
+                style="margin-bottom: 1.5em;"
+                :style="{borderBottom: index !== detail.reviews.length - 1 ? '1px solid': ''}"
             >
               <p>{{ review.author_name }}</p>
               <p style="word-break: break-word;">{{ review.text }}</p>
             </div>
+            <p v-else>No information</p>
           </div>
         </template>
       </nut-tab-pane>
