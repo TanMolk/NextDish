@@ -25,8 +25,11 @@ if (MODE === "production") {
 //local storage constants
 const STORAGE_USER_LOCATION_LATITUDE = "currentPositionLat";
 const STORAGE_USER_LOCATION_LONGITUDE = "currentPositionLng";
-//exist means is not the first time, don't exist means it is the first time
-const STORAGE_IS_USER_FIRST_USER_STAT = "userFirstUseState";
+//if show the welcome page, when access to root path
+const STORAGE_IF_NEVER_SHOW = "ifNeverShowWelcomePage";
+//if user has experienced user guidance
+const STORAGE_IF_EXPERIENCE_USER_GUIDANCE = "ifExperiencedGuidance";
+
 //if detail is from marker clicking
 const STORAGE_IF_DETAIL_SHOW_BY_CLICK_MARKER = "detailShowByClickMarker";
 
@@ -50,7 +53,8 @@ export default {
     GOOGLE_MAP_API_KEY,
     STORAGE_USER_LOCATION_LATITUDE,
     STORAGE_USER_LOCATION_LONGITUDE,
-    STORAGE_IS_USER_FIRST_USER_STAT,
+    STORAGE_IF_NEVER_SHOW,
+    STORAGE_IF_EXPERIENCE_USER_GUIDANCE,
     STORAGE_IF_DETAIL_SHOW_BY_CLICK_MARKER,
     CLIENT_ID
 }

@@ -48,7 +48,7 @@ export default {
       let successCallback = (pos) => {
         //if success, jump to app
         if (neverShow) {
-          StorageUtil.set(Constants.STORAGE_IS_USER_FIRST_USER_STAT, "false");
+          StorageUtil.set(Constants.STORAGE_IF_NEVER_SHOW, "true");
         }
 
         this.$router.push({path: "/app"});
@@ -84,7 +84,7 @@ export default {
   },
   beforeMount() {
     //check if the first time
-    if (StorageUtil.get(Constants.STORAGE_IS_USER_FIRST_USER_STAT)) {
+    if (StorageUtil.get(Constants.STORAGE_IF_NEVER_SHOW)) {
       this.$router.push({path: "/app"});
       return;
     }

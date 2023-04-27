@@ -508,8 +508,11 @@ export default {
     this.freshUserLocation();
   },
   mounted() {
-    this.guidanceModel = true;
-    this.$tours['userGuidance'].start()
+    if (!StorageUtil.get(Constants.STORAGE_IF_EXPERIENCE_USER_GUIDANCE)) {
+      this.guidanceModel = true;
+      this.$tours['userGuidance'].start()
+      StorageUtil.set(Constants.STORAGE_IF_EXPERIENCE_USER_GUIDANCE, "true");
+    }
   }
 }
 </script>
