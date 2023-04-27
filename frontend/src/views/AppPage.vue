@@ -39,7 +39,6 @@
     <!----------------------Markers-------------------->
 
     <CustomMarker
-        user-guidance-step="2"
         :options="userMarkerOption"
     >
       <img style="opacity: 0.7;width: 2em;height: 2em" src="@/assets/me.png" alt="me"/>
@@ -62,14 +61,17 @@
     <!------------------Markers End-------------------->
   </GoogleMap>
   <CuisineTypeSelect
+      :guidance-mode="guidanceModel"
       ref="cuisineTypeFilter"
       v-show="!directionModel"
-      user-guidance-step="1"
       class="cuisine-select-wrapper"
+      @click="onSelectClick"
       @option-change="selectOptionChange($event)"
       @option-click="selectOptionChange($event)"
   />
   <CuisineWindow
+      user-guidance="3"
+      :guidance-mode="guidanceModel"
       :key="listDetailKey"
       ref="cuisineList"
       v-show="listShowState"
@@ -106,9 +108,9 @@ export default {
     Constants() {
       return Constants
     },
-    restriction(){
+    restriction() {
       return {
-        latLngBounds:{
+        latLngBounds: {
           north: this.userLocation.lat + 0.025,
           south: this.userLocation.lat - 0.025,
           east: this.userLocation.lng + 0.05,
@@ -203,27 +205,34 @@ export default {
       listDetailKey: 0,
 
       /** user guidance steps*/
+      guidanceModel: false,
       steps: [
         {
-          target: '[user-guidance-step="1"]',
+          target: '.cuisine-select-wrapper',
           params: {
             highlight: true
           },
-          content: 'Step 1'
+          content: 'Here you can select your favourite food. Click it!'
         },
         {
-          target: '[user-guidance-step="2"]',
+          target: '.el-popper',
+          params: {
+            highlight: true,
+            placement: 'left'
+          },
+          content: 'Choose one type.'
+        },
+        {
+          target: '[user-guidance="3"]',
           params: {
             highlight: true
           },
-          content: 'Step 2'
-        }
+          content: 'Here it is.'
+        },
       ]
     }
   },
   methods: {
-    ttttt(e){
-      console.log(e)},
     /**
      * set the center of Map to user location
      * set condition to make sure mapInstance is not null
@@ -313,26 +322,28 @@ export default {
               break;
           }
           ElMessageBox({
-            title:'',
-            message: h('p',{style: 'color: white'},[
-                h('span', {style: 'font-family: inter'},[
-                    h('span',{style: 'font-weight: 400'},[
-                        h('span', {style: 'font-size: 1.5em'},errorMessage)
-                    ])
+            title: '',
+            message: h('p', {style: 'color: white'}, [
+              h('span', {style: 'font-family: inter'}, [
+                h('span', {style: 'font-weight: 400'}, [
+                  h('span', {style: 'font-size: 1.5em'}, errorMessage)
                 ])
+              ])
             ]),
-            customClass:'locationServiceAlert',
-            confirmButtonClass:'confirmButton',
-            showClose:false,
-            center:true,
-            buttonSize:"large",
-            closeOnClickModal:false,
-            showConfirmButton:true,
-            autofocus:false,
+            customClass: 'locationServiceAlert',
+            confirmButtonClass: 'confirmButton',
+            showClose: false,
+            center: true,
+            buttonSize: "large",
+            closeOnClickModal: false,
+            showConfirmButton: true,
+            autofocus: false,
           })
               //Rerun freshUserLocation after user tap confirm button
               //without fresh the page after allow geolocation in browser
-              .then(() => {this.freshUserLocation()})
+              .then(() => {
+                this.freshUserLocation()
+              })
         }
 
         //Set the callback function
@@ -344,11 +355,15 @@ export default {
      * @param type restaurant type
      */
     selectOptionChange(type) {
+      if (this.guidanceModel && this.$tours['userGuidance'].currentStep === 1) {
+        this.$tours['userGuidance'].nextStep()
+      }
+
       this.restaurantData.title = type;
       this.restaurantData.nextPageToken = null;
       this.listDetailWindowStates.noMoreData = false;
 
-      if (this.restaurantData.currentSelection !== type){
+      if (this.restaurantData.currentSelection !== type) {
         this.loadRecentRestaurant(type);
         this.$refs.cuisineList.changeInfoWindow("list", true);
       } else {
@@ -409,7 +424,7 @@ export default {
       this.$refs.cuisineTypeFilter.makeSelectBlur();
 
       //set market invoke detail flag
-      StorageUtil.set(Constants.STORAGE_IF_DETAIL_SHOW_BY_CLICK_MARKER,"true")
+      StorageUtil.set(Constants.STORAGE_IF_DETAIL_SHOW_BY_CLICK_MARKER, "true")
       this.listShowState = true;
       this.setMapCenter(item.geometry.location);
       this.restaurantData.detailPlaceId = item.place_id;
@@ -422,6 +437,11 @@ export default {
      * @param data place_id
      */
     onCuisineListChangePlaceId(data) {
+      if (this.guidanceModel && this.$tours['userGuidance'].currentStep === 2) {
+        this.guidanceModel = false;
+        this.$tours['userGuidance'].finish();
+      }
+
       this.restaurantData.detailPlaceId = data;
       //quit direction model
       this.directionModel = false;
@@ -439,6 +459,10 @@ export default {
       this.directionModel = true;
     },
     onClickX(value) {
+      if (this.guidanceModel && this.$tours['userGuidance'].currentStep === 2) {
+        this.guidanceModel = false;
+        this.$tours['userGuidance'].finish();
+      }
 
       //if it is showing list, close cuisine window
       //else change title to current selection
@@ -449,22 +473,27 @@ export default {
       }
 
       //if detail window is invoked by markers clicking, close all table, then remove that flag
-      if (StorageUtil.get(Constants.STORAGE_IF_DETAIL_SHOW_BY_CLICK_MARKER)){
+      if (StorageUtil.get(Constants.STORAGE_IF_DETAIL_SHOW_BY_CLICK_MARKER)) {
         this.listShowState = false;
         StorageUtil.remove(Constants.STORAGE_IF_DETAIL_SHOW_BY_CLICK_MARKER);
       }
     },
-    OnMapClick(){
+    OnMapClick() {
       this.$refs.cuisineTypeFilter.makeSelectBlur();
       this.listShowState = false;
     },
-    onDetailChange(e){
+    onDetailChange(e) {
       let name = e.name;
-      if (name.length > 47){
-        name = name.substring(0,46) + "...";
+      if (name.length > 47) {
+        name = name.substring(0, 46) + "...";
       }
       this.restaurantData.title = name;
       this.setMapCenter(e.geometry.location)
+    },
+    onSelectClick() {
+      if (this.guidanceModel && this.$tours['userGuidance'].currentStep === 0) {
+        this.$tours['userGuidance'].nextStep();
+      }
     }
   },
   /**
@@ -477,26 +506,30 @@ export default {
     });
     //If it gets location successfully, the loading will disappear.
     this.freshUserLocation();
+  },
+  mounted() {
+    this.guidanceModel = true;
+    this.$tours['userGuidance'].start()
   }
 }
 </script>
 
 <style>
-.el-message-box{
+.el-message-box {
   box-sizing: border-box;
   background: #034BFC;
   border-width: 0;
   text-align-last: center;
 }
 
-.confirmButton{
+.confirmButton {
   background: #A4B0BE 70%;
-  outline:none;
+  outline: none;
   font-weight: bold;
   border-width: 0;
 }
 
-.confirmButton:hover{
+.confirmButton:hover {
   background: #A4B0BE 50%;
 }
 
@@ -509,6 +542,7 @@ export default {
   color: #d7dbdf;
 
 }
+
 .cuisine-select-wrapper {
   position: absolute;
   top: 5%;

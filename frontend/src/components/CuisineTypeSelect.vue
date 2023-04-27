@@ -7,7 +7,7 @@
 <template>
   <el-select
       ref="elSelect"
-      popper-class="custom-select-option"
+      :popper-class="guidanceMode ? 'custom-select-option v-tour__target--highlighted' : 'custom-select-option'"
       placeholder="Filter by"
       v-model="selectedOptionValue"
       @change="optionChange"
@@ -25,6 +25,9 @@
 <script>
 export default {
   name: "CuisineTypeSelect",
+  props: {
+    guidanceMode:Boolean
+  },
   data() {
     return {
       types: ["All", "American", "British", "Chinese", "Indian", "Italian", "Thai"],

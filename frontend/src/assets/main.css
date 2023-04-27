@@ -25,3 +25,11 @@ body {
 
     background-color: var(--application-normal-background-color);
 }
+
+.v-step__buttons{
+    display: none;
+}
+
+.v-step__content{
+    margin: 0 !important;
+}

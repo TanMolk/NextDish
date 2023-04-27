@@ -8,6 +8,7 @@
   <div
       ref="windowWrapper"
       class="li-wrapper"
+      :class="guidanceMode ? 'v-tour__target--highlighted' : ''"
       :style="{overflow: listShowState?'auto':'hidden'}"
   >
     <div
@@ -85,6 +86,7 @@ export default {
     //data of detail
     placeId: String,
     mapInstance: Object,
+    guidanceMode:Boolean
   },
   watch: {
     //if prop placeId change, update to placeIdForDetail
