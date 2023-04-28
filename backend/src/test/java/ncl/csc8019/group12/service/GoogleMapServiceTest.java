@@ -25,7 +25,7 @@ public class GoogleMapServiceTest {
     @Test
     public void testGetPlaceDetail() {
         String placeId = "ChIJE-u-MMpwfkgRe5igEnexTN0";
-        JSONObject jsonObject = googleMapService.getPlaceDetail(placeId);
+        JSONObject jsonObject = googleMapService.getPlaceDetail(placeId, "test");
         Assert.assertNotNull(jsonObject);
 
         System.out.println(jsonObject);

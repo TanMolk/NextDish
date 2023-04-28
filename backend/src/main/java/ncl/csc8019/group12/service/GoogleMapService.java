@@ -1,10 +1,14 @@
 package ncl.csc8019.group12.service;
 
 
+import ncl.csc8019.group12.enums.google.map.APIPathEnum;
+import ncl.csc8019.group12.enums.google.map.RequestFieldEnum;
+import ncl.csc8019.group12.enums.google.map.ResponseFieldEnum;
 import ncl.csc8019.group12.exception.ExternalAPIException;
 import ncl.csc8019.group12.exception.ExternalAPIParamsException;
 import ncl.csc8019.group12.exception.ExternalAPIResponseException;
 import ncl.csc8019.group12.pojo.Location;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -49,10 +53,28 @@ public class GoogleMapService {
      * @param placeID The place_id return by google place api, which is the identifier of a place
      * @author Rachel
      */
-    public JSONObject getPlaceDetail(String placeID) {
+    public JSONObject getPlaceDetail(String placeID, String sessionId) {
         Map<String, String> params = new HashMap<>();
         params.put(RequestFieldEnum.PLACE_ID.name, placeID);
-        return baseRequest(APIPathEnum.DETAIL, params).getJSONObject("result");
+        params.put(RequestFieldEnum.SESSION_TOKEN.name, sessionId);
+
+
+        JSONObject result = baseRequest(APIPathEnum.DETAIL, params).getJSONObject("result");
+
+        //handler additions
+        JSONArray additions = new JSONArray();
+        for (ResponseFieldEnum addition : ResponseFieldEnum.getAdditions()) {
+
+            if (result.has(addition.name)) {
+                String builder = addition.name.replace("_", " ")
+                        + ": "
+                        + (result.getBoolean(addition.name) ? "yes" : "no");
+                additions.put(builder);
+            }
+        }
+        result.put("additions", additions);
+
+        return result;
     }
 
     /**
@@ -135,6 +157,13 @@ public class GoogleMapService {
             }
         }
 
+        //select return fields only for Detail API
+        if (APIPathEnum.DETAIL.equals(api)) {
+            requestParams.put(
+                    RequestFieldEnum.FIELDS.name,
+                    RequestFieldEnum.FIELDS.defaultValue);
+        }
+
         //Build the request
         String url = buildRequestUrl(api.path, requestParams);
 
@@ -161,105 +190,4 @@ public class GoogleMapService {
         return urlBuilder.build().encode().toString();
     }
 
-    /**
-     * @author Wei
-     * Enum for possible used api
-     * <a href="https://developers.google.com/maps/documentation/places/web-service">API Document</a>
-     */
-    private enum APIPathEnum {
-        /**
-         * <a href="https://developers.google.com/maps/documentation/places/web-service/search-nearby">Nearby Place Search</a>
-         */
-        NEARBY("/place/nearbysearch/json",
-                new RequestFieldEnum[][]{
-                        new RequestFieldEnum[]{
-                                RequestFieldEnum.RADIUS,
-                                RequestFieldEnum.LOCATION
-                        },
-                        new RequestFieldEnum[]{
-                                RequestFieldEnum.PAGE_TOKEN,
-                        }}),
-
-        /**
-         * <a href="https://developers.google.com/maps/documentation/places/web-service/details">Place Detail</a>
-         */
-        DETAIL("/place/details/json",
-                new RequestFieldEnum[][]{
-                        new RequestFieldEnum[]{
-                                RequestFieldEnum.PLACE_ID,
-                        }}),
-
-        /**
-         * <a href="https://developers.google.com/maps/documentation/places/web-service/photos">Photo</a>
-         */
-        PHOTO("/place/photo", null),
-
-        ;
-
-        /**
-         * Path for this api
-         */
-        private final String path;
-
-        /**
-         * Required query params for this api
-         */
-        private final RequestFieldEnum[][] requiredParams;
-
-        APIPathEnum(String path, RequestFieldEnum[][] requiredParam) {
-            this.path = path;
-            this.requiredParams = requiredParam;
-        }
-    }
-
-    /**
-     * @author Wei
-     * Field name of google api request
-     */
-    private enum RequestFieldEnum {
-
-
-        KEY("key"),
-
-        //for nearby place api
-        //like -1.123,11.123
-        LOCATION("location"),
-        RADIUS("radius"),
-        TYPE("type"),
-        KEYWORD("keyword"),
-
-        PAGE_TOKEN("pagetoken"),
-
-
-        //for place detail api
-        PLACE_ID("place_id"),
-
-        ;
-
-        private final String name;
-
-        RequestFieldEnum(String name) {
-            this.name = name;
-        }
-    }
-
-    /**
-     * @author Wei
-     * Field name of google api response
-     */
-    private enum ResponseFieldEnum {
-        /**
-         * To judge if a request is fine.
-         * "OK" means normal
-         */
-        STATUS("status"),
-        NEXT_PAGE_TOKEN("next_page_token"),
-        ;
-
-        private final String name;
-
-        ResponseFieldEnum(String name) {
-            this.name = name;
-        }
-    }
 }

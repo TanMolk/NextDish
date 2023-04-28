@@ -143,7 +143,7 @@ public class PlaceController {
             return response.toString();
         }
 
-        response = googleMapService.getPlaceDetail(placeId);
+        response = googleMapService.getPlaceDetail(placeId, clientId);
         GOOGLE_API_REQUEST_AMOUNT.addAndGet(1);
         cacheService.cacheResponse(response, placeId);
         return response.toString();

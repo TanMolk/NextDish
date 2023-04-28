@@ -9,7 +9,7 @@
     --restaurants-list-detail-window-width: 100vw;
     --restaurants-list-detail-window-height: calc(var(--doc-height) * 0.7);
     --restaurants-list-detail-window-left: calc(50% - 50vw);
-    --restaurants-list-detail-window-tab-pane-height: calc(var(--doc-height) * 0.6);
+    --restaurants-list-detail-window-tab-pane-height: calc(var(--doc-height) * 0.55);
 
 }
 

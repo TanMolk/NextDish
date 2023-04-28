@@ -508,11 +508,11 @@ export default {
     this.freshUserLocation();
   },
   mounted() {
-    if (!StorageUtil.get(Constants.STORAGE_IF_EXPERIENCE_USER_GUIDANCE)) {
-      this.guidanceModel = true;
-      this.$tours['userGuidance'].start()
-      StorageUtil.set(Constants.STORAGE_IF_EXPERIENCE_USER_GUIDANCE, "true");
-    }
+    // if (!StorageUtil.get(Constants.STORAGE_IF_EXPERIENCE_USER_GUIDANCE)) {
+    //   this.guidanceModel = true;
+    //   this.$tours['userGuidance'].start()
+    //   StorageUtil.set(Constants.STORAGE_IF_EXPERIENCE_USER_GUIDANCE, "true");
+    // }
   }
 }
 </script>

@@ -37,18 +37,32 @@
       >
         <template v-slot>
           <div style="text-align: left;font-size: 20px;">
-            Distance: {{ directionDetail?.routes[0].legs[0].distance.value }}m
-            <br>
-            <br>
-            Time: {{ directionDetail?.routes[0].legs[0].duration.text }}
-            <br>
-            <br>
-            <el-button
-                v-show="mapInstance"
-                style="border: 1px grey solid;color: black"
-                @click="directionButtonClick"
-            >Start Go
-            </el-button>
+            <div>
+              Distance: {{ directionDetail?.routes[0].legs[0].distance.value }}m
+              <br>
+              <br>
+              Time: {{ directionDetail?.routes[0].legs[0].duration.text }}
+              <br>
+              <br>
+              <el-button
+                  v-show="mapInstance"
+                  style="border: 1px grey solid;color: black"
+                  @click="directionButtonClick"
+              >Start Go
+              </el-button>
+            </div>
+            <div
+                v-if="detail?.additions && detail.additions.length > 0"
+            >
+              <p>Addition</p>
+              <table>
+                <tr
+                    v-for="addition in detail.additions"
+                >
+                  <td>{{ addition }}</td>
+                </tr>
+              </table>
+            </div>
           </div>
         </template>
       </nut-tab-pane>
@@ -297,10 +311,10 @@ export default {
 .disable {
   pointer-events: none;
   background-color: grey;
-  text-decoration:line-through;
+  text-decoration: line-through;
 }
 
-.share-model{
+.share-model {
   --restaurants-list-detail-window-tab-pane-height: calc(var(--doc-height) * 0.8);
 }
 
