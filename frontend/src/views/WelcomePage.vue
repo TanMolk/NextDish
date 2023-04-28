@@ -10,7 +10,9 @@
         src="./video/video.mp4"
         style="height: var(--doc-height);"
     >
-      <div class="title">
+      <div class="title"
+           @click="clickTitle"
+      >
       <span>
       Newcastle Feed your stomach
       </span>
@@ -38,6 +40,11 @@ import MsgBoxUtil from "@/utils/MsgBoxUtil";
 
 export default {
   name: "WelcomePage",
+  data() {
+    return{
+      clickTime:0,
+    }
+  },
   methods: {
     jumpToApp(neverShow) {
       //show loading
@@ -80,6 +87,12 @@ export default {
 
       //get location permission
       navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+    },
+    clickTitle(){
+      this.clickTime++;
+      if (this.clickTime === 3){
+        new window.VConsole();
+      }
     }
   },
   beforeMount() {
