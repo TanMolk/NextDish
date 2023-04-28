@@ -22,8 +22,18 @@
           }"
           class="title">{{ title }}</span>
       <button
+          v-show="supportShare && placeIdForDetail"
+          class="share"
+          @click="clickShare"
+      >
+        <el-image
+            style="width: 16px;height: 16px;"
+            src="/share.png"
+        />
+      </button>
+      <button
           class="exit"
-          @click="clickX()"
+          @click="clickX"
       >
         <el-image
             style="width: 16px;height: 16px;"
@@ -58,8 +68,10 @@
         </li>
       </ul>
       <CuisineDetail
+          ref="cuisineDetail"
           :map-instance="mapInstance"
           :place-id="placeIdForDetail"
+          :share-model="false"
           class="cuisine-detail"
           v-show="!listShowState"
           @direction-request="this.$emit('direction-request',$event);"
@@ -71,6 +83,7 @@
 <script>
 import CuisineListItem from "@/components/CuisineListItem.vue";
 import CuisineDetail from "@/components/CuisineDetail.vue";
+import Constants from "@/constants/Constants";
 
 export default {
   name: "CuisineWindow",
@@ -86,7 +99,7 @@ export default {
     //data of detail
     placeId: String,
     mapInstance: Object,
-    guidanceMode:Boolean
+    guidanceMode: Boolean
   },
   watch: {
     //if prop placeId change, update to placeIdForDetail
@@ -112,6 +125,7 @@ export default {
        * the position of scrollbar
        */
       scrollTop: null,
+      supportShare: Constants.SUPPORT_SHARE
     }
   },
   methods: {
@@ -160,6 +174,16 @@ export default {
     },
     loadMoreData() {
       this.$emit("load-more-data");
+    },
+    clickShare() {
+      let detail = this.$refs.cuisineDetail.detail;
+      const share = {
+        title: detail.name,
+        text: 'I found a really nice restaurant, come with me!',
+        url: '/share?placeId=' + this.placeIdForDetail,
+      };
+
+      navigator.share(share);
     }
   }
 }
@@ -202,7 +226,18 @@ export default {
 
   background-color: transparent;
 
-  color: #FFFFFF;
+  font-size: 1.1em;
+}
+
+.share {
+  position: absolute;
+  left: 5%;
+  top: 2.5%;
+
+  border: none;
+
+  background-color: transparent;
+
   font-size: 1.1em;
 }
 </style>

@@ -1,5 +1,6 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import WelcomePage from "@/views/WelcomePage.vue";
+import SharePage from "@/views/SharePage.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,6 +15,11 @@ const router = createRouter({
             name: 'app',
             //lazy-loaded
             component: () => import('../views/AppPage.vue')
+        },
+        {
+            path: '/share',
+            name: 'share',
+            component: SharePage
         }
     ]
 })

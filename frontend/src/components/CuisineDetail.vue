@@ -5,7 +5,9 @@
  @createDate 2023/03/13
 -->
 <template>
-  <div>
+  <div
+      :class="shareModel ? 'share-model' : ''"
+  >
     <!--      Pane Tabs    -->
     <nut-tabs
         v-model="selectedTab"
@@ -19,6 +21,7 @@
               color: selectedTab=== item ? '#3742FA' : ''
             }"
             class="nut-tabs__titles-item tab-class"
+            :class="shareModel && item === items[0] ? 'disable' : ''"
             v-for="item in items"
             :key="item"
             @click="selectedTab = item"
@@ -41,6 +44,7 @@
             <br>
             <br>
             <el-button
+                v-show="mapInstance"
                 style="border: 1px grey solid;color: black"
                 @click="directionButtonClick"
             >Start Go
@@ -72,7 +76,7 @@
             />
             <div
                 class="highlight-image"
-              v-if="images.length % 2 === 1"
+                v-if="images.length % 2 === 1"
             ></div>
           </div>
           <p v-else>No information</p>
@@ -155,6 +159,7 @@ export default {
   props: {
     placeId: String,
     mapInstance: Object,
+    shareModel: Boolean
   },
   data() {
     return {
@@ -197,7 +202,9 @@ export default {
           }
         }
 
-        await this.getDirection();
+        if (!this.shareModel) {
+          await this.getDirection();
+        }
       }
     },
     /**
@@ -234,7 +241,11 @@ export default {
     },
     directionButtonClick() {
       this.$emit("direction-request", this.directionDetail);
-    }
+    },
+  },
+  async mounted() {
+    this.selectedTab = this.items[1];
+    await this.getDetail();
   }
 }
 </script>
@@ -249,7 +260,7 @@ export default {
 
 .detail-pane {
   overflow: auto;
-  height: calc(var(--doc-height) * 0.6);
+  height: var(--restaurants-list-detail-window-tab-pane-height)
 }
 
 .info-title {
@@ -280,6 +291,16 @@ export default {
   margin-bottom: 1.5em;
 
   border-radius: 0.5em;
+}
+
+.disable {
+  pointer-events: none;
+  background-color: grey;
+  text-decoration:line-through;
+}
+
+.share-model{
+  --restaurants-list-detail-window-tab-pane-height: calc(var(--doc-height) * 0.8);
 }
 
 </style>
