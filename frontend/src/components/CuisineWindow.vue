@@ -49,11 +49,11 @@
           :infinite-scroll-delay="1000"
           v-infinite-scroll="loadMoreData"
           :infinite-scroll-disabled="listNoMoreState && listShowState"
+          v-show="listShowState"
       >
         <li
             style="list-style: none;margin-top: 1px;"
             v-for="item in items"
-            v-show="listShowState"
         >
           <CuisineListItem
               :info="item"
@@ -62,7 +62,7 @@
         </li>
         <li
             style="margin-top: 10px"
-            v-show="listShowState && listNoMoreState"
+            v-show="listNoMoreState"
         >
           <span style="font-weight: bolder;">No more</span>
         </li>
