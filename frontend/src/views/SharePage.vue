@@ -9,14 +9,15 @@
       <p
           style="overflow:hidden;text-overflow:ellipsis; white-space:nowrap; "
       >
-        {{ this.$refs.cuisineDetail?.detail.name }}</p>
-      <!--    <p>{{this.$refs.cuisineDetail.detail.name}}</p>-->
+        {{ placeName ? placeName : "" }}
+      </p>
     </div>
     <CuisineDetail
         ref="cuisineDetail"
         :map-instance="null"
         :place-id="placeId"
         :share-model="true"
+        @place-change="this.placeName=$event"
     />
   </div>
 </template>
@@ -29,7 +30,8 @@ export default {
   components: {CuisineDetail},
   data() {
     return {
-      placeId: this.$route.query.placeId + ""
+      placeId: this.$route.query.placeId + "",
+      placeName: null
     }
   }
 }

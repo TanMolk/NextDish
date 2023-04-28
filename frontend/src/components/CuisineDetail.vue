@@ -185,6 +185,7 @@ export default {
         this.images = [];
         let resp = await PlaceService.getPlaceDetail(this.placeId);
         this.detail = resp.data;
+        this.$emit("place-change", this.detail.name)
 
         let photos = this.detail.photos;
         if (photos) {

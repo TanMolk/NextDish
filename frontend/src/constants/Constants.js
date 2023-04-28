@@ -44,11 +44,19 @@ const STORAGE_CLIENT_UUID = "clientId"
 let CLIENT_ID = StorageUtil.get(STORAGE_CLIENT_UUID);
 //set client id
 if (!CLIENT_ID) {
-    CLIENT_ID = crypto.randomUUID();
+    CLIENT_ID = uuid();
     StorageUtil.set(STORAGE_CLIENT_UUID, CLIENT_ID);
 }
 console.log(CLIENT_ID);
 //-------Assign Client ID stop----------
+
+function uuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0,
+            v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
 
 export default {
     MODE,
