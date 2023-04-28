@@ -26,10 +26,18 @@ body {
     background-color: var(--application-normal-background-color);
 }
 
-.v-step__buttons{
+.v-step__buttons {
     display: none;
 }
 
-.v-step__content{
+.v-step__content {
     margin: 0 !important;
+}
+
+.right-bottom-button {
+    color: #FFFFFF;
+
+    position: absolute;
+    bottom: 3%;
+    right: 3%;
 }

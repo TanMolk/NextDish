@@ -25,7 +25,7 @@
       </button>
       <p
           @click="jumpToApp(true)"
-          class="never-show"
+          class="right-bottom-button"
       >
         never show</p>
     </video-background>
@@ -155,13 +155,5 @@ export default {
 
 .button:focus {
   background-color: #b7abab;
-}
-
-.never-show {
-  color: #FFFFFF;
-
-  position: absolute;
-  bottom: 3%;
-  right: 3%;
 }
 </style>

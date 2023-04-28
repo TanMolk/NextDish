@@ -84,7 +84,7 @@ export default {
 
   padding: 0;
 
-  border-width: 1px 0 0 0;
+  border-width: 0 0 1px 0;
   border-color: #545454;
   border-style: solid;
 }

@@ -60,6 +60,10 @@
     />
     <!------------------Markers End-------------------->
   </GoogleMap>
+  <FavoriteCuisine
+      class="favorite-cuisine"
+  />
+  <Feedback/>
   <CuisineTypeSelect
       :guidance-mode="guidanceModel"
       ref="cuisineTypeFilter"
@@ -100,10 +104,22 @@ import PlaceService from "@/service/PlaceService";
 import {ElLoading, ElMessageBox} from 'element-plus';
 import StorageUtil from "@/utils/StorageUtil";
 import {h} from 'vue';
+import FavoriteCuisine from "@/components/FavoriteCuisine.vue";
+import Feedback from "@/components/Feedback.vue";
 
 export default {
   name: "AppPage",
-  components: {CuisineWindow, CuisineTypeSelect, GoogleMap, Marker, CustomMarker, Circle, CustomControl},
+  components: {
+    Feedback,
+    FavoriteCuisine,
+    CuisineWindow,
+    CuisineTypeSelect,
+    GoogleMap,
+    Marker,
+    CustomMarker,
+    Circle,
+    CustomControl
+  },
   computed: {
     Constants() {
       return Constants
@@ -550,5 +566,11 @@ export default {
   position: absolute;
   top: 5%;
   right: 5%;
+}
+
+.favorite-cuisine {
+  position: absolute;
+  top: 5%;
+  left: 5%;
 }
 </style>
