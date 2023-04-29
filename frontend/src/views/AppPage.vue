@@ -63,7 +63,19 @@
   <FavoriteCuisine
       class="favorite-cuisine"
   />
-  <Feedback/>
+  <p
+      style="color:black;"
+      @click="this.textAreaShowState=true"
+      class="right-bottom-button"
+  >
+    feedback
+  </p>
+
+  <TextArea
+      :show-state="textAreaShowState"
+      @close-textArea="this.textAreaShowState=false"
+  />
+
   <CuisineTypeSelect
       :guidance-mode="guidanceModel"
       ref="cuisineTypeFilter"
@@ -90,6 +102,7 @@
       @direction-request="onDirectionRequest($event)"
       @load-more-data="loadRecentRestaurant(restaurantData.currentSelection)"
       @detail-change="onDetailChange($event)"
+      @review-request="textAreaShowState = true"
   />
   <v-tour name="userGuidance" :steps="steps"></v-tour>
 </template>
@@ -105,12 +118,12 @@ import {ElLoading, ElMessageBox} from 'element-plus';
 import StorageUtil from "@/utils/StorageUtil";
 import {h} from 'vue';
 import FavoriteCuisine from "@/components/FavoriteCuisine.vue";
-import Feedback from "@/components/Feedback.vue";
+import TextArea from "@/components/TextArea.vue";
 
 export default {
   name: "AppPage",
   components: {
-    Feedback,
+    TextArea,
     FavoriteCuisine,
     CuisineWindow,
     CuisineTypeSelect,
@@ -219,7 +232,7 @@ export default {
       },
       /** to force this component update by changing key*/
       listDetailKey: 0,
-
+      textAreaShowState: false,
       /** user guidance steps*/
       guidanceModel: false,
       steps: [

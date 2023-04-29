@@ -18,11 +18,20 @@
       </span>
       </div>
       <button
+          @click="login()"
+          class="button"
+          style="margin-bottom: 3em"
+      >
+        Login
+      </button>
+
+      <button
           @click="jumpToApp()"
           class="button"
       >
         Start exploring
       </button>
+
       <p
           @click="jumpToApp(true)"
           class="right-bottom-button"
@@ -36,13 +45,16 @@
 import StorageUtil from "@/utils/StorageUtil";
 import Constants from "@/constants/Constants";
 import MsgBoxUtil from "@/utils/MsgBoxUtil";
+import UserModal from "@/components/UserModal.vue";
+import UserUtil from "@/utils/UserUtil";
 
 
 export default {
   name: "WelcomePage",
+  components: {UserModal},
   data() {
-    return{
-      clickTime:0,
+    return {
+      clickTime: 0,
     }
   },
   methods: {
@@ -88,11 +100,14 @@ export default {
       //get location permission
       navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
     },
-    clickTitle(){
+    clickTitle() {
       this.clickTime++;
-      if (this.clickTime === 3){
+      if (this.clickTime === 3) {
         new window.VConsole();
       }
+    },
+    login() {
+      UserUtil.show();
     }
   },
   beforeMount() {

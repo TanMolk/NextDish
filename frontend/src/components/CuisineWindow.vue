@@ -75,6 +75,7 @@
           class="cuisine-detail"
           v-show="!listShowState"
           @direction-request="this.$emit('direction-request',$event);"
+          @review-request="this.$emit('review-request')"
       />
     </div>
   </div>

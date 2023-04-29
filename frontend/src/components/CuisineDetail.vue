@@ -140,7 +140,24 @@
           :pane-key="items[3]"
       >
         <template v-slot>
-          <p class="info-title">Reviews</p>
+          <p class="info-title">
+
+            Reviews
+            <button
+                style="
+                display: inline-block;
+                border: none;
+                background: transparent;
+                width: 45px;
+                height: 45px;
+                "
+                @click="this.$emit('review-request')"
+            >
+              <el-image
+                  src="/add-review.png"
+              />
+            </button>
+          </p>
           <div
               style="text-align: left;"
               v-if="detail"
