@@ -102,7 +102,7 @@
       @direction-request="onDirectionRequest($event)"
       @load-more-data="loadRecentRestaurant(restaurantData.currentSelection)"
       @detail-change="onDetailChange($event)"
-      @review-request="textAreaShowState = true"
+      @review-request="onReviewRequest"
   />
   <v-tour name="userGuidance" :steps="steps"></v-tour>
 </template>
@@ -119,6 +119,7 @@ import StorageUtil from "@/utils/StorageUtil";
 import {h} from 'vue';
 import FavoriteCuisine from "@/components/FavoriteCuisine.vue";
 import TextArea from "@/components/TextArea.vue";
+import UserUtil from "@/utils/UserUtil";
 
 export default {
   name: "AppPage",
@@ -523,7 +524,10 @@ export default {
       if (this.guidanceModel && this.$tours['userGuidance'].currentStep === 0) {
         this.$tours['userGuidance'].nextStep();
       }
-    }
+    },
+    onReviewRequest(){
+      UserUtil.show();
+    },
   },
   /**
    * Event when all dom nodes get created

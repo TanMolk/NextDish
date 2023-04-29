@@ -41,3 +41,10 @@ body {
     bottom: 3%;
     right: 3%;
 }
+
+/*Customer select option for selection*/
+.custom-select-option {
+    --el-bg-color-overlay: var(--application-normal-background-color);
+    --el-text-color-regular: #FFFFFF;
+    --el-fill-color-light: #3c5b9d;
+}

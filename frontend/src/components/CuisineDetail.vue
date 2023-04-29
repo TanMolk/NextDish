@@ -150,6 +150,7 @@
                 background: transparent;
                 width: 45px;
                 height: 45px;
+                float: right;
                 "
                 @click="this.$emit('review-request')"
             >
