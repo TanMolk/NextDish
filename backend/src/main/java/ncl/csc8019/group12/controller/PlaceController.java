@@ -48,12 +48,23 @@ public class PlaceController {
      * @param nextPageToken the nextPageToken returned
      * @return Places data
      */
+
+
     @GetMapping("/nearby")
     public String nearByPlaces(@RequestHeader("c8019-client-id") String clientId,
                                @RequestParam String location,
                                @RequestParam(required = false) String keyword,
                                @RequestParam(required = false) String nextPageToken) {
         //produce response
+        /*
+        * Create a boolean variable to check if the response is from cache.
+        * Create a JSONObject variable to store the response.
+        *
+        * Split the location string into latitude and longitude.
+        * Create a Location object to store the latitude and longitude.
+        * Convert the required radius (1 mile) to meters and create a variable to store the value.
+        */
+
         boolean fromCache = false;
         JSONObject responseObject;
         String[] locations = location.split(",");
@@ -61,6 +72,17 @@ public class PlaceController {
         int radius = DistanceUtil.convertMilesToMetersApproximately(1);
 
         //get data
+        /*
+         * If there is nextPageToken, get the cached response with the token.
+         *   If the response is null, get a new response via googleMapService api.
+         *   Else, set fromCache to true.
+         *
+         * If the nextPageToken is null, get cached response with the location and keyword.
+         *  If the response is null, get a new response via googleMapService api.
+         *  Else, set fromCache to true.
+         */
+
+
         if (nextPageToken != null) {
             responseObject = cacheService.getCachedResponse(nextPageToken);
             if (responseObject == null) {
@@ -81,6 +103,11 @@ public class PlaceController {
         }
 
         //log and count request
+        /*
+        * Log request information, including incrementing API_CALL_TOTAL_AMOUNT,
+        * whether the request is from cache, the location, keyword, nextPageToken and clientID.
+         */
+        
         log.info("[{}-Nearby] cache:{}; location:{}, keyword:{}, nextPageToken:{}; clientId:{}",
                 API_CALL_TOTAL_AMOUNT.addAndGet(1),
                 fromCache,
@@ -89,12 +116,30 @@ public class PlaceController {
         );
 
         //if it gets cache, return.
+        /*
+        * If from cache is true, increment the CACHE_HIT_AMOUNT.
+        * Turn the responseObject to string and return it.
+         */
+
         if (fromCache) {
             CACHE_HIT_AMOUNT.addAndGet(1);
             return responseObject.toString();
         }
 
         //filter places within 1 mile
+        /*
+         * If fromCache is false:
+         * Create an array to store all places in the response.
+         * Create another array to store the filtered places within 1 mile of current location.
+         *
+         * Get the corresponding locations of the places using a for-loop.
+         * Get the latitude and longitude of each location to create a new Location object.
+         * Calculate the distance between the current location and the new Location object.
+         * If the distance is within 1 mile, append this place JSONObject to the filteredPlaces JSONArray.
+         * Repeat until the loop ends.
+         *
+         * Finally, append the JSONArray of filteredPlaces to the responseObject.
+         */
         JSONArray places = responseObject.getJSONArray("results");
         JSONArray filteredPlaces = new JSONArray();
 
@@ -113,6 +158,13 @@ public class PlaceController {
         responseObject.put("results", filteredPlaces);
 
         //cache
+        /*
+        * If there is nextPageToken, add the responseObject and the token to the cache storage.
+        * Else, add the responseObject, location and keyword to the cache storage.
+        * Increment the GOOGLE_API_REQUEST_AMOUNT.
+        * Turn the responseObject to string and return it.
+        *
+        * */
         if (nextPageToken != null) {
             cacheService.cacheResponse(responseObject, nextPageToken);
         } else {
