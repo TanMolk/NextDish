@@ -1,36 +1,23 @@
-import {createApp} from "vue";
-import {ElButton, ElDialog, ElForm, ElFormItem, ElInput, ElNotification, ElStep, ElSteps} from "element-plus";
-import UserModal from "@/components/UserModal.vue";
 import StorageUtil from "@/utils/StorageUtil";
 import Constants from "@/constants/Constants";
+import {ElNotification} from "element-plus";
 
-
-const mountNode = document.createElement('div')
-const userDialog = createApp(UserModal)
-userDialog.use(ElDialog)
-userDialog.use(ElInput)
-userDialog.use(ElButton)
-userDialog.use(ElSteps)
-userDialog.use(ElStep)
-userDialog.use(ElForm)
-userDialog.use(ElFormItem)
-userDialog.use(ElNotification)
-userDialog.mount(mountNode)
+let userDialog;
 
 function show() {
-    userDialog._instance.data.currentStep = 0;
-    userDialog._instance.data.titleIndex = 0;
-    userDialog._instance.data.formData.email = "";
-    userDialog._instance.data.formData.password = "";
-    userDialog._instance.data.formData.verifyCode = "";
-    userDialog._instance.data.passwordInputShow = true;
-    userDialog._instance.data.verifyCodeInputShow = false;
-    userDialog._instance.data.buttonLoading = false;
-    userDialog._instance.data.openState = true;
+    userDialog.currentStep = 0;
+    userDialog.titleIndex = 0;
+    userDialog.formData.email = "";
+    userDialog.formData.password = "";
+    userDialog.formData.verifyCode = "";
+    userDialog.passwordInputShow = true;
+    userDialog.verifyCodeInputShow = false;
+    userDialog.buttonLoading = false;
+    userDialog.openState = true;
 }
 
 function hide() {
-    userDialog._instance.data.openState = false;
+    userDialog.openState = false;
 }
 
 function tokenExpired(err) {
@@ -42,11 +29,15 @@ function tokenExpired(err) {
         message: "Login expired"
     });
     show();
+}
 
+function setUserDialog(obj) {
+    userDialog = obj;
 }
 
 export default {
     show,
     hide,
-    tokenExpired
+    tokenExpired,
+    setUserDialog
 }

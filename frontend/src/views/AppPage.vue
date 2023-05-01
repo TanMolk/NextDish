@@ -526,7 +526,6 @@ export default {
       this.setMapCenter(e.geometry.location)
     },
     onSelectClick() {
-      console.log(this.$tours['userGuidance'].currentStep)
       if (this.guidanceModel && this.$tours['userGuidance'].currentStep === 0) {
         this.$tours['userGuidance'].nextStep();
       }

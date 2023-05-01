@@ -45,7 +45,6 @@ import CuisineListItem from "@/components/CuisineListItem.vue";
 import ClientVersionUtil from "@/utils/ClientVersionUtil";
 import FavoritesService from "@/service/FavoritesService";
 import UserUtil from "@/utils/UserUtil";
-import {ElNotification} from "element-plus";
 import UserData from "@/constants/UserData";
 
 export default {

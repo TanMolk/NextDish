@@ -1,7 +1,7 @@
 import {createApp} from 'vue'
 import App from './App.vue'
 import router from './router'
-import ElementPlus, {ElMessage, ElNotification} from 'element-plus'
+import ElementPlus from 'element-plus'
 import VueTour from 'v3-tour'
 import VideoBackground from 'vue-responsive-video-background-player'
 
