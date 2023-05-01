@@ -105,7 +105,10 @@ public class CacheService {
      */
     public JSONObject getCachedResponse(Object... args) {
         JSONObject jsonObject = RESPONSE_CACHE_STORAGE.get(Objects.hash(args));
-        return new JSONObject(jsonObject);
+        if (jsonObject == null) {
+            return null;
+        }
+        return new JSONObject(jsonObject.toString());
     }
 
     public void cachePhoto(String photoReference, byte[] data) {
@@ -142,16 +145,19 @@ public class CacheService {
         VERIFY_CODE_EXPIRED_QUEUE.add(code);
     }
 
-    public String getVerifyCode(String email) {
+    public String getVerifyCode(String email, boolean blockTry) {
         VerifyCode verifyCode = VERIFY_CODE_MAP.get(email);
 
         if (verifyCode == null) {
             return null;
         }
 
-        if (verifyCode.getTryTimes() >= 3) {
+        if (verifyCode.getTryTimes() >= 3 && blockTry) {
             throw new VerifyTooMuchTimesException();
         } else {
+            if (verifyCode.getTryTimes() == 0) {
+                VERIFY_TIMES_QUEUE.add(new NormalDelayTask(email, 60 * 1000));
+            }
             addVerifyTryTime(email);
         }
 
@@ -162,9 +168,5 @@ public class CacheService {
         VerifyCode verifyCode = VERIFY_CODE_MAP.get(email);
         int tryTimes = verifyCode.getTryTimes() + 1;
         verifyCode.setTryTimes(tryTimes);
-
-        if (tryTimes == 3) {
-            VERIFY_TIMES_QUEUE.add(new NormalDelayTask(email, 60 * 1000));
-        }
     }
 }

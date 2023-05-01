@@ -41,15 +41,15 @@ public class PlaceControllerTest {
 
 
         String responseString = mockMvc.perform(MockMvcRequestBuilders.get(url))
-                .andExpect(MockMvcResultMatchers.status().isOk())  //返回的状态是200
-                .andDo(MockMvcResultHandlers.print()) //打印出请求和相应的内容
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
                 .andReturn()
-                .getResponse().getContentAsString(); //将相应的数据转换为字符
+                .getResponse().getContentAsString();
         Assert.assertNotNull(responseString);
 
         String responseString2 = mockMvc.perform(MockMvcRequestBuilders.get(url))
-                .andExpect(MockMvcResultMatchers.status().isOk())  //返回的状态是200
-                .andDo(MockMvcResultHandlers.print()) //打印出请求和相应的内容
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
@@ -63,15 +63,15 @@ public class PlaceControllerTest {
 
 
         String responseString = mockMvc.perform(MockMvcRequestBuilders.get(url))
-                .andExpect(MockMvcResultMatchers.status().isOk())  //返回的状态是200
-                .andDo(MockMvcResultHandlers.print()) //打印出请求和相应的内容
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
                 .andReturn()
-                .getResponse().getContentAsString(); //将相应的数据转换为字符
+                .getResponse().getContentAsString();
         Assert.assertNotNull(responseString);
 
         String responseString2 = mockMvc.perform(MockMvcRequestBuilders.get(url))
-                .andExpect(MockMvcResultMatchers.status().isOk())  //返回的状态是200
-                .andDo(MockMvcResultHandlers.print()) //打印出请求和相应的内容
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
                 .andReturn()
                 .getResponse()
                 .getContentAsString();

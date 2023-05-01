@@ -65,15 +65,18 @@
   />
   <p
       style="color:black;"
-      @click="this.textAreaShowState=true"
+      @click="onFeedbackRequest"
       class="right-bottom-button"
   >
     feedback
   </p>
 
   <TextArea
+      :place-id="restaurantData.detailPlaceId"
+      :model="textAreaModel"
       :show-state="textAreaShowState"
       @close-textArea="this.textAreaShowState=false"
+      @review-add-success="this.$refs.cuisineList.freshReviews();"
   />
 
   <CuisineTypeSelect
@@ -86,10 +89,10 @@
       @option-click="selectOptionChange($event)"
   />
   <CuisineWindow
+      ref="cuisineList"
       user-guidance="3"
       :guidance-mode="guidanceModel"
       :key="listDetailKey"
-      ref="cuisineList"
       v-show="listShowState"
       :title="restaurantData.title"
       :map-instance="mapInstance"
@@ -120,6 +123,7 @@ import {h} from 'vue';
 import FavoriteCuisine from "@/components/FavoriteCuisine.vue";
 import TextArea from "@/components/TextArea.vue";
 import UserUtil from "@/utils/UserUtil";
+import UserData from "@/constants/UserData";
 
 export default {
   name: "AppPage",
@@ -234,6 +238,7 @@ export default {
       /** to force this component update by changing key*/
       listDetailKey: 0,
       textAreaShowState: false,
+      textAreaModel: '',
       /** user guidance steps*/
       guidanceModel: false,
       steps: [
@@ -525,9 +530,14 @@ export default {
         this.$tours['userGuidance'].nextStep();
       }
     },
-    onReviewRequest(){
-      UserUtil.show();
+    onReviewRequest() {
+      this.textAreaModel = "review"
+      this.textAreaShowState = true;
     },
+    onFeedbackRequest() {
+      this.textAreaModel = "feedback"
+      this.textAreaShowState = true;
+    }
   },
   /**
    * Event when all dom nodes get created
@@ -546,6 +556,10 @@ export default {
     //   this.$tours['userGuidance'].start()
     //   StorageUtil.set(Constants.STORAGE_IF_EXPERIENCE_USER_GUIDANCE, "true");
     // }
+
+    if (StorageUtil.get(Constants.STORAGE_TOKEN)) {
+      UserData.freshUserData();
+    }
   }
 }
 </script>

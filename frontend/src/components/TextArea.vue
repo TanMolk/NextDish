@@ -15,10 +15,11 @@
             v-model="text"
             :rows="2"
             type="textarea"
-            placeholder="Please input"
+            :placeholder="'Please input your ' + model"
         />
       </div>
       <el-button
+          :loading="buttonLoading"
           class="commit"
           @click="submitFeedBack"
       >
@@ -29,34 +30,96 @@
 </template>
 
 <script>
-import MsgBoxUtil from "@/utils/MsgBoxUtil";
+import ReviewService from "@/service/ReviewService";
+import FeedbackService from "@/service/FeedbackService";
+import UserData from "@/constants/UserData";
+import UserUtil from "@/utils/UserUtil";
 
 export default {
   name: "TextArea",
   props: {
-    showState: Boolean
+    showState: Boolean,
+    model: String,
+    placeId: String,
   },
   watch: {
     showState(val) {
       this.openState = val
+    },
+    model() {
+      this.text = "";
     }
   },
   methods: {
     submitFeedBack() {
-      MsgBoxUtil.alert(
-          "Feedback",
-          "Thanks for your feedback!",
-          "OK",
-          () => {
-            this.openState = false;
-          }
-      );
+      if (!this.text.trim()) {
+        this.$notify({
+          type: "warning",
+          message: "Content can't be blank"
+        });
+        return;
+      }
+
+      this.buttonLoading = true;
+      switch (this.model) {
+        case "review":
+          ReviewService.add(this.placeId, this.text)
+              .then(async resp => {
+                if (resp.data) {
+                  await UserData.freshUserData().catch(err => {
+                    UserUtil.tokenExpired(err);
+                  });
+
+                  this.$notify({
+                    type: "success",
+                    message: "Add review successfully"
+                  });
+
+                  this.$emit("review-add-success");
+                }
+                this.text = "";
+                this.buttonLoading = false;
+                this.openState = false;
+              })
+              .catch(err => {
+                console.log(err);
+                this.$notify({
+                  type: "error",
+                  message: "Network error"
+                });
+                this.buttonLoading = false;
+              });
+          return;
+        case "feedback":
+          FeedbackService.add(this.text)
+              .then(resp => {
+                if (resp.data) {
+                  this.$notify({
+                    type: "success",
+                    message: "Add feedback successfully"
+                  });
+                }
+                this.text = "";
+                this.buttonLoading = false;
+                this.openState = false;
+              })
+              .catch(err => {
+                console.log(err)
+                this.$notify({
+                  type: "error",
+                  message: "Network error"
+                });
+                this.buttonLoading = false;
+              });
+          return;
+      }
     }
   },
   data() {
     return {
       openState: false,
-      text: ""
+      text: "",
+      buttonLoading: false,
     }
   }
 }

@@ -48,6 +48,7 @@ public class ReviewController {
         reviews.forEach(review -> {
             String nickname = uidNickNameMap.get(review.getUid());
             review.setUid(null);
+            review.setPlaceId(null);
 
             JSONObject jsonObject = new JSONObject(review);
             jsonObject.put("author", nickname.isEmpty() ? "anonymous" : nickname);

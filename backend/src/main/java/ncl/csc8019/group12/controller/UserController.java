@@ -8,11 +8,12 @@ import ncl.csc8019.group12.service.EmailService;
 import ncl.csc8019.group12.utils.ConfuseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.security.auth.login.LoginException;
-import javax.transaction.Transactional;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -66,7 +67,7 @@ public class UserController {
     ) {
         log.info("[User-SendVerifyCode] {}; clientId:{}", email, clientId);
 
-        if (cacheService.getVerifyCode(email) == null) {
+        if (cacheService.getVerifyCode(email, false) == null) {
             return emailService.sendVerifyCode(email);
 
         } else {
@@ -81,7 +82,7 @@ public class UserController {
             @RequestParam String code
     ) {
         log.info("[User-VerifyCode] {}; clientId:{}", email, clientId);
-        return code.equals(cacheService.getVerifyCode(email));
+        return code.equals(cacheService.getVerifyCode(email, true));
     }
 
     @GetMapping("/reset-password")
@@ -93,7 +94,7 @@ public class UserController {
     ) {
         log.info("[User-ResetPassword] {}; clientId:{}", email, clientId);
 
-        if (code.equals(cacheService.getVerifyCode(email))) {
+        if (code.equals(cacheService.getVerifyCode(email, true))) {
             return userRepository.updatePasswordWithEmail(email, password) == 1;
         } else {
             return false;
@@ -101,7 +102,7 @@ public class UserController {
     }
 
     @PostMapping("/sign-in")
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public User signIn(
             @RequestHeader("c8019-client-id") String clientId,
             @RequestParam String code,
@@ -110,7 +111,7 @@ public class UserController {
         log.info("[User-SignIn] {}; clientId:{}", user.getEmail(), clientId);
 
         if (userRepository.findByEmail(user.getEmail()) == null) {
-            if (code.equals(cacheService.getVerifyCode(user.getEmail()))) {
+            if (code.equals(cacheService.getVerifyCode(user.getEmail(), true))) {
                 user.setState(UserStateEnum.ACTIVE);
                 user = userRepository.save(user);
                 user.setToken(ConfuseUtil.encryptByRSA(user.getUid()));
@@ -136,5 +137,48 @@ public class UserController {
         log.info("[User-ChangeName] {} -> {}; clientId:{}", uid, name, clientId);
 
         return userRepository.updateNickNameWithUid(uid, name) == 1;
+    }
+
+    @GetMapping("/exist")
+    public Boolean exist(
+            @RequestHeader("c8019-client-id") String clientId,
+            @RequestParam String email
+    ) {
+        log.info("[User-exist] {}; clientId:{}", email, clientId);
+
+        return userRepository.existsByEmail(email);
+    }
+
+    @GetMapping
+    public User getDataByToken(
+            @RequestHeader("c8019-client-id") String clientId,
+            @RequestHeader("c8019-token") String token
+    ) throws Exception {
+
+        Long uid = ConfuseUtil.decryptToLongByRSA(token);
+        log.info("[User-getDataByToken] {}; clientId:{}", uid, clientId);
+
+        Optional<User> userOptional = userRepository.findById(uid);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            user.setToken(null);
+            user.setUid(null);
+            user.setEmail(null);
+            user.setPassword(null);
+            user.setState(null);
+            user.getFavorites().forEach(f -> f.setUid(null));
+            user.getReviews().forEach(r -> {
+                r.setUid(null);
+                r.setContent(null);
+            });
+
+            return user;
+
+
+        } else {
+            throw new LoginException();
+        }
     }
 }

@@ -37,6 +37,8 @@ const STORAGE_IF_EXPERIENCE_USER_GUIDANCE = "ifExperiencedGuidance";
 const STORAGE_IF_DETAIL_SHOW_BY_CLICK_MARKER = "detailShowByClickMarker";
 //client uuid
 const STORAGE_CLIENT_UUID = "clientId"
+//token
+const STORAGE_TOKEN = "token"
 //----------local storage constants end---------------
 
 
@@ -48,6 +50,7 @@ if (!CLIENT_ID) {
     StorageUtil.set(STORAGE_CLIENT_UUID, CLIENT_ID);
 }
 console.log(CLIENT_ID);
+
 //-------Assign Client ID stop----------
 
 function uuid() {
@@ -69,5 +72,6 @@ export default {
     STORAGE_IF_NEVER_SHOW,
     STORAGE_IF_EXPERIENCE_USER_GUIDANCE,
     STORAGE_IF_DETAIL_SHOW_BY_CLICK_MARKER,
-    CLIENT_ID
+    CLIENT_ID,
+    STORAGE_TOKEN
 }

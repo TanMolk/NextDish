@@ -26,7 +26,7 @@ public class User {
 
     @JoinColumn(name = "uid")
     @OneToMany(cascade = CascadeType.ALL)
-    private List<Review> favorites;
+    private List<Favorite> favorites;
 
     public Long getUid() {
         return uid;
@@ -84,11 +84,11 @@ public class User {
         this.reviews = reviews;
     }
 
-    public List<Review> getFavorites() {
+    public List<Favorite> getFavorites() {
         return favorites;
     }
 
-    public void setFavorites(List<Review> favorites) {
+    public void setFavorites(List<Favorite> favorites) {
         this.favorites = favorites;
     }
 }

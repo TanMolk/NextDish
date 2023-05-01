@@ -64,6 +64,16 @@
               </table>
             </div>
           </div>
+          <button
+              style="border: none;background: transparent;padding:0;position: absolute;bottom: 5%;right: 5%"
+              :disabled="isFavorite()"
+              @click="handlerClickFavorite"
+          >
+            <el-image
+                :class="isFavorite()? '' : 'not-favorite'"
+                src="/favorite.png"
+            />
+          </button>
         </template>
       </nut-tab-pane>
 
@@ -148,11 +158,12 @@
                 display: inline-block;
                 border: none;
                 background: transparent;
-                width: 45px;
-                height: 45px;
+                width: 32px;
+                height: 32px;
                 float: right;
+                padding: 0;
                 "
-                @click="this.$emit('review-request')"
+                @click="handlerAddReview"
             >
               <el-image
                   src="/add-review.png"
@@ -164,13 +175,21 @@
               v-if="detail"
           >
             <div
-                v-if="detail.reviews"
-                v-for="(review, index) in detail.reviews"
+                v-if="reviews.length !== 0"
+                v-for="(review, index) in reviews"
                 style="margin-bottom: 1.5em;"
-                :style="{borderBottom: index !== detail.reviews.length - 1 ? '1px solid': ''}"
+                :style="{borderBottom: index !== reviews.length - 1 ? '1px solid': ''}"
             >
-              <p>{{ review.author_name }}</p>
-              <p style="word-break: break-word;">{{ review.text }}</p>
+              <p>{{ review.author }}
+                <span
+                    v-if="ifReviewCanRemove(review.id)"
+                    style="display: inline-block; float: right;color: #007DFA"
+                    @click="removeReview(review.id,index)"
+                >
+                  Delete
+                </span>
+              </p>
+              <p style="word-break: break-word;">{{ review.content }}</p>
             </div>
             <p v-else>No information</p>
           </div>
@@ -185,6 +204,10 @@
 import PlaceService from "@/service/PlaceService";
 import StorageUtil from "@/utils/StorageUtil";
 import Constants from "@/constants/Constants";
+import UserUtil from "@/utils/UserUtil";
+import ReviewService from "@/service/ReviewService";
+import UserData from "@/constants/UserData";
+import FavoritesService from "@/service/FavoritesService";
 
 export default {
   name: "CuisineDetail",
@@ -202,7 +225,8 @@ export default {
       /** service of direction */
       directionService: null,
       images: [],
-      imageViewShowState: false
+      imageViewShowState: false,
+      reviews: []
     }
   },
   watch: {
@@ -235,9 +259,12 @@ export default {
           }
         }
 
+        this.getCustomerReviews();
+
         if (!this.shareModel) {
           await this.getDirection();
         }
+
       }
     },
     /**
@@ -275,10 +302,78 @@ export default {
     directionButtonClick() {
       this.$emit("direction-request", this.directionDetail);
     },
+    handlerAddReview() {
+      if (!StorageUtil.get(Constants.STORAGE_TOKEN)) {
+        UserUtil.show();
+      } else {
+        this.$emit('review-request');
+      }
+    },
+    getCustomerReviews() {
+      let reviews = this.detail.reviews;
+      if (reviews) {
+        for (const review of reviews) {
+          this.reviews.push({
+            id: null,
+            author: review.author_name,
+            content: review.text
+          })
+        }
+      }
+
+      ReviewService.get(this.placeId)
+          .then(resp => {
+            if (resp) {
+              this.reviews = [...this.reviews, ...resp.data];
+            }
+          });
+    },
+    ifReviewCanRemove(id) {
+      return UserData.ifReviewCanRemove(id);
+    },
+    removeReview(id, index) {
+      ReviewService.remove(id)
+          .then(resp => {
+            if (resp) {
+              this.$notify({
+                type: 'success',
+                message: "Delete review successfully"
+              });
+              this.reviews.splice(index, 1)
+            }
+          })
+    },
+    handlerClickFavorite() {
+      FavoritesService.add(this.placeId)
+          .then(async resp => {
+            if (resp.data()) {
+              await UserData.freshUserData()
+                  .catch(err => {
+                    UserUtil.tokenExpired(err);
+                  });
+
+              this.$notify({
+                type: "success",
+                message: "Add successful"
+              });
+
+              this.$emit("favorite-add-success");
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          })
+    },
+    isFavorite() {
+      return UserData.isFavorite(this.placeId);
+    }
+
   },
   async mounted() {
-    this.selectedTab = this.items[1];
-    await this.getDetail();
+    if (this.shareModel) {
+      this.selectedTab = this.items[1];
+      await this.getDetail();
+    }
   }
 }
 </script>
@@ -334,6 +429,10 @@ export default {
 
 .share-model {
   --restaurants-list-detail-window-tab-pane-height: calc(var(--doc-height) * 0.8);
+}
+
+.not-favorite {
+  filter: invert(50%);
 }
 
 </style>

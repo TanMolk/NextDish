@@ -45,7 +45,7 @@ public class FavoriteController {
                 placeDetail = googleMapService.getPlaceDetail(placeId, clientId);
                 cacheService.cacheResponse(placeDetail, placeId);
             }
-            JSONObject placeDetailCopy = new JSONObject(placeDetail);
+            JSONObject placeDetailCopy = new JSONObject(placeDetail.toString());
             placeDetailCopy.put("id", favorite.getId());
 
             array.put(placeDetailCopy);

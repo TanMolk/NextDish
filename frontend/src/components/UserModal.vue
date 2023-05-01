@@ -17,33 +17,42 @@
             enter-active-class="animate__animated animate__fadeInRightBig"
             leave-active-class="animate__animated animate__fadeOut"
         >
-          <div v-show="titleIndex === 0">
-            <p class="input-title">Email</p>
-            <el-input
-                v-model="email"
-                size="large"
-            />
-            <p class="input-title">Password
-              <span
-                  style="float: right"
-                  class="text-button"
-                  @click="titleIndex = 2"
-              >
+          <div v-if="titleIndex === 0">
+            <el-form
+                ref="form"
+                :rules="validRuleForm"
+                :model="formData"
+            >
+              <p class="input-title">Email</p>
+              <el-form-item prop="email">
+                <el-input v-model="formData.email" size="large"/>
+              </el-form-item>
+
+              <p class="input-title">Password
+                <span
+                    style="float: right"
+                    class="text-button"
+                    @click="titleIndex = 2"
+                >
                 Forgot?
               </span>
-            </p>
-            <el-input
-                v-model="password"
-                size="large"
-                show-password
-            />
-            <el-button
-                ref="subBtn"
-                class="submit"
-                @click="submit"
-            >
-              {{ buttonTitles[0] }}
-            </el-button>
+              </p>
+              <el-form-item prop="password">
+                <el-input
+                    v-model="formData.password"
+                    size="large"
+                    show-password
+                />
+              </el-form-item>
+              <el-button
+                  ref="subBtn"
+                  class="submit"
+                  :loading="buttonLoading"
+                  @click="submit"
+              >
+                {{ buttonTitles[0] }}
+              </el-button>
+            </el-form>
           </div>
         </transition>
 
@@ -52,7 +61,7 @@
             enter-active-class="animate__animated animate__fadeInRightBig"
             leave-active-class="animate__animated animate__fadeOut"
         >
-          <div v-show="titleIndex !== 0">
+          <div v-if="titleIndex !== 0">
             <transition
                 name="custom-transition"
                 enter-active-class="animate__animated animate__fadeInRightBig"
@@ -72,24 +81,33 @@
               </div>
             </transition>
 
-            <p
-                class="input-title"
-                v-show="currentStep !== 1"
+            <el-form
+                ref="step0Form"
+                :model="formData"
+                :rules="validRuleForm"
             >
-              {{ currentStep === 2 ? email : "Email address" }}
-            </p>
-            <el-input
-                v-if="currentStep === 0"
-                v-model="email"
-                size="large"
-            />
+              <p
+                  class="input-title"
+                  v-if="currentStep !== 1"
+              >
+                {{ currentStep === 2 ? formData.email : "Email address" }}
+              </p>
+              <el-form-item prop="email">
+                <el-input
+                    v-if="currentStep === 0"
+                    v-model="formData.email"
+                    size="large"
+                />
+              </el-form-item>
+            </el-form>
             <div>
               <nut-short-password
-                  v-model="verifyCode"
+                  v-model="formData.verifyCode"
                   v-model:visible="verifyCodeInputShow"
                   title="Verify Code"
                   desc="Please enter the code received"
-                  :tips="verifyCodeMsg"
+                  :error-msg="verifyCodeMsg"
+                  tips="Resend"
                   @tips="resend"
               >
               </nut-short-password>
@@ -104,19 +122,28 @@
                 name="custom-transition"
                 enter-active-class="animate__animated animate__fadeIn"
             >
+
               <div
                   v-if="currentStep === 2"
               >
                 <p class="input-title">Password</p>
-                <el-input
-                    v-model="password"
-                    size="large"
-                    show-password
-                />
+                <el-form
+                    ref="step2Form"
+                    :model="formData"
+                    :rules="validRuleForm"
+                >
+                  <el-form-item prop="password">
+                    <el-input
+                        v-model="formData.password"
+                        size="large"
+                        show-password
+                    />
+                  </el-form-item>
+                </el-form>
               </div>
             </transition>
             <el-button
-                :loading="verifyCode.length >= 6 && !verifyCodeInputShow"
+                :loading="buttonLoading"
                 ref="subWithStepBtn"
                 class="submit"
                 @click="submitWithStep"
@@ -159,6 +186,11 @@
 
 <script>
 import ClientVersionUtil from "@/utils/ClientVersionUtil";
+import UserService from "@/service/UserService";
+import {ElNotification} from "element-plus";
+import StorageUtil from "@/utils/StorageUtil";
+import Constants from "@/constants/Constants";
+import UserData from "@/constants/UserData";
 
 export default {
   name: "UserModal",
@@ -174,12 +206,31 @@ export default {
       passwordInputShow: false,
       verifyCodeInputShow: false,
       verifyCodeMsg: "",
+      buttonLoading: false,
       currentStep: 0,
       titleIndex: 0,
       openState: false,
-      email: "",
-      password: "",
-      verifyCode: ""
+      formData: {
+        email: "",
+        password: "",
+        verifyCode: ""
+      },
+      validRuleForm: {
+        email: [
+          {
+            required: true,
+            message: 'Please enter your login email',
+            trigger: 'blur'
+          }
+        ],
+        password: [
+          {
+            required: true,
+            message: 'Please enter your password',
+            trigger: 'blur'
+          }
+        ]
+      }
     }
   },
   watch: {
@@ -188,37 +239,200 @@ export default {
     }
   },
   methods: {
-    submit() {
+    async submit() {
+      this.buttonLoading = true;
+      await this.$refs.form.validate(async valid => {
+        if (valid) {
+          let resp = await UserService.login(this.formData.email, this.formData.password);
 
+          if (resp) {
+            ElNotification({
+              type: 'success',
+              message: 'Login success',
+            })
+            StorageUtil.set(Constants.STORAGE_TOKEN, resp.data.token);
+            UserData.freshUserData();
+            this.openState = false;
+          }
+        }
+      });
+      this.buttonLoading = false;
     },
     submitWithStep() {
+      this.buttonLoading = true;
       if (this.currentStep === 0) {
+        this.$refs.step0Form.validate(async valid => {
+          if (valid) {
+            let resp = await UserService.exist(this.formData.email);
+            if (!resp.data) {
+              if (this.titleIndex === 2) {
+                ElNotification({
+                  type: 'warning',
+                  message: `Account doesn't exist`,
+                });
+                this.buttonLoading = false;
+                return;
+              }
+            } else {
+              if (this.titleIndex === 1) {
+                ElNotification({
+                  type: 'warning',
+                  message: `Account exists`,
+                });
+                this.buttonLoading = false;
+                return;
+              }
+            }
+
+            UserService.sendVerifyCode(this.formData.email)
+                .then((resp) => {
+                  if (resp) {
+                    this.verifyCodeInputShow = true;
+                    this.currentStep++;
+                  }
+                  this.buttonLoading = false;
+                })
+                .catch(err => {
+                  console.log(err)
+                  ElNotification({
+                    type: 'warning',
+                    message: `Send verify code fail, please try later`,
+                  });
+                  this.buttonLoading = false;
+                });
+          }
+        });
+      } else if (this.currentStep === 1) {
+        this.verifyCodeMsg = ""
         this.verifyCodeInputShow = true;
-      } else {
-        this.currentStep++;
+      } else if (this.currentStep === 2) {
+        this.$refs.step2Form.validate(valid => {
+          if (valid) {
+            if (this.titleIndex === 1) {
+              UserService.signIn(this.formData.email, this.formData.password, this.formData.verifyCode)
+                  .then(resp => {
+                    if (resp) {
+                      if (resp.data) {
+                        StorageUtil.set(Constants.STORAGE_TOKEN, resp.data.token);
+                        ElNotification({
+                          type: 'success',
+                          message: 'Create success',
+                        });
+                        setTimeout(() => {
+                          this.openState = false;
+                        }, 500)
+                      } else {
+                        ElNotification({
+                          type: 'warning',
+                          message: `This email has been occupied, please try another`,
+                        });
+                      }
+                    }
+                    this.buttonLoading = false;
+                  })
+                  .catch(err => {
+                    console.log(err)
+                    ElNotification({
+                      type: 'error',
+                      message: 'Code has expired',
+                    })
+                    this.buttonLoading = false;
+                    this.openState = false;
+                  });
+            } else if (this.titleIndex === 2) {
+              UserService.resetPassword(this.formData.email, this.formData.password, this.formData.verifyCode)
+                  .then(resp => {
+                    if (resp) {
+                      if (resp.data) {
+                        ElNotification({
+                          type: 'success',
+                          message: 'Reset success',
+                        });
+                        setTimeout(() => {
+                          this.titleIndex = 0;
+                        }, 500)
+                      } else {
+                        ElNotification({
+                          type: 'warning',
+                          message: `Reset fail, please try later`,
+                        });
+                      }
+                    }
+                    this.currentStep++
+                    this.buttonLoading = false;
+                  })
+                  .catch(err => {
+                    console.log(err)
+                    ElNotification({
+                      type: 'error',
+                      message: 'Code has expired',
+                    })
+                    this.buttonLoading = false;
+                    this.openState = false;
+                  })
+            }
+          }
+        });
       }
     },
     verifyInput(number) {
-      this.verifyCode += number;
-      if (this.verifyCode.length === 6) {
-        this.verifyCodeInputShow = false;
+      this.verifyCodeMsg = ""
+      this.formData.verifyCode += number;
+      if (this.formData.verifyCode.length === 6) {
+        this.buttonLoading = true;
+        UserService.verifyCode(this.formData.email, this.formData.verifyCode)
+            .then(resp => {
+              if (resp) {
+                if (resp.data) {
+                  this.verifyCodeInputShow = false;
+                  this.currentStep++;
+                } else {
+                  this.formData.verifyCode = "";
+                  this.verifyCodeMsg = "code error, please have a check";
+                }
+              }
+              this.buttonLoading = false;
+            })
+            .catch(err => {
+              console.log(err)
+              this.verifyCodeMsg = "too much try, please wait a moment";
 
-        this.verifyCode = "";
-        this.currentStep++;
+              this.buttonLoading = false;
+              setTimeout(() => {
+                this.verifyCodeInputShow = false;
+                this.formData.verifyCode = "";
+              }, 500)
+              this.buttonLoading = false;
+            });
       }
     },
     verifyDelete() {
-      let verifyCode = this.verifyCode;
-      this.verifyCode = verifyCode.substring(0, verifyCode.length - 1);
+      let verifyCode = this.formData.verifyCode;
+      this.formData.verifyCode = verifyCode.substring(0, verifyCode.length - 1);
     },
     resend() {
-      console.log("rrr")
+      UserService.sendVerifyCode(this.formData.email)
+          .then(resp => {
+            if (resp) {
+              ElNotification({
+                type: 'success',
+                message: "Send verify code successfully"
+              });
+            }
+          })
+          .catch(err => {
+            console.log(err);
+            ElNotification({
+              type: 'error',
+              message: "Operation too fast"
+            });
+          })
     },
     init() {
       this.currentStep = 0;
-      this.email = "";
-      this.password = "";
-      this.verifyCode = "";
+      this.formData.email = "";
+      this.formData.password = "";
+      this.formData.verifyCode = "";
       this.passwordInputShow = true;
     }
   }
