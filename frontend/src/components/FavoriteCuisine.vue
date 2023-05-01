@@ -20,6 +20,7 @@
         >
           <nut-swipe
               v-for="(item,index) in items"
+              ref="swipes"
           >
             <li
                 style="list-style: none;margin-top: 1px;margin-left:4px;"
@@ -29,7 +30,7 @@
               />
             </li>
             <template #right>
-              <nut-button shape="square" style="height:100%" type="danger" @click="removeFavorite(item.id,index)">Delete
+              <nut-button shape="square" style="height:100%" type="danger" @click="removeFavorite(item,index)">Delete
               </nut-button>
             </template>
           </nut-swipe>
@@ -71,14 +72,15 @@ export default {
       }
       return false;
     },
-    removeFavorite(id, index) {
-      FavoritesService.remove(id).then(resp => {
+    removeFavorite(item, index) {
+      FavoritesService.remove(item.id).then(resp => {
         if (resp.data) {
           this.$notify({
             type: 'success',
             message: 'Delete successfully'
           });
-          this.items.splice(index);
+          this.$refs.swipes[index].close();
+          this.items.splice(index, 1);
           UserData.freshUserData();
         } else {
           this.$notify({

@@ -12,6 +12,7 @@
         placeholder="Filter by"
         v-model="selectedOptionValue"
         @change="optionChange"
+        @click="this.$emit('click')"
     >
       <el-option
           v-for="type in types"

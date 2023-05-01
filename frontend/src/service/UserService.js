@@ -1,9 +1,11 @@
 import BaseService from "@/service/BaseService";
 import {ElNotification} from "element-plus";
+import md5 from 'js-md5';
 
 class UserService extends BaseService {
 
     login(email, password) {
+        password = md5(password)
         return this.$http.post("/user/login", {
             email,
             password
@@ -17,6 +19,7 @@ class UserService extends BaseService {
     }
 
     signIn(email, password, code) {
+        password = md5(password)
         return this.$http({
             method: "post",
             url: "/user/sign-in",
@@ -36,6 +39,7 @@ class UserService extends BaseService {
     }
 
     resetPassword(email, password, code) {
+        password = md5(password)
         return this.$http.get("/user/reset-password",
             {
                 params: {

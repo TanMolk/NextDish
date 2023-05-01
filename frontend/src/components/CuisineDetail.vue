@@ -66,11 +66,11 @@
           </div>
           <button
               style="border: none;background: transparent;padding:0;position: absolute;bottom: 5%;right: 5%"
-              :disabled="isFavorite()"
+              :disabled="clickFavoriteSuccess || ifIsFavorite()"
               @click="handlerClickFavorite"
           >
             <el-image
-                :class="isFavorite()? '' : 'not-favorite'"
+                :class="clickFavoriteSuccess || ifIsFavorite()? '' : 'not-favorite'"
                 src="/favorite.png"
             />
           </button>
@@ -226,13 +226,16 @@ export default {
       directionService: null,
       images: [],
       imageViewShowState: false,
-      reviews: []
+      reviews: [],
+      clickFavoriteSuccess: false,
     }
   },
   watch: {
     placeId() {
       this.selectedTab = this.items[0];
       this.getDetail();
+      this.clickFavoriteSuccess = false;
+      this.reviews = [];
     }
   },
   methods: {
@@ -346,7 +349,8 @@ export default {
     handlerClickFavorite() {
       FavoritesService.add(this.placeId)
           .then(async resp => {
-            if (resp.data()) {
+            if (resp.data) {
+              this.clickFavoriteSuccess = true;
               await UserData.freshUserData()
                   .catch(err => {
                     UserUtil.tokenExpired(err);
@@ -364,7 +368,7 @@ export default {
             console.log(err);
           })
     },
-    isFavorite() {
+    ifIsFavorite() {
       return UserData.isFavorite(this.placeId);
     }
 

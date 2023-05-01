@@ -526,6 +526,7 @@ export default {
       this.setMapCenter(e.geometry.location)
     },
     onSelectClick() {
+      console.log(this.$tours['userGuidance'].currentStep)
       if (this.guidanceModel && this.$tours['userGuidance'].currentStep === 0) {
         this.$tours['userGuidance'].nextStep();
       }
@@ -551,11 +552,11 @@ export default {
     this.freshUserLocation();
   },
   mounted() {
-    // if (!StorageUtil.get(Constants.STORAGE_IF_EXPERIENCE_USER_GUIDANCE)) {
-    //   this.guidanceModel = true;
-    //   this.$tours['userGuidance'].start()
-    //   StorageUtil.set(Constants.STORAGE_IF_EXPERIENCE_USER_GUIDANCE, "true");
-    // }
+    if (!StorageUtil.get(Constants.STORAGE_IF_EXPERIENCE_USER_GUIDANCE)) {
+      this.guidanceModel = true;
+      this.$tours['userGuidance'].start()
+      StorageUtil.set(Constants.STORAGE_IF_EXPERIENCE_USER_GUIDANCE, "true");
+    }
 
     if (StorageUtil.get(Constants.STORAGE_TOKEN)) {
       UserData.freshUserData();
