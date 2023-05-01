@@ -128,7 +128,7 @@ public class PlaceController {
 
         //filter places within 1 mile
         /*
-         * If fromCache is false:
+         * If fromCache is false,
          * Create an array to store all places in the response.
          * Create another array to store the filtered places within 1 mile of current location.
          *
