@@ -19,6 +19,7 @@
       </div>
       <button
           @click="login()"
+          v-show="!loginState"
           class="button"
           style="margin-bottom: 3em"
       >
@@ -29,7 +30,7 @@
           @click="jumpToApp()"
           class="button"
       >
-        Start exploring
+        {{ loginState ? "Start exploring" : "Start as visitor" }}
       </button>
 
       <p
@@ -47,6 +48,7 @@ import Constants from "@/constants/Constants";
 import MsgBoxUtil from "@/utils/MsgBoxUtil";
 import UserModal from "@/components/UserModal.vue";
 import UserUtil from "@/utils/UserUtil";
+import storageUtil from "@/utils/StorageUtil";
 
 
 export default {
@@ -55,6 +57,7 @@ export default {
   data() {
     return {
       clickTime: 0,
+      loginState: false
     }
   },
   methods: {
@@ -123,6 +126,16 @@ export default {
 
     //change background
     document.querySelector("body").setAttribute('style', 'background:#a0aab6')
+  },
+  mounted() {
+    this.loginState = StorageUtil.get(Constants.STORAGE_TOKEN);
+
+
+    window.addEventListener('setItemEvent', (e) => {
+      if (Constants.STORAGE_TOKEN === e.key) {
+        this.loginState = !!e.newValue
+      }
+    });
   }
 }
 </script>

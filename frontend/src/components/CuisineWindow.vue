@@ -185,6 +185,9 @@ export default {
       };
 
       navigator.share(share);
+    },
+    freshReviews(){
+      this.$refs.cuisineDetail.getCustomerReviews();
     }
   }
 }

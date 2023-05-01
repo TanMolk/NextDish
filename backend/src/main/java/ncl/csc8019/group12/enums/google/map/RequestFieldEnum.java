@@ -18,7 +18,7 @@ public enum RequestFieldEnum {
 
     //for place detail api
     PLACE_ID("place_id", null),
-    FIELDS("fields", "name,geometry,photo,place_id,opening_hours,type,curbside_pickup,delivery,dine_in,reservable,serves_beer,serves_breakfast,serves_brunch,serves_dinner,serves_lunch,serves_vegetarian_food,serves_wine,takeout"),
+    FIELDS("fields", "name,geometry,photo,reviews,place_id,opening_hours,type,curbside_pickup,delivery,dine_in,reservable,serves_beer,serves_breakfast,serves_brunch,serves_dinner,serves_lunch,serves_vegetarian_food,serves_wine,takeout"),
     SESSION_TOKEN("sessiontoken",null),
 
 

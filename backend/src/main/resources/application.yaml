@@ -1,3 +1,33 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username:
+    password:
+    url:
+  mail:
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            enable: true
+            socketFactory:
+              port: 465
+              class: javax.net.ssl.SSLSocketFactory
+    default-encoding: utf-8
+    host:
+    port:
+    username:
+    password:
+    from:
+    test-connection: true
+
+
+
+
 google:
   cloud:
     map:
