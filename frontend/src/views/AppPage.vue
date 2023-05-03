@@ -72,7 +72,7 @@
   </div>
 
   <p
-      style="color:black;"
+      style="color:black;background-color: #4bc7ff;border-radius: 6px;"
       @click="onFeedbackRequest"
       class="right-bottom-button"
   >
