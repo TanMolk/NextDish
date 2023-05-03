@@ -32,6 +32,7 @@
                 style="list-style: none;margin-top: 1px;margin-left:4px;"
             >
               <CuisineListItem
+                  @click="this.$emit('favorite-item-click',item);this.openState = false"
                   :info="item"
               />
             </li>

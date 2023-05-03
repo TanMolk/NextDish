@@ -106,7 +106,9 @@
                 />
               </el-form-item>
             </el-form>
-            <div>
+            <div
+                v-if="ClientVersionUtil.isMobile()"
+            >
               <nut-short-password
                   v-model="formData.verifyCode"
                   v-model:visible="verifyCodeInputShow"
@@ -123,6 +125,25 @@
                   @delete="verifyDelete"
                   @close="this.verifyCodeInputShow = false;"
               />
+            </div>
+            <div
+                v-else
+            >
+              <el-form
+                  v-if="verifyCodeInputShow"
+                  ref="step1Form"
+                  :model="formData"
+                  :rules="validRuleForm"
+              >
+                <el-form-item prop="verifyCode">
+                  <el-input
+                      maxlength="6"
+                      placeholder="Enter verify code you received"
+                      v-model="formData.verifyCode"
+                      size="large"
+                  />
+                </el-form-item>
+              </el-form>
             </div>
             <transition
                 name="custom-transition"
@@ -235,6 +256,29 @@ export default {
             message: 'Please enter your password',
             trigger: 'blur'
           }
+        ],
+        verifyCode: [
+          {
+            validator: async (rule, value, callback) => {
+              if (value.length !== 6) {
+                callback(new Error("Please enter the right code"));
+              } else {
+                let pass = await UserService.verifyCode(
+                    this.formData.email,
+                    this.formData.verifyCode)
+                    .catch(err => {
+                      console.log(err);
+                      callback(new Error("Try too much times, please wait a moment"));
+                    });
+                if (pass?.data) {
+                  callback();
+                } else {
+                  callback(new Error("Please check if it is the right code"));
+                }
+              }
+            },
+            trigger: 'blur'
+          }
         ]
       }
     }
@@ -317,8 +361,20 @@ export default {
           }
         });
       } else if (this.currentStep === 1) {
-        this.verifyCodeMsg = ""
         this.verifyCodeInputShow = true;
+
+        if (ClientVersionUtil.isMobile()) {
+          this.verifyCodeMsg = ""
+        } else {
+          this.$refs.step1Form.validate(valid => {
+            if (valid) {
+              this.verifyCodeInputShow = false;
+              this.currentStep++
+            }
+            this.buttonLoading = false;
+          })
+        }
+
         //check the account is created successfully
       } else if (this.currentStep === 2) {
         this.$refs.step2Form.validate(valid => {

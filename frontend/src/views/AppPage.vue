@@ -60,9 +60,17 @@
     />
     <!------------------Markers End-------------------->
   </GoogleMap>
-  <FavoriteCuisine
-      class="favorite-cuisine"
-  />
+
+  <div class="top-buttons">
+    <MeSetting
+        class="me-setting"
+    />
+    <FavoriteCuisine
+        class="favorite-cuisine"
+        @favorite-item-click="markerClick($event)"
+    />
+  </div>
+
   <p
       style="color:black;"
       @click="onFeedbackRequest"
@@ -124,10 +132,12 @@ import FavoriteCuisine from "@/components/FavoriteCuisine.vue";
 import TextArea from "@/components/TextArea.vue";
 import UserUtil from "@/utils/UserUtil";
 import UserData from "@/constants/UserData";
+import MeSetting from "@/components/MeSetting.vue";
 
 export default {
   name: "AppPage",
   components: {
+    MeSetting,
     TextArea,
     FavoriteCuisine,
     CuisineWindow,
@@ -204,7 +214,7 @@ export default {
         /** title of cuisine window*/
         title: "All",
         /** current selection of cuisine type select*/
-        currentSelection: "All",
+        currentSelection: "",
         /**set next page token for scrolling*/
         nextPageToken: null,
       },
@@ -390,6 +400,7 @@ export default {
      * @param type restaurant type
      */
     selectOptionChange(type) {
+      console.log(type)
       if (this.guidanceModel && this.$tours['userGuidance'].currentStep === 1) {
         this.$tours['userGuidance'].nextStep()
       }
@@ -417,6 +428,7 @@ export default {
      * @param type Type of restaurant, like America, British
      */
     async loadRecentRestaurant(type) {
+      console.log(type)
       this.listDetailWindowStates.windowShow = true;
 
       let response
@@ -599,9 +611,20 @@ export default {
   right: 5%;
 }
 
-.favorite-cuisine {
+.top-buttons {
   position: absolute;
   top: 5%;
-  left: 5%;
+
+  width: 50%;
+}
+
+.favorite-cuisine {
+  display: inline-block;
+  margin-left: 10%;
+}
+
+.me-setting {
+  display: inline-block;
+  margin-left: 5%;
 }
 </style>

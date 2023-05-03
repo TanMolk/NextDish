@@ -19,7 +19,10 @@
           :key="type"
           :label="type"
           :value="type"
-          @click="type === selectedOptionValue ? this.$emit('option-click', type) : ''"
+          @click="
+          type === selectedOptionValue
+          ? this.$emit('option-click', type === this.types[0] ? '' : this.selectedOptionValue)
+          : ''"
       />
     </el-select>
   </div>
@@ -34,7 +37,7 @@ export default {
   data() {
     return {
       types: ["All", "American", "British", "Chinese", "Indian", "Italian", "Thai"],
-      selectedOptionValue: '',
+      selectedOptionValue: "All",
       isFocused: false,
     }
   },
@@ -43,7 +46,7 @@ export default {
      * change select option
      */
     optionChange() {
-      this.$emit("option-change", this.selectedOptionValue);
+      this.$emit("option-change", this.selectedOptionValue === this.types[0] ? "" : this.selectedOptionValue);
     },
     /**
      * make select blur
