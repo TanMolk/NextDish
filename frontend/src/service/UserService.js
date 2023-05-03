@@ -2,6 +2,9 @@ import BaseService from "@/service/BaseService";
 import {ElNotification} from "element-plus";
 import md5 from 'js-md5';
 
+/**
+ * communication between frontend and backend of various function related to user
+ */
 class UserService extends BaseService {
 
     login(email, password) {

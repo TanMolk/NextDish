@@ -1,3 +1,9 @@
+<!--
+ @Name UserModel
+ @Description Component for user login, user registration, password reset
+ @author Wei Tan
+ @createDate 2023/04/28
+-->
 <template>
   <teleport to="body">
     <el-dialog
@@ -239,6 +245,10 @@ export default {
     }
   },
   methods: {
+    /**
+     * Funtion of login button
+     * @returns {Promise<void>} successful login
+     */
     async submit() {
       this.buttonLoading = true;
       await this.$refs.form.validate(async valid => {
@@ -258,8 +268,12 @@ export default {
       });
       this.buttonLoading = false;
     },
+    /**
+     * function of login registration and password reset,  with various condition check, notify user the process is success or fail
+     */
     submitWithStep() {
       this.buttonLoading = true;
+      //validate user email existent in database
       if (this.currentStep === 0) {
         this.$refs.step0Form.validate(async valid => {
           if (valid) {
@@ -283,7 +297,7 @@ export default {
                 return;
               }
             }
-
+            //check if the verify code is sent
             UserService.sendVerifyCode(this.formData.email)
                 .then((resp) => {
                   if (resp) {
@@ -305,6 +319,7 @@ export default {
       } else if (this.currentStep === 1) {
         this.verifyCodeMsg = ""
         this.verifyCodeInputShow = true;
+        //check the account is created successfully
       } else if (this.currentStep === 2) {
         this.$refs.step2Form.validate(valid => {
           if (valid) {
@@ -340,6 +355,7 @@ export default {
                     this.openState = false;
                   });
             } else if (this.titleIndex === 2) {
+              //check if the password reset success or fail
               UserService.resetPassword(this.formData.email, this.formData.password, this.formData.verifyCode)
                   .then(resp => {
                     if (resp) {
@@ -375,6 +391,11 @@ export default {
         });
       }
     },
+    /**
+     *function for user to input 6 digits verify code
+     *if server response, proceed to next step, else notify user error
+     * @param number verify code
+     */
     verifyInput(number) {
       this.verifyCodeMsg = ""
       this.formData.verifyCode += number;
@@ -406,10 +427,19 @@ export default {
             });
       }
     },
+
+    /**
+     *function to delete verify code
+     */
     verifyDelete() {
       let verifyCode = this.formData.verifyCode;
       this.formData.verifyCode = verifyCode.substring(0, verifyCode.length - 1);
     },
+
+    /**
+     *function to resend verify code
+     * if server response, notify user success, else catch error
+     */
     resend() {
       UserService.sendVerifyCode(this.formData.email)
           .then(resp => {

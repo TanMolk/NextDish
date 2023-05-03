@@ -1,3 +1,9 @@
+<!--
+ @Name TextArea
+ @Description area to submit review or feedback
+ @author Wei Tan
+ @createDate 2023/04/28
+-->
 <template>
   <div>
     <el-dialog
@@ -51,7 +57,13 @@ export default {
     }
   },
   methods: {
+    /**
+     * function to submit user review or feedback to database,
+     * switch between either "review" and "feedback"
+     * if server response, notify user message added successfully, else catch error and notify user network error
+     */
     submitFeedBack() {
+      //condition to check whether the content is blank
       if (!this.text.trim()) {
         this.$notify({
           type: "warning",

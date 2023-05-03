@@ -1,3 +1,7 @@
+/**
+ * create local storage item
+ * @type {(key: string, value: string) => void}
+ */
 let originalSetItem = window.localStorage.setItem;
 
 localStorage.setItem = function (key, newValue) {

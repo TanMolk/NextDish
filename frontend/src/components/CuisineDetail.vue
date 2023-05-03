@@ -239,6 +239,10 @@ export default {
     }
   },
   methods: {
+    /**
+     * get restaurant details from backend
+     * @returns {Promise<void>}
+     */
     async getDetail() {
       if (this.placeId) {
         this.images = [];
@@ -312,6 +316,9 @@ export default {
         this.$emit('review-request');
       }
     },
+    /**
+     * get customer review data from backend
+     */
     getCustomerReviews() {
       let reviews = this.detail.reviews;
       if (reviews) {
@@ -346,6 +353,9 @@ export default {
             }
           })
     },
+    /**
+     * allow user to add their favourite restaurant, notify user if added successful
+     */
     handlerClickFavorite() {
       FavoritesService.add(this.placeId)
           .then(async resp => {

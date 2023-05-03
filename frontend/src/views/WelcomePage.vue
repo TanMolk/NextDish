@@ -61,6 +61,10 @@ export default {
     }
   },
   methods: {
+    /**
+     * get user current location, error callback if user decline permission
+     * @param neverShow
+     */
     jumpToApp(neverShow) {
       //show loading
       this.$loading({
@@ -103,6 +107,9 @@ export default {
       //get location permission
       navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
     },
+    /**
+     * show vconsole for debug when clicking title of the welcome page
+     */
     clickTitle() {
       this.clickTime++;
       if (this.clickTime === 3) {

@@ -1,6 +1,9 @@
 import BaseService from "@/service/BaseService";
 import UserUtil from "@/utils/UserUtil";
 
+/**
+ * add, remove, get user review to/from backend
+ */
 class ReviewService extends BaseService {
     add(placeId, content) {
         return this.$http.post("/review", {

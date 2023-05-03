@@ -2,6 +2,11 @@ import axios from 'axios';
 import Constants from "@/constants/Constants";
 import StorageUtil from "@/utils/StorageUtil";
 
+/**
+ * base function for communication between frontend and backend
+ * @type {axios.AxiosInstance}
+ */
+
 let http = axios.create({
     baseURL: Constants.API_GATEWAY
 });

@@ -39,9 +39,15 @@ export default {
     }
   },
   methods: {
+    /**
+     * change select option
+     */
     optionChange() {
       this.$emit("option-change", this.selectedOptionValue);
     },
+    /**
+     * make select blur
+     */
     makeSelectBlur() {
       this.$refs.elSelect.blur();
     }

@@ -1,3 +1,9 @@
+<!--
+ @Name FavoriteCuisine
+ @Description page to show favorite cuisine
+ @author Wei Tan
+ @createDate 2023/04/28
+-->
 <template>
   <div class="wrapper">
     <button

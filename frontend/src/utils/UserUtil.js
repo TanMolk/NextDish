@@ -4,6 +4,9 @@ import {ElNotification} from "element-plus";
 
 let userDialog;
 
+/**
+ * user states associated to different function
+ */
 function show() {
     userDialog.currentStep = 0;
     userDialog.titleIndex = 0;

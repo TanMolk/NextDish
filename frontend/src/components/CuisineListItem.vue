@@ -43,6 +43,10 @@ export default {
     }
   },
   methods: {
+    /**
+     * load restaurant images from backend
+     * @returns {Promise<void>}
+     */
     async loadImage() {
 
       let photos = this.info.photos;

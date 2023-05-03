@@ -1,3 +1,9 @@
+<!--
+ @Name SharePage
+ @Description the page contain restaurant information to be shared by the share function
+ @author Ashton
+ @createDate 2023/05/01
+-->
 <template>
   <div
       style="width: var(--restaurants-list-detail-window-width);margin: 0 auto;"
