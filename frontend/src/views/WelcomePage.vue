@@ -13,8 +13,8 @@
       <div class="title"
            @click="clickTitle"
       >
-      <span>
-      Newcastle Feed your stomach
+      <span style="font-size: 2em;">
+      Next Dish
       </span>
       </div>
       <button
