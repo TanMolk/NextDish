@@ -169,11 +169,9 @@ public class CacheService {
 
     /**
      * The purpose of this code is to get a user's CAPTCHA in Cache.
-     * If the user has more than three attempts and blockTry is true then a VerifyTooMuchTimesException will be thrown,
-     * otherwise the number of attempts will be increased and the last user's CAPTCHA will be returned.
-     * If the user has 0 attempts before the code is obtained,
-     * a task is also added to VERIFY_TIMES_QUEUE indicating that the user will need 60 seconds to try to obtain the code again,
-     * A 60-second cache prevents users from continuously requesting CAPTCHA and thus affecting server performance.
+     * This API allows users to make up to three CAPTCHA requests within 60 seconds，
+     * with exceptions thrown if the number is greater than three.
+     *
      * @param  email       email of user
      * @param  blockTry    Lock function for turning on or off the limit of up to 3 captcha requests
      * @return             -null(There is no authentication code for this user in the cache)
