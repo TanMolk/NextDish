@@ -113,7 +113,7 @@ public class CacheService {
     /**
      * The cachePhoto method caches an array of bytes of images in a specified folder.
      * so that the next time it is fetched it can be read directly from the file.
-     * avoiding repeated requests for images from the network.
+     * avoiding repeated requests for images from the GoogleAPI.
      *
      * @param  photoReference It is the identifier of the image in the Google Places API
      * @param  data           The image itself is represented as a byte array of the type "data"

@@ -175,14 +175,27 @@ public class PlaceController {
         return responseObject.toString();
     }
 
+    /**
+     * Get details of the location by placeId.
+     * Must contain clientId and placeId.
+     * Use the CacheService to reduce the frequency of use of Google APIs and thus improve efficiency.
+     *
+     * @param clientId     A unique id for each user
+     * @param placeId      Unique id for each place
+     * @return             Detailed about the place identified by placeID
+     */
     @GetMapping("/detail")
     public String detail(@RequestHeader("c8019-client-id") String clientId,
                          @RequestParam String placeId) {
 
         JSONObject response;
-        //get from cache
+        //get details of the place from cache
         response = cacheService.getCachedResponse(placeId);
 
+        /*
+        *This code uses the logger logs to record specific information about using the CacheService,
+        * such as whether the target place's details are available in the cache and the count of API calls.
+        */
         log.info("[{}-Detail] cache:{}; placeId:{}; clientId:{}",
                 API_CALL_TOTAL_AMOUNT.addAndGet(1),
                 response != null,
@@ -190,6 +203,12 @@ public class PlaceController {
                 clientId
         );
 
+
+        /*
+        * If there are target data in the Cache, the data is returned via the toString method,
+        * if there is no target data in the Cache, the data is obtained by calling GoogleAPI and storing the new data in the cache.
+        * also increase the number of Google API usage once.
+        */
         if (response != null) {
             CACHE_HIT_AMOUNT.addAndGet(1);
             return response.toString();
@@ -201,15 +220,31 @@ public class PlaceController {
         return response.toString();
     }
 
+
+    /**
+     * This code defines an API interface for fetching map photos. When the interface is called,
+     * it fetches the specified photo from the cache or Google Maps API based on the parameters passed in and returns the result as a byte array to the caller.
+     * Must contain clientId and placeId.
+     * Use the CacheService to reduce the frequency of use of Google APIs and thus improve efficiency.
+     *
+     * @param clientId            A unique id for each user
+     * @param photoReference      It is the identifier of the image in the Google Places API
+     * @param width               It defines the width of the image returned by GoogleAPI
+     * @param height              It defines the height of the image returned by GoogleAPI
+     * @return                    Pictures in the form of byte arrays,but it will be converted to jepg format through the browser
+     */
     @GetMapping(
             value = "/photo",
+            //Define the response type of this interface as "JEPG" format
             produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] photo(@RequestHeader("c8019-client-id") String clientId,
                         @RequestParam String photoReference,
                         @RequestParam int width,
                         @RequestParam int height) {
+            //Determine if the image already exists in the cache
         byte[] photoBytes = cacheService.getPhotoCache(photoReference);
 
+            //The log records specific information about when the image was found and whether the CacheService service was used and counted.
         log.info("[{}-Photo] cache:{}; photoReference:{}; clientId:{}",
                 API_CALL_TOTAL_AMOUNT.addAndGet(1),
                 photoBytes != null,
@@ -217,12 +252,19 @@ public class PlaceController {
                 clientId
         );
 
-
+           /*
+           * If the image is already stored in the Cache,
+           * the data for that image is returned directly.
+           */
         if (photoBytes != null) {
             CACHE_HIT_AMOUNT.addAndGet(1);
             return photoBytes;
         }
 
+           /*
+           * If the image is not in the Cache,
+           * the GoogleAPI is called to get the data of the image while storing the data in the Cache and finally returning the data.
+           */
         photoBytes = googleMapService.getPhoto(photoReference, width, height);
         GOOGLE_API_REQUEST_AMOUNT.addAndGet(1);
         cacheService.cachePhoto(photoReference, photoBytes);
