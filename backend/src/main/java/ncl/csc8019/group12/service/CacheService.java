@@ -23,7 +23,7 @@ import java.util.concurrent.DelayQueue;
  * It helps with the speed of data request and decrease the number of requesting for Google place api.
  * And the cache is stored in a ConcurrentHashMap, which could make concurrency safety.
  *
- * @author wei tan
+ * @author Wei tan & Pulei & Rachel
  */
 
 @Service
@@ -110,7 +110,15 @@ public class CacheService {
         }
         return new JSONObject(jsonObject.toString());
     }
-
+    /**
+     * The cachePhoto method caches an array of bytes of images in a specified folder.
+     * so that the next time it is fetched it can be read directly from the file.
+     * avoiding repeated requests for images from the network.
+     *
+     * @param  photoReference It is the identifier of the image in the Google Places API
+     * @param  data           The image itself is represented as a byte array of the type "data"
+     * @return                void(The cache function does not require a return value)
+     */
     public void cachePhoto(String photoReference, byte[] data) {
         File file = new File("./cache_image/" + photoReference + ".jpeg");
         if (!file.exists()) {
@@ -125,6 +133,14 @@ public class CacheService {
         }
     }
 
+    /**
+     * The getPhotoCache method get the relevant images in the cache with the photoReference keyword.
+     * Reduced frequency of Google API usage and improved system efficiency
+     *
+     * @param  photoReference It is the identifier of the image in the Google Places API
+     * @return                If the relevant image exists,return An array of bytes corresponding to the image
+     *                        If the relevant image doesn't exist,return null
+     */
     public byte[] getPhotoCache(String photoReference) {
         File file = new File("./cache_image/" + photoReference + ".jpeg");
         if (file.exists()) {
@@ -140,11 +156,29 @@ public class CacheService {
         return null;
     }
 
+    /**
+     * This code is a synchronous method for adding a new CAPTCHA object to a Map that stores CAPTCHA objects.
+     * And adds the same CAPTCHA object to a queue that stores expired CAPTCHA objects.
+     * @param  code       It is the identifier of the image in the Google Places API
+     * @return            Data storage function, no return value required
+     */
     public synchronized void addVerifyCode(VerifyCode code) {
         VERIFY_CODE_MAP.put(code.getId(), code);
         VERIFY_CODE_EXPIRED_QUEUE.add(code);
     }
 
+    /**
+     * The purpose of this code is to get a user's CAPTCHA in Cache.
+     * If the user has more than three attempts and blockTry is true then a VerifyTooMuchTimesException will be thrown,
+     * otherwise the number of attempts will be increased and the last user's CAPTCHA will be returned.
+     * If the user has 0 attempts before the code is obtained,
+     * a task is also added to VERIFY_TIMES_QUEUE indicating that the user will need 60 seconds to try to obtain the code again,
+     * A 60-second cache prevents users from continuously requesting CAPTCHA and thus affecting server performance.
+     * @param  email       email of user
+     * @param  blockTry    Lock function for turning on or off the limit of up to 3 captcha requests
+     * @return             -null(There is no authentication code for this user in the cache)
+     *                     -otherwise will return the VerifyCode by user in Cache
+     */
     public String getVerifyCode(String email, boolean blockTry) {
         VerifyCode verifyCode = VERIFY_CODE_MAP.get(email);
 
@@ -164,6 +198,13 @@ public class CacheService {
         return verifyCode.getCode();
     }
 
+
+    /**
+     * This code is to increase the number of user authentication verification code attempts once.
+     *
+     * @param  email   This user's email
+     * @return         void
+     */
     private synchronized void addVerifyTryTime(String email) {
         VerifyCode verifyCode = VERIFY_CODE_MAP.get(email);
         int tryTimes = verifyCode.getTryTimes() + 1;

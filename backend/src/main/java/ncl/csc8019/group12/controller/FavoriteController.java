@@ -17,7 +17,7 @@ import javax.annotation.Resource;
  * FavouriteController is to record and update information on users' favourite restaurants.
  * This Controller contains the methods to query users' favourite restaurants(getFavoritesByUid()).
  *                                      to add users' favourite restaurants(addFavorite()).
- *                                      to delete users' favourite restaurants(deleteFavorite()).
+ *                                      to delete users' favourite restaurants(deleteFavorite())
  * @author Wei & Rachel & Pulei
  */
 @CrossOrigin
