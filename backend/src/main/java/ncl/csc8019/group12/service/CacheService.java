@@ -23,7 +23,7 @@ import java.util.concurrent.DelayQueue;
  * It helps with the speed of data request and decrease the number of requesting for Google place api.
  * And the cache is stored in a ConcurrentHashMap, which could make concurrency safety.
  *
- * @author Wei tan & Pulei & Rachel
+ * @author Wei tan & Pulei chen
  */
 
 @Service

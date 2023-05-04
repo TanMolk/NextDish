@@ -12,7 +12,7 @@ import java.util.Random;
 
 /**
  * This code defines an EmailService service to send emails and generate CAPTCHAs for authentication.
- * @author Wei tan & Rachel & Pulei
+ * @author Wei tan & Pulei chen
  */
 
 @Service

@@ -18,7 +18,7 @@ import javax.annotation.Resource;
  * This Controller contains the methods to query users' favourite restaurants(getFavoritesByUid()).
  *                                      to add users' favourite restaurants(addFavorite()).
  *                                      to delete users' favourite restaurants(deleteFavorite())
- * @author Wei & Rachel & Pulei
+ * @author Pulei chen & Wei tan
  */
 @CrossOrigin
 @RestController

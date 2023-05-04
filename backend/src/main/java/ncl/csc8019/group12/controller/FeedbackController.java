@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 /**
  * FeedbackController is to record feedback and suggestions given by users.
  *
- * @author Wei & Rachel & Pulei
+ * @author Wei tan & Pulei chen
  */
 @CrossOrigin
 @RestController

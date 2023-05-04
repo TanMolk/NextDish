@@ -15,9 +15,10 @@ import javax.annotation.Resource;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Place Apis
+ * Place Apis.
+ * Use the CacheService and GoogleMap API to find places near the user and get detailed information about the place.
  *
- * @author Pulei & Rachel & Wei
+ * @author  Rachel wu & Wei tan & Pulei chen
  */
 
 @CrossOrigin
