@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * Functions of Google map provides
  *
- * @author Pulei, Rachel & Wei
+ * @author Wei tan & Rachel wu
  */
 
 @Service
@@ -35,8 +35,8 @@ public class GoogleMapService {
 
     /**
      * When do a request to google map api, must attach this value with key.
-     * Like key=abc123
-     * default as null
+     * Like key=abc123.
+     * Default as null.
      */
     @Value("${google.cloud.map.key}")
     private String MAP_API_KEY;
@@ -53,6 +53,15 @@ public class GoogleMapService {
      * @param placeID The place_id return by google place api, which is the identifier of a place
      * @author Rachel
      */
+
+    /*
+    * Create a hashmap to store placeID and sessionID input strings
+    * Create a JSONObject to store baseRequest
+    * Put the placeID and sessionID into the hashmap
+    * Get the response
+    * Return the response
+    *
+     */
     public JSONObject getPlaceDetail(String placeID, String sessionId) {
         Map<String, String> params = new HashMap<>();
         params.put(RequestFieldEnum.PLACE_ID.name, placeID);
@@ -62,6 +71,14 @@ public class GoogleMapService {
         JSONObject result = baseRequest(APIPathEnum.DETAIL, params).getJSONObject("result");
 
         //handler additions
+        /*
+        * Create a JSONArray to store additions.
+        * Use for loop to get the additions from ResponseFieldEnum.
+        * If the result has the addition, then put the addition into the JSONArray.
+        * Put the JSONArray into the result.
+        * Return the result.
+        *
+         */
         JSONArray additions = new JSONArray();
         for (ResponseFieldEnum addition : ResponseFieldEnum.getAdditions()) {
 
@@ -141,6 +158,16 @@ public class GoogleMapService {
      * @throws ExternalAPIResponseException If response is not normal
      * @author Wei
      */
+
+    /*
+    * Create a JSONObject to store baseRequest
+    * Check the required params
+    * Build the request
+    * Get the response
+    * Check the response
+    * Return the response
+     */
+    
     private JSONObject baseRequest(APIPathEnum api, Map<String, String> requestParams) throws ExternalAPIException {
         //check params
         for (RequestFieldEnum[] requiredParamList : api.requiredParams) {
@@ -182,6 +209,13 @@ public class GoogleMapService {
      * @param path          the uri
      * @param requestParams get query parameters
      * @return the request url
+     */
+
+    /*
+    * Create a UriComponentsBuilder to build the request url
+    * Put the requestParams into the UriComponentsBuilder
+    * Return the request url
+    *
      */
     private String buildRequestUrl(String path, Map<String, String> requestParams) {
         requestParams.put(RequestFieldEnum.KEY.name, MAP_API_KEY);

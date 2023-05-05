@@ -15,6 +15,20 @@ import javax.annotation.Resource;
 import javax.security.auth.login.LoginException;
 import java.util.Optional;
 
+/**
+ * User Controller is to handle account registration, login and updates.
+ * This controller contains methods to register a user(register()).
+ *                                  to login a user(login()).
+ *                                  to verify a user(sendVerifyCode()).
+ *                                  to authenticate a verification code (verifyCode()).
+ *                                  to reset password (resetPassword()).
+ *                                  to register an account (signIn()).
+ *                                  to change a nickname (changeName()).
+ *                                  to check if a user email exists (exist()).
+ *                                  to retrieve data with token (getDataByToken()).
+ *
+ * @author Rachel wu & Wei tan
+ */
 @CrossOrigin
 @RestController
 @RequestMapping("/user")
@@ -31,6 +45,26 @@ public class UserController {
     @Resource
     private EmailService emailService;
 
+
+
+
+    /**
+     * Login - Authenticating a user based on clientId and user credentials
+     *
+     * @param clientId
+     * @param user
+     * @return
+     * @throws LoginException
+     */
+
+    /*
+    * Log the user's email and clientId.
+    * Ensure Email and password input are not null or empty.
+    * Find the user with the given email and password.
+    * If the state of the user is active (verified),
+    * create a user object with the same token, nickname, review and favourites.
+    * Return the user.
+     */
 
     @PostMapping("/login")
     public User login(
@@ -60,6 +94,22 @@ public class UserController {
         throw new LoginException();
     }
 
+    /**
+     * Send verification code
+     *
+     * @param clientId
+     * @param email
+     * @return
+     */
+
+    /*
+    * Log the user's email and clientId.
+    * If cache does not find verification code that has been sent to the email,
+    * send verification code to the email and store in cache.
+    * Return the verification code.
+    * Else, return the md5 of the email.
+     */
+
     @GetMapping("/send-verify-code")
     public String sendVerifyCode(
             @RequestHeader("c8019-client-id") String clientId,
@@ -75,6 +125,20 @@ public class UserController {
         }
     }
 
+    /**
+     * Verification of code
+     *
+     * @param clientId
+     * @param email
+     * @param code
+     * @return
+     */
+
+    /*
+    * Log the email and clientId.
+    * Return true if the verification code input matches with the code in cache.
+     */
+
     @GetMapping("/verify-code")
     public Boolean verifyCode(
             @RequestHeader("c8019-client-id") String clientId,
@@ -84,6 +148,23 @@ public class UserController {
         log.info("[User-VerifyCode] {}; clientId:{}", email, clientId);
         return code.equals(cacheService.getVerifyCode(email, true));
     }
+
+    /**
+     * Password Reset
+     *
+     * @param clientId
+     * @param email
+     * @param code
+     * @param password
+     * @return
+     */
+
+    /*
+    * Log the email and clientId.
+    * If the verification code input matches with the code in cache,
+    * update the password and return true.
+    * Else, return false.
+     */
 
     @GetMapping("/reset-password")
     public Boolean resetPassword(
@@ -100,6 +181,26 @@ public class UserController {
             return false;
         }
     }
+
+    /**
+     * Sign up for an account
+     *
+     * @param clientId
+     * @param code
+     * @param user
+     * @return
+     * @throws Exception
+     */
+
+    /*
+    * Log the email and clientId.
+    * If the email has not been registered before and the code input matches the code in cache,
+    * set the user state as active,
+    * save the user in userRepository,
+    * set a token,
+    * save the user again to update the token value.
+    * Create and return a new user object with the same token and nickname.
+     */
 
     @PostMapping("/sign-in")
     @Transactional(rollbackFor = Exception.class)
@@ -126,6 +227,22 @@ public class UserController {
         return null;
     }
 
+    /**
+     * Nickname change
+     * @param clientId
+     * @param token
+     * @param name
+     * @return
+     * @throws Exception
+     */
+
+    /*
+    * Identify the uid with the token input.
+    * Log the uid, name and clientId.
+    * Return 1 if the nickname has been changed successfully.
+    *
+     */
+
     @PostMapping("/change-name")
     public Boolean changeName(
             @RequestHeader("c8019-client-id") String clientId,
@@ -139,6 +256,19 @@ public class UserController {
         return userRepository.updateNickNameWithUid(uid, name) == 1;
     }
 
+    /**
+     * Check if the user exists with the email input
+     *
+     * @param clientId
+     * @param email
+     * @return
+     */
+
+    /*
+    * Log the email and clientId.
+    * Return true if the user exists.
+     */
+
     @GetMapping("/exist")
     public Boolean exist(
             @RequestHeader("c8019-client-id") String clientId,
@@ -149,6 +279,22 @@ public class UserController {
         return userRepository.existsByEmail(email);
     }
 
+    /**
+     * Retrieve User's data with the token while preventing sensitive data to be exposed.
+     * @param clientId
+     * @param token
+     * @return
+     * @throws Exception
+     */
+
+    /*
+    * Identify the uid with the token input.
+    * Log the uid, name and clientId.
+    * If a user is found with the uid,
+    * set all sensitive data fields to null,
+    * return the user object.
+    * Else, return Login Exception.
+     */
     @GetMapping
     public User getDataByToken(
             @RequestHeader("c8019-client-id") String clientId,
