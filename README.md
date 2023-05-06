@@ -32,7 +32,9 @@ src
 | | |____application.yaml (environment configuration file)
 | |____java (main java code)
 | | |____ncl.csc8019.group12 (all code in this package)
-| | | | | |____BackendApplication.java (backend entrance)
+| | | | | |____controller (provide APIs)
+| | | | | |____service (provide kinds of functions)
+| | | | | |____dao (data access object, operate database)
 ```
 
 - **Frontend**
@@ -46,6 +48,8 @@ frontend
 |____package.json (dependency config)
 |____.env (environment configuration)
 |____src (all source code of frontend)
+| |___components (frontend components)
+| |___views (frontend pages)
 ```
 
 ## Code Standard

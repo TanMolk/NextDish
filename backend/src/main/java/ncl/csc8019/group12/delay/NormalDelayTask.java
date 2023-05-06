@@ -4,6 +4,8 @@ import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * As a base class of delayed task.
+ *
  * @author wei tan
  */
 public class NormalDelayTask implements Delayed {

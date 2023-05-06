@@ -22,6 +22,10 @@ import java.util.concurrent.DelayQueue;
  * This Cache Service is to store data in server memory for further use.
  * It helps with the speed of data request and decrease the number of requesting for Google place api.
  * And the cache is stored in a ConcurrentHashMap, which could make concurrency safety.
+ * When this class get initialized, it will create two thread,
+ * one for consume the task of verify code expired task.
+ * another is for consume the task of limiting user can only try 3 times to verify the code in a minute.
+ * And it also will create a dir to store images cache if this dir doesn't exist.
  *
  * @author Wei tan & Pulei chen
  */
@@ -110,14 +114,15 @@ public class CacheService {
         }
         return new JSONObject(jsonObject.toString());
     }
+
     /**
      * The cachePhoto method caches an array of bytes of images in a specified folder.
      * so that the next time it is fetched it can be read directly from the file.
      * avoiding repeated requests for images from the GoogleAPI.
      *
-     * @param  photoReference It is the identifier of the image in the Google Places API
-     * @param  data           The image itself is represented as a byte array of the type "data"
-     * @return                void(The cache function does not require a return value)
+     * @param photoReference It is the identifier of the image in the Google Places API
+     * @param data           The image itself is represented as a byte array of the type "data"
+     * @return void(The cache function does not require a return value)
      */
     public void cachePhoto(String photoReference, byte[] data) {
         File file = new File("./cache_image/" + photoReference + ".jpeg");
@@ -137,9 +142,9 @@ public class CacheService {
      * The getPhotoCache method get the relevant images in the cache with the photoReference keyword.
      * Reduced frequency of Google API usage and improved system efficiency
      *
-     * @param  photoReference It is the identifier of the image in the Google Places API
-     * @return                If the relevant image exists,return An array of bytes corresponding to the image
-     *                        If the relevant image doesn't exist,return null
+     * @param photoReference It is the identifier of the image in the Google Places API
+     * @return If the relevant image exists,return An array of bytes corresponding to the image
+     * If the relevant image doesn't exist,return null
      */
     public byte[] getPhotoCache(String photoReference) {
         File file = new File("./cache_image/" + photoReference + ".jpeg");
@@ -159,8 +164,9 @@ public class CacheService {
     /**
      * This code is a synchronous method for adding a new CAPTCHA object to a Map that stores CAPTCHA objects.
      * And adds the same CAPTCHA object to a queue that stores expired CAPTCHA objects.
-     * @param  code       It is the identifier of the image in the Google Places API
-     * @return            Data storage function, no return value required
+     *
+     * @param code It is the identifier of the image in the Google Places API
+     * @return Data storage function, no return value required
      */
     public synchronized void addVerifyCode(VerifyCode code) {
         VERIFY_CODE_MAP.put(code.getId(), code);
@@ -172,10 +178,10 @@ public class CacheService {
      * This API allows users to make up to three CAPTCHA requests within 60 seconds，
      * with exceptions thrown if the number is greater than three.
      *
-     * @param  email       email of user
-     * @param  blockTry    Lock function for turning on or off the limit of up to 3 captcha requests
-     * @return             -null(There is no authentication code for this user in the cache)
-     *                     -otherwise will return the VerifyCode by user in Cache
+     * @param email    email of user
+     * @param blockTry Lock function for turning on or off the limit of up to 3 captcha requests
+     * @return -null(There is no authentication code for this user in the cache)
+     * -otherwise will return the VerifyCode by user in Cache
      */
     public String getVerifyCode(String email, boolean blockTry) {
         VerifyCode verifyCode = VERIFY_CODE_MAP.get(email);
@@ -200,8 +206,8 @@ public class CacheService {
     /**
      * This code is to increase the number of user authentication verification code attempts once.
      *
-     * @param  email   This user's email
-     * @return         void
+     * @param email This user's email
+     * @return void
      */
     private synchronized void addVerifyTryTime(String email) {
         VerifyCode verifyCode = VERIFY_CODE_MAP.get(email);
