@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import java.util.concurrent.DelayQueue;
 
-/**
+/**Test if the program delay function works
  * @author wei tan
  */
 public class DelayTest {

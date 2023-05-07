@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Test if the caching API works
  * @author wei tan
  */
 

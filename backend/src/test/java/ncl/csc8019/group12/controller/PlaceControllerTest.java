@@ -17,6 +17,8 @@ import org.springframework.web.context.WebApplicationContext;
 import javax.annotation.Resource;
 
 /**
+ * Test the functionality of all APIs inside PlaceController -Nearby() API
+ *                                                           -detail() API
  * @author wei tan
  */
 
