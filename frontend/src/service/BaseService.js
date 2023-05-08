@@ -3,7 +3,7 @@ import Constants from "@/constants/Constants";
 import StorageUtil from "@/utils/StorageUtil";
 
 /**
- * base function for communication between frontend and backend
+ * This service provides functions for http request to backend
  * @type {axios.AxiosInstance}
  */
 

@@ -290,8 +290,8 @@ export default {
   },
   methods: {
     /**
-     * Funtion of login button
-     * @returns {Promise<void>} successful login
+     * This method calls login function from UserService to handle user login, notify user if the login is successful and create
+     * @returns {Promise<void>} backend response
      */
     async submit() {
       this.buttonLoading = true;
@@ -313,7 +313,11 @@ export default {
       this.buttonLoading = false;
     },
     /**
-     * function of login registration and password reset,  with various condition check, notify user the process is success or fail
+     * Method of login registration and password reset, with various condition check, notify user the process is success or fail
+     * Validate user email
+     * Send verify code to user email
+     * User sign in
+     * Reset password
      */
     submitWithStep() {
       this.buttonLoading = true;
@@ -341,7 +345,7 @@ export default {
                 return;
               }
             }
-            //check if the verify code is sent
+            //To send verify code to user and check if the verify code is sent
             UserService.sendVerifyCode(this.formData.email)
                 .then((resp) => {
                   if (resp) {
@@ -375,7 +379,7 @@ export default {
           })
         }
 
-        //check the account is created successfully
+        //To check if the account is created successfully
       } else if (this.currentStep === 2) {
         this.$refs.step2Form.validate(valid => {
           if (valid) {
@@ -411,7 +415,7 @@ export default {
                     this.openState = false;
                   });
             } else if (this.titleIndex === 2) {
-              //check if the password reset success or fail
+              //To calls resetPassword function from UserService to reset user password and check if the password reset success or fail
               UserService.resetPassword(this.formData.email, this.formData.password, this.formData.verifyCode)
                   .then(resp => {
                     if (resp) {
@@ -448,7 +452,7 @@ export default {
       }
     },
     /**
-     *function for user to input 6 digits verify code
+     *This method calls verifyCode function from UserService for user to input 6 digits verify code
      *if server response, proceed to next step, else notify user error
      * @param number verify code
      */
@@ -485,7 +489,7 @@ export default {
     },
 
     /**
-     *function to delete verify code
+     *This method handle user to delete verify code
      */
     verifyDelete() {
       let verifyCode = this.formData.verifyCode;
@@ -493,7 +497,7 @@ export default {
     },
 
     /**
-     *function to resend verify code
+     *The method calls sendVerifyCode function from userService to resend verify code to user inputted email
      * if server response, notify user success, else catch error
      */
     resend() {

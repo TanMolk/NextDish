@@ -1,7 +1,7 @@
 <!--
  @Name FavoriteCuisine
  @Description page to show favorite cuisine
- @author Wei Tan
+ @author Ashton
  @createDate 2023/04/28
 -->
 <template>
@@ -63,10 +63,20 @@ export default {
   },
   components: {CuisineListItem},
   methods: {
+    /**
+     * This method to handle user clicks on favorites restaurant ui
+     * click on the ui to add restaurant to favorite
+     * @returns {Promise<void>}
+     */
     async handlerClick() {
       this.openState = await this.getFavorites();
     }
     ,
+    /**
+     * To allow users add their favorite restaurant,
+     * To inform backend to get user favourite restaurant
+     * @returns {Promise<boolean>}
+     */
     async getFavorites() {
       let resp = await FavoritesService.get()
           .catch(err => {
@@ -78,6 +88,12 @@ export default {
       }
       return false;
     },
+    /**
+     * To allow users remove their favorite restaurant
+     * To inform backend to remove user favourite restaurant
+     * @param item restaurant
+     * @param index index of the restaurant in the list
+     */
     removeFavorite(item, index) {
       FavoritesService.remove(item.id).then(resp => {
         if (resp.data) {

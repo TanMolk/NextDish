@@ -240,8 +240,8 @@ export default {
   },
   methods: {
     /**
-     * get restaurant details from backend
-     * @returns {Promise<void>}
+     * This method get restaurant details from backend by calls getPlaceDetail function in PlaceService
+     * @returns {Promise<void>} backend response
      */
     async getDetail() {
       if (this.placeId) {
@@ -275,8 +275,8 @@ export default {
       }
     },
     /**
-     * Get information for direction, best used in the getDetail
-     * @returns {Promise<void>}
+     * This method get direction information from DirectionService api, best used in the getDetail
+     * @returns {Promise<void>} backend response
      */
     async getDirection() {
       if (this.placeId) {
@@ -306,9 +306,16 @@ export default {
         });
       }
     },
+    /**
+     *
+     */
     directionButtonClick() {
       this.$emit("direction-request", this.directionDetail);
     },
+    /**
+     * This method handle user click on add review
+     * Show user login window if user is not login
+     */
     handlerAddReview() {
       if (!StorageUtil.get(Constants.STORAGE_TOKEN)) {
         UserUtil.show();
@@ -317,7 +324,7 @@ export default {
       }
     },
     /**
-     * get customer review data from backend
+     * This method get customer review data from backend
      */
     getCustomerReviews() {
       let reviews = this.detail.reviews;
@@ -338,9 +345,19 @@ export default {
             }
           });
     },
+    /**
+     * This method checks whether user can remove their own review
+     * @param id userID
+     * @returns {boolean}
+     */
     ifReviewCanRemove(id) {
       return UserData.ifReviewCanRemove(id);
     },
+    /**
+     * This method calls remove function in ReviewService to remove user's review
+     * @param id userID
+     * @param index index of the review
+     */
     removeReview(id, index) {
       ReviewService.remove(id)
           .then(resp => {
@@ -378,6 +395,10 @@ export default {
             console.log(err);
           })
     },
+    /**
+     * This method checks if this placeID is favorited by user
+     * @returns {boolean}
+     */
     ifIsFavorite() {
       return UserData.isFavorite(this.placeId);
     }

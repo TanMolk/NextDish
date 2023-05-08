@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     /**
-     * function to submit user review or feedback to database,
+     * Method to submit user review or feedback to backend,
      * switch between either "review" and "feedback"
      * if server response, notify user message added successfully, else catch error and notify user network error
      */

@@ -3,7 +3,7 @@ import {ElNotification} from "element-plus";
 import md5 from 'js-md5';
 
 /**
- * communication between frontend and backend of various function related to user
+ * This service provide functions for various user account related actions
  */
 class UserService extends BaseService {
 

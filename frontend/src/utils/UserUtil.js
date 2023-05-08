@@ -5,8 +5,9 @@ import {ElNotification} from "element-plus";
 let userDialog;
 
 /**
- * user states associated to different function
+ * This utility provides functions for userDialog
  */
+
 function show() {
     userDialog.currentStep = 0;
     userDialog.titleIndex = 0;
@@ -23,6 +24,10 @@ function hide() {
     userDialog.openState = false;
 }
 
+/**
+ * To handle token expired
+ * @param err
+ */
 function tokenExpired(err) {
     StorageUtil.remove(Constants.STORAGE_TOKEN);
 

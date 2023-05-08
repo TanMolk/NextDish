@@ -1,7 +1,7 @@
 const FACTOR = 0.621371;
 
 /**
- * convert miles to meters
+ * To convert miles to meters
  * @param miles miles
  * @returns {number} meters
  */

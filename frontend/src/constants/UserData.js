@@ -1,5 +1,8 @@
 import UserService from "@/service/UserService";
 
+/**
+ * This class provides functions of UserData
+ */
 class UserData {
 
     reviews
@@ -7,7 +10,7 @@ class UserData {
     nickname
 
     /**
-     * get user data from backend
+     * To get user data from backend
      * @returns {*} user's own reviews, favorites, nickname
      */
     freshUserData() {
@@ -24,7 +27,7 @@ class UserData {
     }
 
     /**
-     * check if the review can be removed
+     * To check if the review can be removed
      * @param id user's own id
      * @returns {boolean} true = remove successful, false = fail
      */
@@ -40,7 +43,7 @@ class UserData {
     }
 
     /**
-     * check if the place is favourited by user
+     * To check if the place is favourited by user
      * @param placeId placeId of the restaurant
      * @returns {boolean} true = is favourited, false = not
      */

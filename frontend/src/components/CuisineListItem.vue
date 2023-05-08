@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     /**
-     * load restaurant images from backend
+     * This method calls getPlaceImage method from PlaceService to get restaurant images from backend
      * @returns {Promise<void>}
      */
     async loadImage() {
@@ -70,7 +70,6 @@ export default {
     }
   },
   mounted() {
-    //only without blobSrc, loading image
     if (!this.imageSrc) {
       this.loadImage();
     }

@@ -6,7 +6,7 @@ import BaseService from "@/service/BaseService";
 
 class PlaceService extends BaseService {
     /**
-     * Get restaurants in one mile with location and type
+     * To get restaurants in one mile with location and type
      * @param location longitude and latitude of center location, like {lat: 55,lng: -1.6}
      * @param keyword keyword of aim restaurants
      * @param nextPageToken the nextPageToken, for page turning
@@ -27,7 +27,7 @@ class PlaceService extends BaseService {
     }
 
     /**
-     * Get more information of this place
+     * To get more information of this place
      * @param placeReference place reference id that Google Api return
      */
     getPlaceDetail(placeReference) {
@@ -40,7 +40,7 @@ class PlaceService extends BaseService {
     }
 
     /**
-     * Get restaurant photo
+     * To get restaurant photo
      * @param photoInfo google returned photo's information, format like
      *             {
      *                 "height": 2268,

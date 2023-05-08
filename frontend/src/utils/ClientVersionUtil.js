@@ -1,5 +1,5 @@
 /**
- * to check whether user's device is mobile
+ * To check whether user's device is mobile
  * @returns {RegExpMatchArray}
  */
 function isMobile() {

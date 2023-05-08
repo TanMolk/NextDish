@@ -1,3 +1,9 @@
+<!--
+ @Name MeSetting
+ @Description The setting components of user
+ @author Wei Tan
+ @createDate 2023/05/01
+-->
 <template>
   <div>
     <button
@@ -66,6 +72,10 @@ export default {
   },
   components: {CuisineListItem},
   methods: {
+    /**
+     * This method handles user clicks on the user profile ui
+     * @returns {Promise<void>}
+     */
     async handlerClick() {
       let apiFail = false;
       await UserData.freshUserData()
@@ -80,6 +90,10 @@ export default {
         this.openState = true;
       }
     },
+    /**
+     * This method calls changeName function in UserService to change user nickname
+     * Notify user whether name change is success or fail
+     */
     changeName() {
       UserService.changeName(this.nickname)
           .then(resp => {
@@ -100,6 +114,10 @@ export default {
             this.nickname = UserData.nickname;
           });
     },
+    /**
+     * This method handles user logout by remove their storage token in local storage
+     * notify user if logout is successful
+     */
     logout() {
       StorageUtil.remove(Constants.STORAGE_TOKEN);
       this.openState = false;

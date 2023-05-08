@@ -1,8 +1,11 @@
 import BaseService from "@/service/BaseService";
 
+/**
+ * This service provides function to add user feedback
+ */
 class FeedbackService extends BaseService {
     /**
-     * send user feedback to backend
+     * To add user feedback to backend
      * @param content feedback
      * @returns {Promise<axios.AxiosResponse<any>>}
      */
