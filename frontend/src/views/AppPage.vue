@@ -70,9 +70,8 @@
         @favorite-item-click="markerClick($event)"
     />
   </div>
-
   <p
-      style="color:black;background-color: #4bc7ff;border-radius: 6px;"
+      style="color:white;background-color: var(--application-normal-background-color);border-radius: 3px;"
       @click="onFeedbackRequest"
       class="right-bottom-button"
   >

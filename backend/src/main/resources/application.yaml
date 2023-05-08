@@ -1,4 +1,6 @@
 spring:
+  jpa:
+    show-sql: false
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username:
@@ -22,11 +24,10 @@ spring:
     port:
     username:
     password:
+    #the same as username
     from:
+    #test if the email is valid when app running.
     test-connection: true
-
-
-
 
 google:
   cloud:
