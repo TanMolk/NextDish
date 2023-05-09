@@ -6,6 +6,12 @@ import UserUtil from "@/utils/UserUtil";
  */
 
 class FavoritesService extends BaseService {
+
+    /**
+     * To add a restaurant to user's favorite
+     * @param placeId restaurant's placeId
+     * @returns {Promise<axios.AxiosResponse<any>>} http request
+     */
     add(placeId) {
         return this.$http.post("/favorite", {
             placeId,
@@ -14,6 +20,11 @@ class FavoritesService extends BaseService {
         });
     }
 
+    /**
+     * To remove a favorite restaurant
+     * @param id restaurant's id
+     * @returns {Promise<axios.AxiosResponse<any>>} http request
+     */
     remove(id) {
         return this.$http.delete("/favorite/" + id)
             .catch((err) => {
@@ -21,6 +32,10 @@ class FavoritesService extends BaseService {
             });
     }
 
+    /**
+     * To get user's favourite restaurants
+     * @returns {Promise<axios.AxiosResponse<any>>} http request
+     */
     get() {
         return this.$http.get("/favorite")
             .catch((err) => {

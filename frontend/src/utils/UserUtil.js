@@ -8,6 +8,9 @@ let userDialog;
  * This utility provides functions for userDialog
  */
 
+/**
+ * To show userDialog
+ */
 function show() {
     userDialog.currentStep = 0;
     userDialog.titleIndex = 0;
@@ -20,6 +23,9 @@ function show() {
     userDialog.openState = true;
 }
 
+/**
+ * To hide userDialog
+ */
 function hide() {
     userDialog.openState = false;
 }
@@ -39,6 +45,10 @@ function tokenExpired(err) {
     show();
 }
 
+/**
+ * To setUserDialog
+ * @param obj
+ */
 function setUserDialog(obj) {
     userDialog = obj;
 }

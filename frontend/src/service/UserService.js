@@ -7,6 +7,12 @@ import md5 from 'js-md5';
  */
 class UserService extends BaseService {
 
+    /**
+     * To login to user account
+     * @param email user email
+     * @param password user password
+     * @returns {Promise<axios.AxiosResponse<any>>} http request
+     */
     login(email, password) {
         password = md5(password)
         return this.$http.post("/user/login", {
@@ -21,6 +27,13 @@ class UserService extends BaseService {
             });
     }
 
+    /**
+     * To sign in user account
+     * @param email user email
+     * @param password user password
+     * @param code verify code
+     * @returns {Promise<axios.AxiosResponse<any>>} http request
+     */
     signIn(email, password, code) {
         password = md5(password)
         return this.$http({
@@ -41,6 +54,13 @@ class UserService extends BaseService {
         });
     }
 
+    /**
+     * To reset user password
+     * @param email user email
+     * @param password user password
+     * @param code verify code
+     * @returns {Promise<axios.AxiosResponse<any>>} http request
+     */
     resetPassword(email, password, code) {
         password = md5(password)
         return this.$http.get("/user/reset-password",
@@ -51,6 +71,11 @@ class UserService extends BaseService {
             })
     }
 
+    /**
+     * To send verify code to user email
+     * @param email user email
+     * @returns {Promise<axios.AxiosResponse<any>>} http request
+     */
     sendVerifyCode(email) {
         return this.$http.get("/user/send-verify-code",
             {
@@ -58,6 +83,12 @@ class UserService extends BaseService {
             });
     }
 
+    /**
+     * To verify the code inputted by user
+     * @param email user email
+     * @param code verify code
+     * @returns {Promise<axios.AxiosResponse<any>>} http request
+     */
     verifyCode(email, code) {
         return this.$http.get("/user/verify-code",
             {
@@ -65,6 +96,11 @@ class UserService extends BaseService {
             });
     }
 
+    /**
+     * To change user nickname
+     * @param name nickname
+     * @returns {Promise<axios.AxiosResponse<any>>} http request
+     */
     changeName(name) {
         return this.$http({
             method: "post",
@@ -75,6 +111,11 @@ class UserService extends BaseService {
         });
     }
 
+    /**
+     * To check whether this email existed in database
+     * @param email user email
+     * @returns {Promise<axios.AxiosResponse<any>>} http request
+     */
     exist(email) {
         return this.$http.get("/user/exist",
             {
@@ -82,6 +123,10 @@ class UserService extends BaseService {
             });
     }
 
+    /**
+     * To get user data
+     * @returns {Promise<axios.AxiosResponse<any>>} http request
+     */
     freshUserData() {
         return this.$http.get("/user");
     }
