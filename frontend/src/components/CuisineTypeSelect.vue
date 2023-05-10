@@ -1,7 +1,7 @@
 <!--
  @Name CuisineTypeSelect
  @Description Filter of cuisine
- @author Ashton
+ @author Ashton Chow
  @createDate 2023/03/12
 -->
 <template>

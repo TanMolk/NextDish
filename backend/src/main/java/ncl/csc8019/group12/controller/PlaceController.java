@@ -15,7 +15,11 @@ import javax.annotation.Resource;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Place Apis.
+ * The PlaceController is to get
+ * This controller contains methods to get nearby restaurants (nearbyPlaces()),
+ *                                     get details of the restaurants (details()),
+ *                                     get map photos (photo()).
+ *
  * Use the CacheService and GoogleMap API to find places near the user and get detailed information about the place.
  *
  * @author  Rachel wu & Wei tan & Pulei chen
@@ -238,6 +242,7 @@ public class PlaceController {
             value = "/photo",
             //Define the response type of this interface as "JEPG" format
             produces = MediaType.IMAGE_JPEG_VALUE)
+
     public byte[] photo(@RequestHeader("c8019-client-id") String clientId,
                         @RequestParam String photoReference,
                         @RequestParam int width,

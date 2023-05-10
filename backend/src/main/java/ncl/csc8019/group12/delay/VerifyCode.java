@@ -1,7 +1,8 @@
 package ncl.csc8019.group12.delay;
 
 /**
- * To store verify code information sent to a user
+ * To store verify code information sent to a user.
+ *
  * @author wei tan
  */
 public class VerifyCode extends NormalDelayTask {

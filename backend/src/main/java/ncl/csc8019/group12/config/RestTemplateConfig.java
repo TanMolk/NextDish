@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import java.nio.charset.StandardCharsets;
 
 /**
- * @author wei tan
+ * @author Wei tan
  */
 @Configuration
 public class RestTemplateConfig {

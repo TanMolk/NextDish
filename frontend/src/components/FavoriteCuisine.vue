@@ -1,7 +1,7 @@
 <!--
  @Name FavoriteCuisine
  @Description page to show favorite cuisine
- @author Ashton
+ @author Ashton Chow
  @createDate 2023/04/28
 -->
 <template>

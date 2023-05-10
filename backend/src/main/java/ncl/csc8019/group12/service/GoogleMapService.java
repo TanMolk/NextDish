@@ -20,7 +20,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Functions of Google map provides
+ * This GoogleMapService provides functions of Google Maps API.
+ * It retrieves information about a place, nearby places, and photos from the API.
+ * It handles requests to the API and exceptions related to them.
+ * It makes use of the RestTemplate class of the Spring Framework for making HTTP requests to the API.
  *
  * @author Wei tan & Rachel wu
  */

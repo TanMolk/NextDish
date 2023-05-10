@@ -27,7 +27,7 @@ import java.util.Optional;
  *                                  to check if a user email exists (exist()).
  *                                  to retrieve data with token (getDataByToken()).
  *
- * @author Rachel wu & Wei tan
+ * @author  Wei tan & Rachel wu
  */
 @CrossOrigin
 @RestController
