@@ -1,7 +1,7 @@
 <!--
  @Name AppPage
  @Description The app page
- @author Wei
+ @author Wei Tan
  @createDate 2023/03/12
 -->
 <template>
