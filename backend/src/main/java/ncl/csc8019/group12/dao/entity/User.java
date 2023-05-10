@@ -1,4 +1,4 @@
-package ncl.csc8019.group12.dao.eneity;
+package ncl.csc8019.group12.dao.entity;
 
 import ncl.csc8019.group12.enums.UserStateEnum;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;

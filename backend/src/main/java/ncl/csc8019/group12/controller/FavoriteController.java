@@ -1,7 +1,7 @@
 package ncl.csc8019.group12.controller;
 
 import ncl.csc8019.group12.dao.FavoriteRepository;
-import ncl.csc8019.group12.dao.eneity.Favorite;
+import ncl.csc8019.group12.dao.entity.Favorite;
 import ncl.csc8019.group12.service.CacheService;
 import ncl.csc8019.group12.service.GoogleMapService;
 import ncl.csc8019.group12.utils.ConfuseUtil;

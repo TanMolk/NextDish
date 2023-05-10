@@ -1,7 +1,7 @@
 package ncl.csc8019.group12.controller;
 
 import ncl.csc8019.group12.dao.FeedbackRepository;
-import ncl.csc8019.group12.dao.eneity.Feedback;
+import ncl.csc8019.group12.dao.entity.Feedback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;

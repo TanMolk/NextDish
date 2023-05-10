@@ -1,6 +1,6 @@
 package ncl.csc8019.group12.dao;
 
-import ncl.csc8019.group12.dao.eneity.Feedback;
+import ncl.csc8019.group12.dao.entity.Feedback;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

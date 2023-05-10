@@ -1,6 +1,6 @@
 package ncl.csc8019.group12.dao;
 
-import ncl.csc8019.group12.dao.eneity.User;
+import ncl.csc8019.group12.dao.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

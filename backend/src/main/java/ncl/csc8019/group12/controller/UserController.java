@@ -1,7 +1,7 @@
 package ncl.csc8019.group12.controller;
 
 import ncl.csc8019.group12.dao.UserRepository;
-import ncl.csc8019.group12.dao.eneity.User;
+import ncl.csc8019.group12.dao.entity.User;
 import ncl.csc8019.group12.enums.UserStateEnum;
 import ncl.csc8019.group12.service.CacheService;
 import ncl.csc8019.group12.service.EmailService;
@@ -202,9 +202,9 @@ public class UserController {
     * Create and return a new user object with the same token and nickname.
      */
 
-    @PostMapping("/sign-in")
+    @PostMapping("/sign-up")
     @Transactional(rollbackFor = Exception.class)
-    public User signIn(
+    public User signUp(
             @RequestHeader("c8019-client-id") String clientId,
             @RequestParam String code,
             @RequestBody User user

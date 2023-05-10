@@ -38,7 +38,7 @@ class UserService extends BaseService {
         password = md5(password)
         return this.$http({
             method: "post",
-            url: "/user/sign-in",
+            url: "/user/sign-up",
             params: {
                 code
             },

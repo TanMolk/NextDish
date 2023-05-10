@@ -2,8 +2,8 @@ package ncl.csc8019.group12.controller;
 
 import ncl.csc8019.group12.dao.ReviewRepository;
 import ncl.csc8019.group12.dao.UserRepository;
-import ncl.csc8019.group12.dao.eneity.Review;
-import ncl.csc8019.group12.dao.eneity.User;
+import ncl.csc8019.group12.dao.entity.Review;
+import ncl.csc8019.group12.dao.entity.User;
 import ncl.csc8019.group12.utils.ConfuseUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
