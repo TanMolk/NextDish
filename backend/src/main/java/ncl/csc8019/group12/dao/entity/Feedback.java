@@ -4,6 +4,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
+/**
+ * This class represents a piece of feedback data stored in the database of Feedback functions,
+ * and finally, the methods of the related SQL can be easily used through the FeedbackRepository interface.
+ *
+ * @author Pulei chen
+ */
 @Entity
 @Table(name = "feedback")
 @EntityListeners(value = AuditingEntityListener.class)

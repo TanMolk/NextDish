@@ -4,6 +4,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
+/**
+* This class represents a piece of data that is stored in the database of Favorite functions,
+ * and finally, the methods of the related SQL can be easily used through the FavoriteRepository interface.
+ *
+ * @author Wei tan & Pulei chen
+ */
+
 @Entity
 @Table(name = "favorite")
 @EntityListeners(value = AuditingEntityListener.class)

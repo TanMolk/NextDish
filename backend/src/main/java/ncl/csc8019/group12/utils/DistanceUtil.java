@@ -5,6 +5,8 @@ import ncl.csc8019.group12.pojo.Location;
 import java.security.InvalidParameterException;
 
 /**
+ * This class defines a class of standard calculation methods,
+ * and contains methods for some of the parameters that the calculation API needs to use.
  * @author wei tan
  */
 public class DistanceUtil {

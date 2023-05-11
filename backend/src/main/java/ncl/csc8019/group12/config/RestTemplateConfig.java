@@ -10,6 +10,10 @@ import org.springframework.web.client.RestTemplate;
 import java.nio.charset.StandardCharsets;
 
 /**
+ * This code is a Spring Configuration class.
+ * The calss can be used to obtain a RestTemplate object in other components via dependency injection (@Autowired),
+ * and use it to make RESTful API calls.
+ *
  * @author Wei tan
  */
 @Configuration

@@ -6,6 +6,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.util.List;
 
+/**
+ * This class represents a piece of User data stored in the database of Review functions,
+ * and finally, the methods of the related SQL can be easily used through the UserRepository interface.
+ *
+ * @author Rahcel wu & Wei tan
+ */
 @Entity
 @Table(name = "user")
 @EntityListeners(value = AuditingEntityListener.class)

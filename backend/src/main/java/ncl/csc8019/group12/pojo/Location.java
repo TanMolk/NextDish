@@ -1,6 +1,8 @@
 package ncl.csc8019.group12.pojo;
 
 /**
+ * This class defines a location class containing a location's latitude and longitude coordinates.
+ *
  * @author wei tan
  */
 public class Location {

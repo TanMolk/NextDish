@@ -7,6 +7,8 @@ import org.junit.Test;
 import java.security.InvalidParameterException;
 
 /**
+ * This class is mainly used to test the correctness of the appropriate calculation methods in the DistanceUtil class.
+ *
  * @author wei tan
  */
 

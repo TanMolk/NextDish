@@ -4,6 +4,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
+ * This test class is mainly used to test the correctness of the encryption and decryption methods (using the RSA algorithm),
+ * and the md5 encryption method in the ConfuseUtil tool class.
+ *
  * @author wei tan
  */
 public class ConfuseUtilTest {

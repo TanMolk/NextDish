@@ -13,7 +13,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.annotation.Resource;
 
 /**
- * @author Pulei, Rachel & Wei
+ * This class tests the usability of some APIs inside the GoogleMapService class.
+ *
+ * @author Pulei chen, Rachel wu & Wei tan
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = BackendApplication.class)
