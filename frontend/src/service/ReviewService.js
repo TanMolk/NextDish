@@ -3,7 +3,7 @@ import UserUtil from "@/utils/UserUtil";
 
 /**
  * This service provides functions to add, remove, get user review to/from backend
- * @author Ashton
+ * @author Ashton Chow
  */
 class ReviewService extends BaseService {
 

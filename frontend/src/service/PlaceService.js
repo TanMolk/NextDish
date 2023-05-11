@@ -1,6 +1,6 @@
 /**
  *Functions for Google map place api
- *@author wei tan
+ *@author Wei Tan
  */
 import BaseService from "@/service/BaseService";
 

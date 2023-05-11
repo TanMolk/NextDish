@@ -12,6 +12,11 @@ import './assets/main.css'
 
 const app = createApp(App)
 
+
+/**
+ * This util is to import and use external extension
+ * @author Wei Tan
+ */
 //component
 app.use(router)
 app.use(ElementPlus)

@@ -4,7 +4,7 @@ import md5 from 'js-md5';
 
 /**
  * This service provide functions for various user account related actions
- * @author Ashton
+ * @author Ashton Chow
  */
 class UserService extends BaseService {
 

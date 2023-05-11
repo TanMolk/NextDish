@@ -1,4 +1,9 @@
 /**
+ * This utils is to check whether user's device is mobile
+ * @author Wei Tan
+ */
+
+/**
  * To check whether user's device is mobile
  * @returns {RegExpMatchArray}
  */

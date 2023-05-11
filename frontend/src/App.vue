@@ -1,3 +1,9 @@
+<!--
+ @Name App
+ @Description the components for user dialog
+ @author Wei Tan
+ @createDate 2023/03/12
+-->
 <script setup>
 import UserModal from "@/components/UserModal.vue";
 </script>

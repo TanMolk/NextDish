@@ -1,7 +1,12 @@
 import {ElMessageBox} from "element-plus";
 
 /**
- * To create an alert message to notify user
+ * This function is to create an alert message to notify user
+ * @author Ashton Chow
+ */
+
+/**
+ * To use an alert message to notify user
  * @param title message title
  * @param msg message
  * @param confirmButtonText confirm button text

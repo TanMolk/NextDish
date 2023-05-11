@@ -6,6 +6,7 @@ let userDialog;
 
 /**
  * This utility provides functions for userDialog
+ * @author Wei Tan
  */
 
 /**

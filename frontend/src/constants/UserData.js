@@ -2,7 +2,7 @@ import UserService from "@/service/UserService";
 
 /**
  * Global user data and functions
- * @author Wei
+ * @author Wei Tan
  */
 class UserData {
 

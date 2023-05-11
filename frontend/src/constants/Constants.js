@@ -2,7 +2,7 @@ import StorageUtil from "@/utils/StorageUtil";
 
 /**
  * Global Constants
- * @author Ashton & Wei
+ * @author Ashton Chow & Wei Tan
  */
 //-----------------System setting---------------
 const MODE = import.meta.env.MODE;
