@@ -3,6 +3,7 @@ import UserUtil from "@/utils/UserUtil";
 
 /**
  * This service provides functions to add, remove, get user favorites from backend
+ * @author Ashton
  */
 
 class FavoritesService extends BaseService {

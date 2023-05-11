@@ -1,7 +1,8 @@
 import UserService from "@/service/UserService";
 
 /**
- * This class provides functions of UserData
+ * Global user data and functions
+ * @author Wei
  */
 class UserData {
 

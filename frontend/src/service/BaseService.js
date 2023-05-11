@@ -5,6 +5,7 @@ import StorageUtil from "@/utils/StorageUtil";
 /**
  * This service provides functions for http request to backend
  * @type {axios.AxiosInstance}
+ * @author Wei
  */
 
 let http = axios.create({

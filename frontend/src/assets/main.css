@@ -1,5 +1,10 @@
 @import "base.css";
 
+/**
+    Global style
+    @author Wei Tan
+ */
+
 body {
     height: var(--doc-height);
     margin: 0;

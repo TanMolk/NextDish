@@ -2,6 +2,7 @@ import BaseService from "@/service/BaseService";
 
 /**
  * This service provides function to add user feedback
+ * @author Ashton
  */
 class FeedbackService extends BaseService {
     /**

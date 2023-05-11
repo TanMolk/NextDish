@@ -1,6 +1,9 @@
-//application constants
 import StorageUtil from "@/utils/StorageUtil";
 
+/**
+ * Global Constants
+ * @author Ashton & Wei
+ */
 //-----------------System setting---------------
 const MODE = import.meta.env.MODE;
 let API_GATEWAY = import.meta.env.VITE_API_GATEWAY;
