@@ -1,5 +1,5 @@
 /**
- * TO create local storage item
+ * This utility provides functions for local storage item
  * @type {(key: string, value: string) => void}
  * @author Wei Tan
  */

@@ -1,5 +1,5 @@
 /**
- * This utils is to check whether user's device is mobile
+ * This utility provides function to check whether user's device is mobile
  * @author Wei Tan
  */
 

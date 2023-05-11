@@ -1,7 +1,7 @@
 import {ElMessageBox} from "element-plus";
 
 /**
- * This function is to create an alert message to notify user
+ * This utility provides function to create an alert message to notify user
  * @author Ashton Chow
  */
 

@@ -1,7 +1,7 @@
 const FACTOR = 0.621371;
 
 /**
- * This class is to convert miles to meters
+ * This utility provides function is to convert miles to meters
  * @author Wei Tan
  */
 
